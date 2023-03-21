@@ -1,5 +1,5 @@
 %function test21(~,~)
-stimpath = 'C:\Users\maana\Dropbox (CMU Biophotonics Lab)\CMU Biophotonics\Users\Maanasa\Stimuli\Gui Final';
+stimpath = 'C:\Users\benri\Documents\GitHub\TalkingHeads\GUI code';
 
 disp("Hello!")
 load([stimpath,'\F1 talker.mat'])
