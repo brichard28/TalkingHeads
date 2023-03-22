@@ -152,7 +152,7 @@ switch handles.guiState
         handles.response = buttonresponse;
         guidata(hObject,handles);
         uiresume(handles.figure1)
-        delete(handles.figure1) % CLOSES PROGRAM
+       % delete(handles.figure1) % CLOSES PROGRAM
 end
 
 
