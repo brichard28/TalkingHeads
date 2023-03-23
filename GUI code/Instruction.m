@@ -52,8 +52,8 @@ function Instruction_OpeningFcn(hObject, ~, handles, varargin)
 % handles    structure with handles and user data (see GUIDATA)
 % varargin   command line arguments to Instruction (see VARARGIN)
 
-
-
+global release
+release = false;
 % UIWAIT makes Instruction wait for user response (see UIRESUME)
 %uiwait(handles.figure1);
 
@@ -90,7 +90,8 @@ function actionButton_Callback(hObject, eventdata, handles)
 %hObject    handle to actionButton (see GCBO)
 %eventdata  reserved - to be defined in a future version of MATLAB
 %handles    structure with handles and user data (see GUIDATA)
-
+global release
+release = true;
 delete(handles.figure1)
 
 

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Created on Mon Mar 20 14:50:15 2023
+Created on Tue Feb 28 11:13:25 2023
 
-@author: Benjamin Richardson and Maanasa Guru Adimurthy
+@author: maana
 """
 
 import matlab.engine
@@ -10,9 +10,6 @@ import time
 import os
 from moviepy.editor import *
 import vlc
-
-
-SubID = input('Enter Subject ID: ')
 
 eng_instruct = matlab.engine.start_matlab()
 
@@ -27,9 +24,11 @@ eng_instruct.quit()
 n_trials = 2
 itrial = 1
 
+SubID = input('Enter Subject ID: ')
 
 while itrial <= n_trials:
     
+    eng_trial = matlab.engine.start_matlab()
     
     # Present Video
     filename = "C:\\Users\\benri\\Documents\\PhD Year 2\\Maanasa Mentorship\\stim\\" + SubID + "trial_" + str(itrial) + ".mp4"
@@ -47,8 +46,6 @@ while itrial <= n_trials:
     media_player.stop()
     
     # Collect Response
-    eng_trial = matlab.engine.start_matlab()
-
     eng_trial.test21(nargout=0)
     
     itrial += 1

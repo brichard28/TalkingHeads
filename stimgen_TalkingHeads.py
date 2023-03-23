@@ -13,10 +13,14 @@ import os
 from moviepy.editor import *
 import vlc
 import time
+import csv
+import pandas
 
 SubID=input("Enter subject id:")
 trials= 10
 
+all_sentences_F1 = [];
+all_sentences_F2 = [];
 
 for itrial in range(trials):
 
@@ -46,6 +50,7 @@ for itrial in range(trials):
         if ind>-1:
             sentence1=l4
             print(sentence1)
+            all_sentences_F1.append(sentence1)
             break
     # Converting string to list to split extension 
     def Convert(string):
@@ -96,6 +101,8 @@ for itrial in range(trials):
         if ind1>-1:
             sentence2=L3
             print(sentence2)
+            all_sentences_F2.append(sentence2)
+
             break
     
     
@@ -114,4 +121,8 @@ for itrial in range(trials):
     duration2= cl2.duration
     clip2= cl2.subclip(0,duration2)
     combined=clips_array([[clip1,clip2]])
-    combined.write_videofile("C:\\Users\\benri\\Documents\\PhD Year 2\\Maanasa Mentorship\\stim\\" + SubID + "trial_" + str(itrial) + ".mp4")
+    combined.write_videofile("C:\\Users\\benri\\Documents\\GitHub\\TalkingHeads\\stim\\" + SubID + "trial_" + str(itrial) + ".mp4")
+
+
+pandas.DataFrame(all_sentences_F1).to_csv("C:\\Users\\benri\\Documents\\GitHub\\TalkingHeads\\stim\\" + SubID + "all_sentences_F1.csv")
+pandas.DataFrame(all_sentences_F2).to_csv("C:\\Users\\benri\\Documents\\GitHub\\TalkingHeads\\stim\\" + SubID + "all_sentences_F2.csv")
