@@ -26,9 +26,9 @@ all_sentences_F2 = [];
 for itrial in range(trials):
 
     # Defining sentence Variables 
-    Name= ["Allen","Doris","Kathy","Lucy","Nina","Peter","Rachel","Steven","Thomas","William"]
+    Name= ['Allen','Doris','Kathy','Lucy','Nina','Peter','Rachel','Steven','Thomas','William']
     Verb= ["bought","gives","got","has","kept","ordered","prefers","sees","sold","wants"]
-    number=["nineteen","seven","fifteen","four","seven","sixty","three","eight","twelve","four","two","nine"]
+    number=["nineteen","seven","fifteen","four","sixty","three","eight","twelve","four","two"]
     adjective=["large","pretty","small","green","cheap","old","red","heavy","white","dark"]
     plural= ["chairs","sofas","desks","tables","flowers","toys","spoons","windows","houses","rings"]
     num=["_1"]
