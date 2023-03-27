@@ -112,11 +112,12 @@ for itrial in range(trials):
     base_dir = "C:\\Users\\benri\\Documents\\PhD Year 2\\Maanasa Mentorship\\stim\\Structured Sentences F1_MP4"
     base_dir2 = "C:\\Users\\benri\\Documents\\PhD Year 2\\Maanasa Mentorship\\stim\\Structured Sentences F2_MP4"
     cl1= VideoFileClip(os.path.join(base_dir,sentence1))
-    d1=cl1.set_duration(3)
+    cl2= VideoFileClip(os.path.join(base_dir2,sentence2))
+
+    #d1=cl1.set_duration(3)
     duration1= cl1.duration
     
     clip1= cl1.subclip(0,duration1)
-    cl2= VideoFileClip(os.path.join(base_dir2,sentence2))
     d2= cl2.set_duration(3)
     duration2= cl2.duration
     clip2= cl2.subclip(0,duration2)

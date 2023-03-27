@@ -24,22 +24,28 @@ while not eng_instruct.workspace['release']:
     
 eng_instruct.quit()
 
-n_trials = 2
-itrial = 1
+n_trials = 6
+itrial = 0
 
+eng_trial = matlab.engine.start_matlab()
 
-while itrial <= n_trials:
+all_responses_this_subject = []
+
+while itrial < n_trials:
     
     
     # Present Video
-    filename = "C:\\Users\\benri\\Documents\\PhD Year 2\\Maanasa Mentorship\\stim\\" + SubID + "trial_" + str(itrial) + ".mp4"
+    filename = "C:\\Users\\benri\\Documents\\GitHub\\TalkingHeads\\stim\\" + SubID + "trial_" + str(itrial) + ".mp4"
     os.add_dll_directory('C:/Program Files/VideoLAN/VLC')
 
     media_player = vlc.MediaPlayer()
     media = vlc.Media(os.path.abspath(filename))
+    media_player.set_fullscreen(True)
 
     media_player.set_media(media)
-
+    media_player.set_position(0.5)
+    release = False
+    
     media_player.play()
 
     time.sleep(5)
@@ -47,9 +53,11 @@ while itrial <= n_trials:
     media_player.stop()
     
     # Collect Response
-    eng_trial = matlab.engine.start_matlab()
 
     eng_trial.test21(nargout=0)
+    
+    curr_response = eng_trial.workspace['resp'];
+    all_responses_this_subject.append(curr_response);
     
     itrial += 1
 

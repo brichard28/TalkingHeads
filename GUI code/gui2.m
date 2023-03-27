@@ -127,6 +127,7 @@ global buttonresponse
 switch handles.guiState
     case 'response'
         varargout{1} = buttonresponse;
+        delete(handles.figure1)
     case 'open'
         varargout{1} = handles.output;
     case 'close'
