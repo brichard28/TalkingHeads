@@ -15,6 +15,7 @@ import vlc
 import time
 import csv
 import pandas
+import numpy as np
 
 SubID=input("Enter subject id:")
 trials= 10
@@ -114,13 +115,27 @@ for itrial in range(trials):
     cl1= VideoFileClip(os.path.join(base_dir,sentence1))
     cl2= VideoFileClip(os.path.join(base_dir2,sentence2))
 
+    raw_duration_clip_1 = cl1.duration
+    raw_duration_clip_2 = cl2.duration
+    
+    longer_duration = np.maximum(raw_duration_clip_1,raw_duration_clip_2)
+    
+    if raw_duration_clip_1 > raw_duration_clip_2: # if clip 1 is longer
+        # get the last frame of clip 2
+        last_frame = cl2.get_frame(raw_duration_clip_2)
+        extend_video = ImageSequenceClip([last_frame],durations = [raw_duration_clip_1 - raw_duration_clip_2])
+        cl2 = concatenate_videoclips([cl2, extend_video])
+    elif raw_duration_clip_2 > raw_duration_clip_1:
+        last_frame = cl1.get_frame(raw_duration_clip_1)
+        extend_video = ImageSequenceClip([last_frame],durations = [raw_duration_clip_2 - raw_duration_clip_1])
+        cl1 = concatenate_videoclips([cl1, extend_video])
     #d1=cl1.set_duration(3)
     duration1= cl1.duration
     
-    clip1= cl1.subclip(0,duration1)
-    d2= cl2.set_duration(3)
-    duration2= cl2.duration
-    clip2= cl2.subclip(0,duration2)
+    clip1= cl1; #.subclip(0,duration1)
+    #d2= cl2.set_duration(3)
+    #duration2= cl2.duration
+    clip2= cl2; #cl2.subclip(0,duration2)
     combined=clips_array([[clip1,clip2]])
     combined.write_videofile("C:\\Users\\benri\\Documents\\GitHub\\TalkingHeads\\stim\\" + SubID + "trial_" + str(itrial) + ".mp4")
 
