@@ -10,7 +10,7 @@ import time
 import os
 from moviepy.editor import *
 import vlc
-
+import pandas
 
 SubID = input('Enter Subject ID: ')
 
@@ -31,11 +31,15 @@ eng_trial = matlab.engine.start_matlab()
 
 all_responses_this_subject = []
 
+conditions_data_frame = pandas.read_csv("C:\\Users\\benri\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "all_conditions.csv")
+all_conditions = conditions_data_frame['0']
+
 while itrial < n_trials:
     
+    condition_this_trial = all_conditions[itrial]
     
     # Present Video
-    filename = "C:\\Users\\benri\\Documents\\GitHub\\TalkingHeads\\stim\\" + SubID + "trial_" + str(itrial) + ".mp4"
+    filename = "C:\\Users\\benri\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "_trial_" + str(itrial) + "_cond_ " + str(condition_this_trial) + ".mp4"
     os.add_dll_directory('C:/Program Files/VideoLAN/VLC')
 
     media_player = vlc.MediaPlayer()
@@ -60,4 +64,8 @@ while itrial < n_trials:
     all_responses_this_subject.append(curr_response);
     
     itrial += 1
+
+os.mkdir("C:\\Users\\benri\\Documents\\GitHub\\TalkingHeads\\Output\\s_" + SubID)
+
+pandas.DataFrame(all_responses_this_subject).to_csv("C:\\Users\\benri\\Documents\\GitHub\\TalkingHeads\\Output\\s_" + SubID + "\\" + SubID + "all_responses.csv")
 

@@ -18,12 +18,31 @@ import pandas
 import numpy as np
 
 SubID=input("Enter subject id:")
-trials= 10
+
+# make folder if it doesn't exist already
+if not os.path.exists("C:\\Users\\benri\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID):
+    os.mkdir("C:\\Users\\benri\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID)
+    
+num_trials= 8
 
 all_sentences_F1 = [];
 all_sentences_F2 = [];
 
-for itrial in range(trials):
+possible_conditions = ["match left","mismatch left","match right","mismatch right"]
+# create array of conditions, ensuring there are equal amounts
+condition_array = []
+for icondition in range(len(possible_conditions)):
+    curr_condition = possible_conditions[icondition]
+    condition_array_this_condition = []
+    for i in range(int(num_trials/len(possible_conditions))):
+        condition_array_this_condition.append(curr_condition)
+    condition_array.extend(condition_array_this_condition)
+
+np.random.shuffle(condition_array)
+
+for itrial in range(num_trials):
+    
+    condition_this_trial = condition_array[itrial]
 
     # Defining sentence Variables 
     Name= ['Allen','Doris','Kathy','Lucy','Nina','Peter','Rachel','Steven','Thomas','William']
@@ -130,15 +149,31 @@ for itrial in range(trials):
         extend_video = ImageSequenceClip([last_frame],durations = [raw_duration_clip_2 - raw_duration_clip_1])
         cl1 = concatenate_videoclips([cl1, extend_video])
     #d1=cl1.set_duration(3)
-    duration1= cl1.duration
     
-    clip1= cl1; #.subclip(0,duration1)
+    #duration1= cl1.duration
+    clip1 = cl1;
+    clip2 = cl2;
+    combined=clips_array([[clip1,clip2]])
+        
+    if condition_this_trial == 'match right' or condition_this_trial == 'mismatch right':
+        right_cue = ImageSequenceClip(["right_visual_cue.jpg"], durations = [2])
+        right_cue = right_cue.resize(newsize=combined.size)
+        combined_with_cue = CompositeVideoClip([right_cue, # starts at t=0
+                            combined.set_start(1)]) # start at t=1s    
+    elif condition_this_trial == 'match left' or condition_this_trial == 'mismatch left':
+        left_cue = ImageSequenceClip(["left_visual_cue.jpg"], durations = [2])
+        left_cue = left_cue.resize(newsize=combined.size)
+        combined_with_cue = CompositeVideoClip([left_cue, # starts at t=0
+                            combined.set_start(1)]) # start at t=1s
+
+    
+    #clip1= cl1; #.subclip(0,duration1)
     #d2= cl2.set_duration(3)
     #duration2= cl2.duration
-    clip2= cl2; #cl2.subclip(0,duration2)
-    combined=clips_array([[clip1,clip2]])
-    combined.write_videofile("C:\\Users\\benri\\Documents\\GitHub\\TalkingHeads\\stim\\" + SubID + "trial_" + str(itrial) + ".mp4")
+    #clip2= cl2; #cl2.subclip(0,duration2)
+    combined_with_cue.write_videofile("C:\\Users\\benri\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "_trial_" + str(itrial) + "_cond_ " + str(condition_this_trial) + ".mp4")
 
 
-pandas.DataFrame(all_sentences_F1).to_csv("C:\\Users\\benri\\Documents\\GitHub\\TalkingHeads\\stim\\" + SubID + "all_sentences_F1.csv")
-pandas.DataFrame(all_sentences_F2).to_csv("C:\\Users\\benri\\Documents\\GitHub\\TalkingHeads\\stim\\" + SubID + "all_sentences_F2.csv")
+pandas.DataFrame(all_sentences_F1).to_csv("C:\\Users\\benri\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "all_sentences_F1.csv")
+pandas.DataFrame(all_sentences_F2).to_csv("C:\\Users\\benri\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "all_sentences_F2.csv")
+pandas.DataFrame(condition_array).to_csv("C:\\Users\\benri\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "all_conditions.csv")
