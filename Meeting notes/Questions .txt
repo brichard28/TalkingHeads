@@ -3,3 +3,7 @@ Questions :
 2. Cueing-Instructions 
 3. Feedback
 4. Response Time
+5. Number of trials
+6. ITD- ILD
+
+
