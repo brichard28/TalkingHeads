@@ -16,6 +16,14 @@ import time
 import csv
 import pandas
 import numpy as np
+from scipy.io import wavfile
+from playsound import playsound
+import soundfile as sf
+import sounddevice as sd
+from func_spatialization import spatialize_seq
+from utils import *
+import pdb
+import numpy.matlib
 
 SubID=input("Enter subject id:")
 
@@ -23,7 +31,7 @@ SubID=input("Enter subject id:")
 if not os.path.exists("C:\\Users\\benri\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID):
     os.mkdir("C:\\Users\\benri\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID)
     
-num_trials= 8
+num_trials= 4
 
 all_sentences_F1 = [];
 all_sentences_F2 = [];
@@ -109,7 +117,7 @@ for itrial in range(num_trials):
     print(plural1)
     
     # Generating Sentence 2
-    path2= "C:\\Users\\benri\\Documents\\PhD Year 2\\Maanasa Mentorship\\stim\\Structured Sentences F2_MP4"
+    path2= "C:\\Users\\benri\\Documents\\GitHub\\TalkingHeads\\stim\\Structured Sentences F2_MP4"
     obj0=os.listdir(path2)
     obj2= str(obj0)
     L=[Name1,Verb1,number1,adjective1,plural1]
@@ -126,13 +134,48 @@ for itrial in range(num_trials):
             break
     
     
+    # Get audio for each sentence
+    audio_base_dir = "C:\\Users\\benri\\Documents\\GitHub\\TalkingHeads\\stim\\Structured Sentences F1_Mp3"
+    audio_base_dir2 = "C:\\Users\\benri\\Documents\\GitHub\\TalkingHeads\\stim\\Structured Sentences F2_Mp3"
+    fs_1, audio_1 = wavfile.read(os.path.join(audio_base_dir,sentence1.replace(".mp4",".wav")))
+    audio_1 =  audio_1*(1/np.max(audio_1))
+    fs_2, audio_2 = wavfile.read(os.path.join(audio_base_dir2,sentence2.replace(".mp4",".wav")))
+    audio_2 =  audio_2*(1/np.max(audio_2))
+
+    audio1_dict = dict({"audio1":audio_1})
+    audio2_dict = dict({"audio2":audio_2})
+    audio1_spatialized = spatialize_seq(audio1_dict,0,0.0005,fs_1)
+    audio2_spatialized = spatialize_seq(audio2_dict,0,0.0005,fs_2)
     
-    
+    if condition_this_trial == 'match right' or condition_this_trial == 'mismatch left':
+        audio1_spatialized = audio1_spatialized[1]
+        audio1_spatialized = audio1_spatialized["audio1_r"]
+        sf.write("C:\\Users\\benri\\Documents\\GitHub\\TalkingHeads\\stim\\sentence_1_spatialized.wav", audio1_spatialized,fs_1)
+        
+        audio2_spatialized = audio2_spatialized[1]
+        audio2_spatialized = audio2_spatialized["audio2_l"]
+        sf.write("C:\\Users\\benri\\Documents\\GitHub\\TalkingHeads\\stim\\sentence_2_spatialized.wav",  audio2_spatialized, fs_2)
+
+    elif condition_this_trial == 'match left' or condition_this_trial == 'mismatch right':
+        audio1_spatialized = audio1_spatialized[1]
+        audio1_spatialized = audio1_spatialized["audio1_l"]
+        sf.write("C:\\Users\\benri\\Documents\\GitHub\\TalkingHeads\\stim\\sentence_1_spatialized.wav", audio1_spatialized, fs_1)
+
+        audio2_spatialized = audio2_spatialized[1]
+        audio2_spatialized = audio2_spatialized["audio2_r"]
+        sf.write("C:\\Users\\benri\\Documents\\GitHub\\TalkingHeads\\stim\\sentence_2_spatialized.wav",  audio2_spatialized, fs_1)
+       
     # Generating Videos
-    base_dir = "C:\\Users\\benri\\Documents\\PhD Year 2\\Maanasa Mentorship\\stim\\Structured Sentences F1_MP4"
-    base_dir2 = "C:\\Users\\benri\\Documents\\PhD Year 2\\Maanasa Mentorship\\stim\\Structured Sentences F2_MP4"
+    base_dir = "C:\\Users\\benri\\Documents\\GitHub\\TalkingHeads\\stim\\Structured Sentences F1_MP4"
+    base_dir2 = "C:\\Users\\benri\\Documents\\GitHub\\TalkingHeads\\stim\\Structured Sentences F2_MP4"
     cl1= VideoFileClip(os.path.join(base_dir,sentence1))
+    audioclip = AudioFileClip("C:\\Users\\benri\\Documents\\GitHub\\TalkingHeads\\stim\\sentence_1_spatialized.wav")
+    cl1 = cl1.set_audio(audioclip)
+    
     cl2= VideoFileClip(os.path.join(base_dir2,sentence2))
+    audioclip = AudioFileClip("C:\\Users\\benri\\Documents\\GitHub\\TalkingHeads\\stim\\sentence_2_spatialized.wav")
+    cl2 = cl2.set_audio(audioclip)
+  
 
     raw_duration_clip_1 = cl1.duration
     raw_duration_clip_2 = cl2.duration
