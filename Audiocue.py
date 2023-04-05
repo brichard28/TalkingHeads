@@ -22,7 +22,11 @@ audio_frame2 = audio_file2[start_time2:end_time2]
 panned_audio1 = audio_frame1.pan(-1)
 panned_audio2 = audio_frame2.pan(1)
 
-
+panned_audiomismatch1= audio_frame1.pan(1)
+panned_audiomismatch2= audio_frame2.pan(-1) 
 
 panned_audio1.export("C:/Users/maana/Documents/GitHub/TalkingHeads/stim/Audio Cue/Kathy_F1.wav", format="wav")
 panned_audio2.export("C:/Users/maana/Documents/GitHub/TalkingHeads/stim/Audio Cue/Allen_F2.wav", format="wav")
+
+panned_audiomismatch1.export("C:/Users/maana/Documents/GitHub/TalkingHeads/stim/Audio Cue/Kathy_F1_mismatch.wav", format="wav")
+panned_audiomismatch2.export("C:/Users/maana/Documents/GitHub/TalkingHeads/stim/Audio Cue/Allen_F2_mismatch.wav", format="wav")
