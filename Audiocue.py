@@ -11,10 +11,10 @@ from pydub import AudioSegment
 
 
 start_time1 = 0 
-end_time1 = 860 
+end_time1 = 800 
 start_time2 = 0 
-end_time2 = 750
-audio_file1 = AudioSegment.from_file("C:/Users/maana/Documents/GitHub/TalkingHeads/stim/Structered Sentences F1_Mp3/Kathy gives nine old chairs_1.wav", format="wav")
+end_time2 = 700
+audio_file1 = AudioSegment.from_file("C:/Users/maana/Documents/GitHub/TalkingHeads/stim/Structured Sentences F1_Mp3/Kathy gives nine old chairs_1.wav", format="wav")
 audio_file2=AudioSegment.from_file("C:/Users/maana/Documents/GitHub/TalkingHeads/stim/Structured Sentences F2_Mp3/Allen got sixty large houses_1.wav", format="wav")
 audio_frame1 = audio_file1[start_time1:end_time1]
 audio_frame2 = audio_file2[start_time2:end_time2]
