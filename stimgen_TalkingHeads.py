@@ -201,21 +201,21 @@ for itrial in range(num_trials):
     if condition_this_trial == 'match right':  
         right_cue = ImageSequenceClip(["right_visual_cue.jpg"], durations = [2])
         right_cue = right_cue.resize(newsize=combined.size)
-        audioclip_right_match=AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\Audio Cue\\Allen_F2.wav")
+        audioclip_right_match=AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\Audio Cue\\Houses_F2.wav")
         right_cue= right_cue.set_audio(audioclip_right_match)
         combined_with_cue = CompositeVideoClip([right_cue, # starts at t=0
                             combined.set_start(1)]) # start at t=1s  
     elif condition_this_trial == 'mismatch right':
         right_cue = ImageSequenceClip(["right_visual_cue.jpg"], durations = [2])
         right_cue = right_cue.resize(newsize=combined.size)
-        audioclip_right_match=AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\Audio Cue\\Allen_F2_mismatch.wav")
+        audioclip_right_match=AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\Audio Cue\\Houses_F2_mismatch.wav")
         right_cue= right_cue.set_audio(audioclip_right_match)
         combined_with_cue = CompositeVideoClip([right_cue, # starts at t=0
                             combined.set_start(1)]) # start at t=1s 
     elif condition_this_trial == 'match left':  
         left_cue = ImageSequenceClip(["left_visual_cue.jpg"], durations = [2])
         left_cue = left_cue.resize(newsize=combined.size)
-        audioclip_left_match=AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\Audio Cue\\Kathy_F1.wav")
+        audioclip_left_match=AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1.wav")
         left_cue= left_cue.set_audio(audioclip_left_match)
         combined_with_cue = CompositeVideoClip([left_cue, # starts at t=0
                             combined.set_start(1)]) # start at t=1s
@@ -223,7 +223,7 @@ for itrial in range(num_trials):
     elif condition_this_trial == 'mismatch left':
      left_cue = ImageSequenceClip(["left_visual_cue.jpg"], durations = [2])
      left_cue = left_cue.resize(newsize=combined.size)
-     audioclip_left_match=AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\Audio Cue\\Kathy_F1_mismatch.wav")
+     audioclip_left_match=AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1_mismatch.wav")
      left_cue= left_cue.set_audio(audioclip_left_match)
      combined_with_cue = CompositeVideoClip([left_cue, # starts at t=0
                          combined.set_start(1)]) # start at t=1s
