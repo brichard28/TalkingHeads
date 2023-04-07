@@ -1,0 +1,13 @@
+Metadata-Version: 2.1
+Name: psychtoolbox
+Version: 3.0.18.2
+Summary: Pieces of Psychtoolbox-3 ported to CPython.
+Home-page: http://psychtoolbox.org
+Author: Mario Kleiner
+Author-email: mario.kleiner.de@gmail.com
+License: UNKNOWN
+Platform: UNKNOWN
+Requires-Dist: numpy (>=1.7)
+
+UNKNOWN
+

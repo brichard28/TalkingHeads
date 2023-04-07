@@ -1,0 +1,1467 @@
+# $BEGIN_AUDIOMATH_LICENSE$
+# 
+# This file is part of the audiomath project, a Python package for
+# recording, manipulating and playing sound files.
+# 
+# Copyright (c) 2008-2022 Jeremy Hill
+# 
+# audiomath is free software: you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see http://www.gnu.org/licenses/ .
+# 
+# The audiomath distribution includes binaries from the third-party
+# AVbin and PortAudio projects, released under their own licenses.
+# See the respective copyright, licensing and disclaimer information
+# for these projects in the subdirectories `audiomath/_wrap_avbin`
+# and `audiomath/_wrap_portaudio` . It also includes a fork of the
+# third-party Python package `pycaw`, released under its original
+# license (see `audiomath/pycaw_fork.py`).
+# 
+# $END_AUDIOMATH_LICENSE$
+
+__all__ = [
+	'Sound',
+	'TestSound',
+	'Concatenate', 'Cat', 'Stack',
+	'Silence', 'MakeRise', 'MakePlateau', 'MakeFall', 'MakeHannWindow',
+	'SecondsToSamples', 'SamplesToSeconds',
+	'ACROSS_SAMPLES', 'ACROSS_CHANNELS',
+]
+
+import os
+import sys
+import copy
+
+from . import Dependencies; from .Dependencies import numpy
+
+ACROSS_SAMPLES  = 0
+ACROSS_CHANNELS = 1
+DEFAULT_DTYPE_IN_MEMORY = 'f4'
+
+class SoundBug( Exception ): pass
+
+def IsActuallyNumpyArray( x ):
+	return isinstance( x, numpy.ndarray )
+def ActsLikeNumpyArray( x ):
+	return hasattr( x, 'ndim' ) and hasattr( x, 'shape' ) and hasattr( x, 'size' )
+
+
+DTYPES = dict(
+	int8    = ( '<i1',  8, 1, True,  float( 2 **  7 ) ),
+	int16   = ( '<i2', 16, 2, True,  float( 2 ** 15 ) ),
+	int32   = ( '<i4', 32, 4, True,  float( 2 ** 31 ) ),
+	int64   = ( '<i8', 64, 8, True,  float( 2 ** 63 ) ),
+	uint8   = ( '<u1',  8, 1, False, float( 2 **  7 ) ), # yes that's correct
+	uint16  = ( '<u2', 16, 2, False, float( 2 ** 15 ) ), # yes that's correct
+	uint32  = ( '<u4', 32, 4, False, float( 2 ** 31 ) ), # yes that's correct
+	uint64  = ( '<u8', 64, 8, False, float( 2 ** 63 ) ), # yes that's correct
+	float32 = ( '<f4', 32, 4, True,  None ),
+	float64 = ( '<f8', 64, 8, True,  None ),
+)
+for entry in list( DTYPES.values() ): DTYPES[ entry[ 0 ] ] = DTYPES[ entry[ 0 ][ 1: ] ] = entry
+DTYPES[ None ] = DTYPES[ '<i2' ] # default
+DEFAULT_DTYPES_BY_DEPTH = {
+	8:  '<u1',  # yep
+	16: '<i2',
+	24: '<i4',
+	32: '<i4',
+}
+
+
+generator = type( ( x for x in '' ) )
+def _AsSequence( x, breakStrings=False, breakArrays=False ):
+	if not breakStrings and isinstance( x, str ): return [ x ]
+	if not breakArrays and isinstance( x, numpy.ndarray ): return [ x ]
+	if isinstance( x, ( dict, set ) ): return [ x ]
+	if isinstance( x, generator ): return list( x )
+	try: return list( x )
+	except: return [ x ]
+	
+def _FlattenSequence( args, breakStrings=False, breakArrays=False ):
+	return [ arg for item in args for arg in _AsSequence( item, breakStrings=breakStrings, breakArrays=breakArrays ) ]
+
+def _NonnegativeFloat( x ):
+	x = float( x )
+	if not 0 <= x < float('inf'): raise ValueError()
+	return x
+	
+def DecodeTimecodeString( s ):
+	"""
+	Decode a string that contains colon-delimited numbers of
+	days and/or hours and/or minutes and/or seconds. Return
+	the floating-point number of seconds it represents.
+	"""
+	coefficients = [ 1.0, 60.0, 3600.0, 86400.0 ]
+	s = s.strip()
+	sign = -1.0 if s.startswith( '-' ) else 1.0
+	if sign < 0: s = s[ 1: ].strip()
+	try: pieces = [ _NonnegativeFloat( x ) for x in s.split( ':' ) ][ ::-1 ]
+	except: raise ValueError( 'could not interpret %r as a valid timecode' % s )
+	if len( pieces ) > len( coefficients ): raise ValueError( '%r has too many pieces to be a valid timecode' % s )
+	return sign * sum( coefficient * piece for coefficient, piece in zip( coefficients, pieces ) )
+
+def MakeTimecodeString( seconds, fmt='hh:MM:SS.FFF' ):
+	"""
+	Convert a number of seconds into a colon-delimited timecode
+	string, according to the formatting specified by `fmt`.
+	
+	NB: `fmt` is not interpreted character-by-character, merely
+	checked for *whether or not it contains* certain characters:
+	D/d for days, H/h for hours, M/m for minutes, S/s for
+	seconds, and F/f for fractions-of-a-second.  Upper-case
+	characters indicate mandatory inclusion, whereas lower-case
+	letters indicate discretionary inclusion---for example, if
+	`fmt` contains H, hours will always get formatted even if
+	the number of hours is zero; if `fmt` contains h instead of
+	H, hours will get formatted if and only if necessary (i.e.
+	if `seconds` >= 3600). If there's no H or h character, you
+	will simply see a numbers of minutes larger than 60, when
+	appropriate.
+	
+	The number of occurrences of each character dictates the
+	width of the corresponding field, unless otherwise
+	constrained.
+	
+	Higher-order fields override the settings for lower-order
+	ones. For example, if hours are getting formatted, minutes
+	will always also get formatted, and always with width 2,
+	regardless of the presence, absence or count of M and m
+	characters.
+	"""
+	s = '-' if seconds < 0 else ''
+	seconds = abs( seconds )
+	fmtLower = fmt.lower()
+	includeDays    = 'D' in fmt or ( 'd' in fmt and seconds >= 86400 )
+	includeHours   = 'H' in fmt or ( 'h' in fmt and seconds >= 3600  ) or includeDays
+	includeMinutes = 'M' in fmt or ( 'm' in fmt and seconds >= 60    ) or includeHours
+	dayWidth    = fmtLower.count( 'd' )
+	hourWidth   = 2 if includeDays    else fmtLower.count( 'h' )
+	minuteWidth = 2 if includeHours   else fmtLower.count( 'm' )
+	secondWidth = 2 if includeMinutes else fmtLower.count( 's' )
+	decimalPlaces = fmtLower.count( 'f' ) if 'F' in fmt or seconds != round( seconds ) else 0
+	if decimalPlaces: secondWidth += 1 + decimalPlaces
+	seconds = ( round( seconds * 10 ** ( decimalPlaces + 1 ) ) // 10 ) * 10 ** -decimalPlaces
+	if includeDays:    days = seconds // 86400; seconds -= days * 86400; s += '%0{}d:'.format( dayWidth    ) % days
+	if includeHours:   hours = seconds // 3600; seconds -= hours * 3600; s += '%0{}d:'.format( hourWidth   ) % hours
+	if includeMinutes: minutes = seconds // 60; seconds -= minutes * 60; s += '%0{}d:'.format( minuteWidth ) % minutes
+	s += '%0{}.{}f'.format( secondWidth, decimalPlaces ) % seconds
+	return s
+
+def SecondsToSamples( seconds, fs, rounding='round' ):
+	"""
+	Convert seconds to samples given sampling frequency `fs`
+	(expressed in Hz). `seconds` may be a scalar, or a
+	sequence or array. The `rounding` approach may be
+	`'floor'`, `'round'`, `'ceil'`, `'none'` or `'int'`.
+	The `'int'` option rounds in the same way as `'floor'`
+	but returns integers---all other options return
+	floating-point numbers.
+	
+	See also: `SamplesToSeconds()`
+	"""
+	if hasattr( fs, 'fs' ): fs = fs.fs
+	if seconds is None or fs is None: return None
+	if isinstance( seconds, str ): seconds = DecodeTimecodeString( seconds )
+	try: len( seconds )
+	except: pass
+	else: seconds = numpy.asarray( seconds, dtype=float )
+	samples = seconds * ( fs / 1.0 )
+	if rounding in [ 'int', int ]:
+		try: samples = samples.astype( int )
+		except: samples = int( samples )
+	elif rounding == 'floor': samples = numpy.floor( samples )
+	elif rounding == 'ceil':  samples = numpy.ceil( samples ) # just for completeness
+	elif rounding in [ 'round', round ]: samples = numpy.round( samples )
+	elif not rounding or rounding is float or rounding.lower() == 'none': pass
+	else: raise ValueError( 'unrecognized `rounding` option %r' % rounding )
+	return samples
+
+def SamplesToSeconds( samples, fs ):
+	"""
+	Convert samples to seconds given sampling frequency
+	`fs` (expressed in Hz). `samples` may be a scalar, or
+	a sequence or array. The result is returned in
+	floating-point.
+	
+	See also: `SecondsToSamples()`
+	"""
+	if hasattr(fs, 'fs'): fs = fs.fs
+	if samples is None or fs is None: return None
+	try: len( samples )
+	except: pass
+	else: samples = numpy.asarray( samples, dtype=float )
+	return samples * ( 1.0 / fs )
+
+def NumberOfSamples( a ):
+	"""
+	Return the number of samples in an array `a`, or in a
+	`Sound` instance `a` that contains an array `a.y`.
+	"""
+	if hasattr( a, 'sound' ) and hasattr( a.sound, 'y' ) and hasattr( a.sound.y, 'shape' ): a = a.sound.y
+	elif hasattr( a, 'y' ) and hasattr( a.y, 'shape' ): a = a.y
+	try: len( a.shape )
+	except: raise SoundBug( 'NumberOfSamples() function called on something other than a numpy.array' )
+	if len( a.shape ) <= ACROSS_SAMPLES: return 1
+	return a.shape[ ACROSS_SAMPLES ]
+
+def NumberOfChannels(a):
+	"""
+	Return the number of channels in an array `a`, or in a
+	`Sound` instance `a` that contains an array `a.y`.
+	"""
+	if hasattr( a, 'sound' ) and hasattr( a.sound, 'y' ) and hasattr( a.sound.y, 'shape' ): a = a.sound.y
+	elif hasattr( a, 'y' ) and hasattr( a.y, 'shape' ): a = a.y
+	try: len( a.shape )
+	except: raise SoundBug( 'NumberOfChannels() function called on something other than a numpy.array' )
+	if len( a.shape ) <= ACROSS_CHANNELS: return 1
+	return a.shape[ ACROSS_CHANNELS ]
+
+def infer_dtype( thing ):
+	if hasattr( thing, 'sound' ) and hasattr( thing.sound, 'y' ) and hasattr( thing.sound.y, 'dtype' ): dtype = thing.sound.y.dtype
+	elif hasattr( thing, 'y' ) and hasattr( thing.y, 'dtype' ): dtype = thing.y.dtype
+	elif hasattr( thing, 'dtype' ): dtype = thing.dtype
+	elif hasattr( thing, 'dtype_in_memory' ): dtype = thing.dtype_in_memory
+	else: dtype = thing
+	return dtype
+
+def Silence( nSamples, nChannels, dtype=DEFAULT_DTYPE_IN_MEMORY, dc=0 ):
+	"""
+	Return a `numpy.array` containing the specified number of
+	samples `nSamples` x channels `nChannels`, all set to a
+	constant value `dc`.
+	"""
+	dtype = infer_dtype( dtype )
+	if nSamples < 0: nSamples = 0
+	z = numpy.zeros( _SubscriptHelper( int( round( nSamples ) ), int( round( nChannels ) ) ), dtype )
+	if dc: z += dc
+	return z
+	
+def MakeRise( duration, fs=1000, hann=False ):
+	"""
+	Return a single-channel `Sound` object of the specified
+	`duration` in seconds at the specified sampling frequency
+	`fs` in Hz, containing a "fade-in" envelope (i.e. a ramp
+	from 0 to 1). If `hann` is True, use a raised-cosine
+	profile instead of a linear ramp.
+	
+	See also: `MakePlateau()`, `MakeFall()`, `MakeHannWindow()`
+	"""
+	y = numpy.linspace( 0.0, 1.0, max( 0, SecondsToSamples( duration, fs, int ) ) ).astype( DEFAULT_DTYPE_IN_MEMORY )
+	y = numpy.expand_dims( y, ACROSS_CHANNELS )
+	if hann: y = 0.5 - 0.5 * numpy.cos( y * numpy.pi )
+	return Sound( y, fs=fs )
+
+def MakePlateau( duration, fs=1000, dc=1.0 ):
+	"""
+	Return a single-channel `Sound` object of the specified
+	`duration` in seconds at the specified sampling frequency
+	`fs` in Hz, containing a constant `dc` value.
+	
+	See also: `MakeRise()`, `MakeFall()`, `MakeHannWindow()`
+	"""
+	y = Silence( max( 0, SecondsToSamples( duration, fs, int ) ), 1, dtype=DEFAULT_DTYPE_IN_MEMORY, dc=dc )
+	return Sound( y, fs=fs )
+	
+def MakeFall( duration, fs=1000, hann=False ):
+	"""
+	Return a single-channel `Sound` object of the specified
+	`duration` in seconds at the specified sampling frequency
+	`fs` in Hz, containing a "fade-out" envelope (i.e. a ramp
+	from 1 to 0). If `hann` is True, use a raised-cosine
+	profile instead of a linear ramp.
+	
+	See also: `MakeRise()`, `MakePlateau()`, `MakeHannWindow()`
+	"""
+	y = numpy.linspace( 1.0, 0.0, max( 0, SecondsToSamples( duration, fs, int ) ) ).astype( DEFAULT_DTYPE_IN_MEMORY )
+	y = numpy.expand_dims( y, ACROSS_CHANNELS )
+	if hann: y = 0.5 - 0.5 * numpy.cos( y * numpy.pi )
+	return Sound( y, fs=fs )
+
+def MakeHannWindow( duration, fs=1000, plateau_duration=0 ):
+	"""
+	Return a single-channel `Sound` object of the specified
+	`duration` in seconds at the specified sampling frequency
+	`fs` in Hz, containing a Hann or Tukey window---i.e. a
+	raised-cosine "fade-in", followed by an optional plateau,
+	followed by a raised-cosine "fade-out".
+	
+	See also: `MakeRise()`, `MakePlateau()`, `MakeFall()`
+	"""
+	risetime = ( float( duration ) - float( plateau_duration ) ) / 2.0
+	r = MakeRise( risetime, fs=fs, hann=True )
+	f = MakeFall( risetime, fs=fs, hann=True )
+	ns = SecondsToSamples( duration, fs ) - r.NumberOfSamples() - f.NumberOfSamples()
+	if ns > 0: p = Silence( ns, 1, dc=1.0 )
+	else: p = 0.0
+	return r % p % f
+
+def Concatenate( *args ):
+	"""
+	Concatenate sounds in time, to make a new `Sound` instance
+	containing a new array.
+
+	You can also concatenate `Sound` instances using the `%`
+	operator, and can modifying an existing `Sound` instance
+	`s` (replacing its array `s.y`) using `%=`::
+	
+		s = s1 % s2
+		s %= s1
+	
+	Note that, in the above examples, either `s1` or `s2` may
+	also be a numeric scalar:  `s %= 0.5` appends half a second
+	of silence to `s`.
+	"""
+	args = _FlattenSequence( args )
+	nChannels = 1
+	fs = None
+	s = None
+	for arg in args:
+		if isinstance( arg, Sound ):
+			if s is None: s = arg.copy()
+
+			if nChannels == 1: nChannels = arg.NumberOfChannels()
+			elif not arg.NumberOfChannels() in ( 1, nChannels ): raise ValueError( 'incompatible numbers of channels' )
+
+			if fs is None: fs = float( arg.fs )
+			elif fs != arg.fs: raise ValueError( 'incompatible sampling frequencies' )
+	if s is None:
+		raise TypeError( 'no Sound object found' )
+	for i, arg in enumerate( args ):
+		if isinstance(arg, Sound):
+			dat = arg.y
+			if NumberOfChannels(dat) == 1 and nChannels > 1:
+				dat = dat.repeat(nChannels, axis=ACROSS_CHANNELS)
+		elif isinstance(arg, numpy.ndarray):
+			dat = arg
+		elif isinstance(arg,float) or isinstance(arg,int):
+			nSamples = round(float(arg) * fs)
+			nSamples = max(0, nSamples)
+			dat = Silence(nSamples, nChannels, s)
+		else:
+			raise TypeError( "don't know how to concatenate type %s" % arg.__class__.__name__ )
+		args[i] = dat
+	s.y = numpy.concatenate( args, axis=ACROSS_SAMPLES )
+	return s
+Cat = Concatenate
+
+def Stack( *args ):
+	"""
+	Stack multiple Sound objects to make a new multi-channel
+	`Sound` object (appending silence to the end of each
+	argument where necessary to equalize lengths).
+	
+	You can also stack channels of `Sound` instances using
+	the `&` operator, and can modifying an existing `Sound`
+	instance `s` (replacing its array `s.y`) using `&=`::
+	
+		s = s1 & s2
+		s &= s1
+	"""
+	args = _FlattenSequence( args )
+	for arg in args:
+		if not isinstance( arg, Sound ): raise TypeError( "arguments must be Sound objects (or sequences thereof)" )
+	out = args.pop( 0 ).copy()
+	while args: out &= args.pop( 0 )
+	return out	
+
+def _SubscriptHelper( samples=None, channels=None ):
+	subs = [ None, None ]
+	subs[ ACROSS_SAMPLES ] = samples
+	subs[ ACROSS_CHANNELS ] = channels
+	return tuple( subs )
+
+def Envelope( s, granularity=0.002, fs=None, includeDC=False, minThickness=1e-2, bars=False ):
+	"""
+	This is both a global function (working on a `numpy` array `s`
+	together with a sampling frequency `fs`) and a `Sound` method
+	(working on a `Sound` instance `s`, in which case no separate
+	`fs` argument is required).
+	
+	It returns `(timebase, lower, upper)`, where `lower` and `upper`
+	are the lower and upper bounds on the signal amplitude. Amplitude
+	os computed in adjacent non-overlapping bins, each bin being
+	of width `granularity` (expressed in seconds).
+	
+	`lower` and `upper` will be adjusted such that they are always
+	at least `minThickness` apart. Also, if you supply per-channel
+	values as `includeDC`, then the bounds will be adjusted such
+	that the specified values are always included. (If you simply
+	specify `includeDC=True`, then the per-channel median values
+	of `s` will be used in this way.)
+	
+	The return values are suitable for plotting as follows::
+	
+		s = TestSound('12')
+		t, lower, upper = s.Envelope()
+		import matplotlib.pyplot as plt
+		for iChannel in range(s.nChannels):
+			plt.fill_between(t, lower[:, i], upper[:, i])
+	
+	(NB: You do not actually need to plot it by hand in this way,
+	because the `Sound.Plot` method will do it for you: "envelope
+	mode" is used by default for sounds longer than 60 seconds,
+	and this decision can be overridden in either direction by
+	passing `envelope=True` or `envelope=False`.)
+	
+	By default, `t` is strictly increasing. But if you
+	set `bars=True` then values will be repeated in `t`, 
+	`lower` and `upper` such that only horizontal and
+	vertical edges will appear in the plots (Manhattan
+	skyline style).
+	"""
+	# Could transfer this to the `Signal` submodule, because it could easily be adapted for that submodule's independence
+	# criterion (it uses only `SamplesToSeconds`, `SecondsToSamples`, and `ACROSS_SAMPLES`, which are easy to replace).
+	# Note that, unlike the `Signal` submodule which assumes time is the first dimension, this is also written to meet
+	# the criterion for inclusion in `Base` (it's agnostic to the actual value of ACROSS_SAMPLES).
+	if fs is None and hasattr( s, 'fs' ): fs = s.fs
+	if hasattr( s, 'y' ): s = s.y
+	samplesPerBatch = SecondsToSamples( granularity, fs, int )
+	nSamples = s.shape[ ACROSS_SAMPLES ]
+	tMax = SamplesToSeconds( nSamples - 1, fs )
+	nWholeBatches = nSamples // samplesPerBatch
+	nSamplesTrimmed = samplesPerBatch * nWholeBatches
+	if not isinstance( includeDC, ( bool, int, type( None ) ) ) or includeDC not in [ True, False, None ]:
+		mid = numpy.asarray( includeDC, dtype=float ).ravel()
+		includeDC = True
+	elif includeDC:
+		mid = numpy.median( s, axis=ACROSS_SAMPLES ) # could use mean(), to go faster?
+	if includeDC:
+		mid = numpy.expand_dims( mid, ACROSS_SAMPLES )
+		s = s - mid
+	slices = [ slice( None ) for dimension in s.shape ]
+	slices[ ACROSS_SAMPLES ] = slice( nSamplesTrimmed, None )
+	lastBatch = s[ tuple( slices ) ]
+	slices[ ACROSS_SAMPLES ] = slice( None, nSamplesTrimmed )
+	s = s[ tuple( slices ) ]
+	batchToBatchAxis = ACROSS_SAMPLES
+	withinBatchSampleAxis = ACROSS_SAMPLES + 1
+	lastBatch = numpy.expand_dims( lastBatch, batchToBatchAxis )
+	s         = numpy.expand_dims( s,         batchToBatchAxis )
+	newShape = list( s.shape )
+	newShape[ batchToBatchAxis ] = nWholeBatches
+	newShape[ withinBatchSampleAxis ] = samplesPerBatch
+	s = s.reshape( newShape )
+	def BatchMin( x ): x = x.min( axis=withinBatchSampleAxis ); return numpy.minimum( 0, x ) if includeDC else x
+	def BatchMax( x ): x = x.max( axis=withinBatchSampleAxis ); return numpy.maximum( 0, x ) if includeDC else x
+	upper = BatchMax( s )
+	lower = BatchMin( s )
+	tStart = SamplesToSeconds( range( 0, nSamplesTrimmed, samplesPerBatch ), fs )
+	tStop  = SamplesToSeconds( range( samplesPerBatch, nSamplesTrimmed + 1, samplesPerBatch ), fs )
+	if lastBatch.size:
+		upper = numpy.concatenate( [ upper, BatchMax( lastBatch ) ], axis=ACROSS_SAMPLES )
+		lower = numpy.concatenate( [ lower, BatchMin( lastBatch ) ], axis=ACROSS_SAMPLES )
+		tStart = numpy.concatenate( [ tStart, [ tStop[ -1 ] ] ] )
+		tStop  = numpy.concatenate( [ tStop,  [ tMax ] ] )
+	if includeDC:
+		upper += mid
+		lower += mid		
+	if minThickness:
+		mask = ( upper - lower < minThickness ).ravel()
+		if mask.any():
+			mid = ( upper + lower ) / 2.0
+			upper.flat[ mask ] = mid.flat[ mask ] + minThickness / 2.0
+			lower.flat[ mask ] = mid.flat[ mask ] - minThickness / 2.0
+	if bars:
+		t = tStart.repeat( 2 ); t[ 1::2 ] = tStop
+		upper = upper.repeat( 2, axis=ACROSS_SAMPLES )
+		lower = lower.repeat( 2, axis=ACROSS_SAMPLES )
+	else:
+		t = numpy.linspace( tStart[ 0 ], tStop[ -1 ], tStart.size, endpoint=True )
+	return t, lower, upper
+
+def _PanHelper( v, nChannels=None, norm='inf' ):
+	
+	try:
+		nChannels = int( nChannels )
+	except:
+		if nChannels is not None: nChannels = NumberOfChannels( nChannels )
+	
+	if isinstance( v, ( tuple, list, numpy.ndarray ) ):
+		v = numpy.array( v, dtype='float' )
+		v = v.ravel()
+		if len( v )==1:
+			v = float( v[ 0 ] ) # scalar numpy value
+		else:
+			# Interpret any kind of multi-element tuple/list/array
+			# as a per-channel list of volumes. Just standardize its
+			# shape and size. Ignore the `norm` parameter.
+			if nChannels is None: nChannels = len( v )
+			elif len( v ) < nChannels: v = numpy.tile( v, numpy.ceil( float( nChannels ) / len( v ) ) )
+			if len( v ) > nChannels: v = v[ :nChannels ]
+			v.shape = _SubscriptHelper( 1, nChannels )
+	else:
+		v = float( v ) # could be converting from a custom class with a __float__ method
+		
+	if isinstance( v, float ):
+		# Interpret any kind of scalar as a stereo pan value in the
+		# range -1 to +1. Normalize according to the specified `norm`.
+		if nChannels is None: nChannels = 2
+		v = 0.5 + 0.5 * numpy.clip( [ -v, v ], -1.0, 1.0 )
+		if nChannels > 2: v = numpy.tile( v, int( nChannels / 2 ) )
+		if len( v ) == nChannels - 1: v = numpy.concatenate( ( v, [ 1.0 ] ) )
+		if isinstance( norm, str)  and norm.lower() == 'inf': norm = numpy.inf
+		if norm in [ numpy.inf, 'inf', 'INF' ]: v /= max( v )
+		else: v /= sum( v ** norm ) ** ( 1.0 / { 0.0:1.0 }.get( norm, norm ) )
+		v = _PanHelper( v, nChannels=nChannels )
+
+	return v
+
+def _InterpolateSamples( y, xi ):
+	x = numpy.arange( float( NumberOfSamples( y ) ) )
+	yi = numpy.zeros( _SubscriptHelper( len( xi ), NumberOfChannels( y ) ), dtype='float' )
+	sub = [ slice( None ), slice( None ) ]
+	for sub[ ACROSS_CHANNELS ] in range( NumberOfChannels( y ) ):
+		tsub = tuple( sub )
+		yi[ tsub ] = numpy.interp( x=xi, xp=x, fp=y[ tsub ] )
+	return yi
+
+def _ChannelIndices( *indices ):
+	return [ 
+		int( index ) - int( isinstance( index, str ) )
+		for item in indices
+		for index in (
+			item if isinstance( item, ( tuple, list, str ) ) else [ item ]
+		)
+	]
+
+class Sound( object ):
+	"""
+	`Sound` is a class for editing and writing sound files.
+	(If your main aim is simply to play back existing sounds
+	loaded from a file, you probably want to start with a
+	`Player` instead.)
+	
+	A `Sound` instance `s` is a wrapper around a numpy array
+	`s.y` which contains a floating-point representation of
+	a (possibly multi-channel) sound waveform. Generally the
+	array values are in the range [-1, +1].
+
+	The wrapper makes it easy to perform certain common
+	editing and preprocessing operations using Python
+	operators, such as:
+	
+	Numerical operations:
+	
+		- The `+` and `-` operators can be used to superimpose
+		  sounds (even if lengths do not match).
+		  
+		- The `*` and `/` operators can be used to scale
+		  amplitudes (usually by a scalar numeric factor, but
+		  you can also use a list of scaling factors to scale
+		  channels separately, or window a signal by multiplying
+		  two objects together).
+		  
+		- The `+=`, `-=`, `*=` and `/=` operators work as you
+		  might expect, modifying a `Sound` instance's data array
+		  in-place.
+	 
+	Concatenation of sound data in time:
+	
+		The syntax `s1 % s2` is the same as `Concatenate( s1, s2 )`:
+		it returns a new `Sound` instance containing a new array
+		of samples, in which the samples of `s1` and `s2` are
+		concatenated in time.
+		
+		Either argument may be a scalar,  so `s % 0.4` returns a
+		new object with 400 msec of silence appended, and `0.4 % s`
+		returns a new object with 400 msec of silence pre-pended.
+	
+		Concatenation can be performed in-place with `s %= arg`
+		or equivalently using the instance method
+		`s.Concatenate( arg1, arg2, ... )`: in either case the
+		instance `s` gets its internal sample array replaced by
+		a new array.
+	
+	Creating multichannel objects:
+	
+		The syntax `s1 & s2` is the same as `Stack( s1, s2 )`:
+		it returns a new `Sound` instance containing a new array
+		of samples, comprising the channels of `s1` and the
+		channels of `s2`. Either one may be automatically
+		padded with silence at the end as necessary to ensure
+		that the lengths match.
+		
+		Stacking may be performed in-place with `s1 &= s2` or
+		equivalently with the instance method
+		`s1.Stack( s2, s3, ... )`:  in either case instance
+		`s1` gets its internal sample array replaced by a new
+		array.
+
+	Slicing, expressed in units of seconds:
+	
+		The following syntax returns Sound objects wrapped
+		around slices into the original array::
+
+			s[:0.5]   #  returns the first half-second of `s`
+			s[-0.5:]  #  returns the last half-second of `s`
+			
+			s[:, 0]   # returns the first channel of `s`
+			s[:, -2:] # returns the last two channels of `s`
+			s[0.25:0.5, [0,1,3]] # returns a particular time-slice of the chosen channels
+			
+		Where possible, the resulting `Sound` instances'
+		arrays are *views* into the original sound data.
+		Therefore, things like  `s[2.0:-1.0].AutoScale()`
+		or  `s[1.0:2.0] *= 2` will change the specified
+		segments of the *original* sound data in `s`.
+		Note one subtlety, however::
+		
+		    # Does each of these examples modify the selected segment of `s` in-place?
+		                                      
+			s[0.1:0.2,  :] *= 2            # yes
+			q = s[0.1:0.2,  :];  q *= 2    # yes  (`q.y` is a view into `s.y`)
+			
+			s[0.1:0.2, ::2] *= 2           # yes
+			q = s[0.1:0.2, ::2];  q *= 2   # yes  (`q.y` is a view into `s.y`)
+			
+			s[0.1:0.2, 0] *= 2             # yes (creates a copy, but then uses `__setitem__` on the original)
+			q = s[0.1:0.2, 0];  q *= 2     # - NO (creates a copy, then just modifies the copy in-place)
+			
+			s[0.1:0.2, [1,3]] *= 2         # yes (creates a copy, but then uses `__setitem__` on the original)
+			q = s[0.1:0.2, [1,3]];  q *= 2 # - NO (creates a copy, then just modifies the copy in-place)
+	
+	"""
+	
+	def __init__(self, source=None, fs=None, nChannels=2, dtype=None, bits=None, label=None ):
+		"""
+		A `Sound` instance may be constructed in any of the
+		following ways::
+		
+			s = Sound( '/path/to/some/sound_file.wav' )
+			s = Sound( some_other_Sound_instance )   # creates a shallow copy
+			s = Sound( y, fs )                       # where `y` is a numpy array
+			s = Sound( duration_in_seconds, fs )     # creates silence
+			s = Sound( raw_bytes, fs, nChannels=2 )
+				
+		Args:
+			source:
+				a filename, another `Sound` instance, a `numpy`
+				array, a scalar numeric value indicating the
+				desired duration of silence in seconds, or a
+				buffer full of raw sound data, as in the examples
+				above.
+			
+			fs (float):
+				sampling frequency, in Hz. If `source` is a
+				filename or another `Sound` instance, the default
+				value will be inferred from that source. Otherwise
+				the default value is 44100.
+			
+			nChannels (int):
+				number of channels.   If `source` is a filename,
+				another `Sound` instance, or a `numpy` array, the
+				default value will be inferred from that source.
+				Otherwise the default value is 2.
+			
+			dtype (str):
+				Sound data are always represented internally in
+				floating-point. However, the `dtype` argument
+				specifies the `Sound` instance's `.dtype_encoded`
+				property, which dictates the format in which
+				the instance imports or exports raw data by
+				default.
+			
+			bits (int):
+				This is another way of initializing the instance's
+				`.dtype_encoded` property (see `dtype`, above),
+				assuming integer encoding. It should be 8, 16, 24
+				or 32.   If `dtype` is specified, this argument
+				is ignored.  Otherwise, the default value is 16.
+			
+			label (str):
+				An optional string to be assigned to the `.label`
+				attribute of the `Sound` instance. 
+		"""
+		if nChannels is None: nChannels = 2
+		if isinstance( nChannels, Sound ) or ActsLikeNumpyArray( nChannels ): nChannels = NumberOfChannels( nChannels )
+		if isinstance( dtype, Sound ): dtype = dtype.dtype_encoded
+		elif ActsLikeNumpyArray( dtype ): dtype = dtype.dtype
+		
+		self.__y = numpy.zeros( ( 0, nChannels ), dtype=DEFAULT_DTYPE_IN_MEMORY )
+		self.__fs = None
+		self.__revision = 0
+		self.__compression = ( 'NONE', 'not compressed' )
+		self.__dtype_encoded = None
+		self._wavFileHandleOpenForWriting = None
+
+		self.filename = None
+		self.label = label
+		
+		if isinstance( source, Sound ):
+			self.__y = source.__y
+			self.__fs = source.__fs
+			self.filename = source.filename
+			self.label = source.label
+			self.__compression = source.__compression
+			self.__dtype_encoded = source.__dtype_encoded
+			source = None
+		
+		if dtype: self.dtype_encoded = dtype
+		if self.__dtype_encoded is None and bits is None: bits = 16
+		if bits is not None: self.bits = bits   # NB: changes self.__dtype_encoded
+		
+		if self.__fs is None and fs is None:
+			if hasattr( source, 'fs' ): fs = source.fs  # convenience for wrapping Synth objects
+			else: fs = 44100
+		if fs is not None:
+			if hasattr( fs, 'fs' ): fs = fs.fs
+			self.fs = fs
+
+		if isinstance( source, ( int, float ) ): self.y = Silence( SecondsToSamples( source, self ), nChannels, dtype=dtype )
+		elif ActsLikeNumpyArray( source ): self.y = source
+		elif source is not None:
+			self.Read( source )
+			if self.label is None and self.filename:
+				self.label = os.path.splitext( os.path.basename( self.filename ) )[ 0 ]
+
+	
+	def Copy( self, empty=False ):
+		"""
+		Create a new `Sound` instance whose array `.y` is
+		a deep copy of the original instance's array. With
+		`empty=True` the resulting array will be empty,
+		but will have the same number of channels as the
+		original.
+		
+		Note that most other preprocessing methods return
+		`self` as their output argument.  This makes it
+		easy to choose between modifying an instance in-
+		place and creating a modified copy. For example::
+		
+			s.Reverse()             # reverse `s` in-place
+			t = s.Copy().Reverse()  # create a reversed copy of `s`
+		
+		"""
+		y = self.__y
+		if empty and y is not None: self.__y = y[ :0 ]
+		c = copy.deepcopy( self )
+		self.__y = y
+		return c
+	copy = Copy
+	
+	@property
+	def y( self ):
+		"""
+		`numpy` array containing the actual sound sample data.
+		"""
+		return self.__y
+	@y.setter
+	def y( self, value ):
+		if not ActsLikeNumpyArray( value ): value = numpy.array( value, dtype=DEFAULT_DTYPE_IN_MEMORY )
+		if value.ndim > 2: raise ValueError( "too many dimensions" )
+		while value.ndim < 2: value = value[ :, None ]
+		self.__y = value
+	
+	@property
+	def fs( self ):
+		"""
+		Sampling frequency, in Hz.
+		"""
+		return self.__fs
+	@fs.setter
+	def fs( self, value ):
+		if hasattr( value, 'fs' ): value = value.fs
+		self.__fs = float( value )
+	
+	@property
+	def revision( self ): return self.__revision
+	
+	@property
+	def compression( self ): return self.__compression
+	@compression.setter
+	def compression( self, value ):
+		if not isinstance( value, ( tuple, list ) ) or len( value ) != 2 or not isinstance( value[ 0 ], str ) or not isinstance( value[ 1 ], str ):
+			raise ValueError( ".compression must be a sequence of two strings" )
+		self.__compression = value
+	
+	@property
+	def bits( self ):
+		"""
+		Bit depth of each sample in each channel, *when encoded*
+		(not necessarily as represented in memory for manipulation
+		and visualization).
+		"""
+		canonical_dtype, nbits, nbytes, signed, factor = DTYPES[ self.__dtype_encoded ]; return nbits
+	@bits.setter
+	def bits( self, value ): self._SetBitDepth( value )
+	nbits = bits
+	
+	@property
+	def bytes( self ):
+		"""
+		Number of bytes used to represent each sample of each channel,
+		*when encoded* (not necessarily as represented in memory for
+		manipulation and visualization).
+		"""
+		return int( numpy.ceil( self.bits / 8.0 ) )
+	nbytes = bytes
+	
+	@property
+	def dtype_encoded( self ): return self.__dtype_encoded
+	@dtype_encoded.setter
+	def dtype_encoded( self, value ): canonical_dtype, nbits, nbytes, signed, factor = DTYPES[ value ]; self.__dtype_encoded = canonical_dtype
+	
+	@property
+	def dtype_in_memory( self ): return self.__y.dtype.name
+	@dtype_in_memory.setter
+	def dtype_in_memory( self, value ): self.__y = self.__y.astype( value )
+	
+	def _SetBitDepth(self, bits):
+		if bits in DEFAULT_DTYPES_BY_DEPTH: dtype = DEFAULT_DTYPES_BY_DEPTH[ bits ]
+		elif isinstance( bits, str ): dtype = bits.lower()
+		else: raise ValueError( 'unrecognized bit precision' )
+		dtype, nbits, nbytes, signed, factor = DTYPES[ dtype ]
+		if dtype != self.__dtype_encoded: self._BumpRevision()
+		self.__dtype_encoded = dtype
+
+	def Bulk( self, encoded=False ):
+		"""
+		Return the number of bytes occupied by the sound
+		waveform...
+		
+		`encoded=False`:
+			...currently, in memory.
+			
+		`encoded=True`:
+			...if it were to be encoded according to the
+			currently-specified `.dtype_encoded` and written
+			to disk in an uncompressed format (excluding
+			the bytes required to store any format header).
+		"""
+		return self.y.size * ( self.bytes if encoded else self.y.dtype.itemsize )
+
+	def NumberOfChannels( self ):
+		"""
+		Returns the number of channels.
+		"""
+		return NumberOfChannels( self )
+		
+	def NumberOfSamples( self ):
+		"""
+		Returns the length of the sound in samples.
+		"""
+		return NumberOfSamples( self )
+	
+	def Duration(self):
+		"""
+		Returns the duration of the sound in seconds.
+		"""
+		return float( self.NumberOfSamples() ) / float( self.fs )
+	
+	def Amplitude( self, norm=2, threshold=0.0 ):
+		"""
+		Returns a 1-D `numpy` array containing the estimated amplitude
+		of each channel.  With `norm=2`, that's the root-mean-square
+		amplitude, whereas `norm=1` would get you the mean-absolute
+		amplitude.
+		
+		Note that, depending on the content, the mean may reflect
+		not only how loud the content is *when* it happens, but also
+		how often it happens.  For example, loud speech with a lot of
+		pauses might have a lower RMS than continuous quiet speech.
+		This would make it difficult to equalize the volumes of the
+		two speech signals. To work around this, use the `threshold`
+		argument. It acts as a noise-gate: in each channel, the
+		average will only include samples whose absolute value reaches
+		or exceeds `threshold` times that channel's maximum (so the
+		`threshold` value itself is relative, expressed as a proportion
+		of each channel's maximum---this makes the noise-gate invariant
+		to simple rescaling).
+		"""
+		y = [ abs( channel.y ) for channel in self.SplitChannels() ]
+		norm = float( norm )
+		if numpy.isinf( norm ): amp = [ yi.max() for yi in y ]
+		elif norm == 0: amp = [ ( yi > threshold * yi.max() ).mean() for yi in y ]
+		else: amp = [ ( yi[ yi >= threshold * yi.max() ] ** norm ).mean() ** ( 1. / norm ) for yi in y ]
+		return numpy.array( amp )
+			
+	rms = property( Amplitude, doc='a 1-D `numpy` array containing root-mean-square amplitude for each channel, i.e. the same as `.Amplitude(norm=2, threshold=0)`' )
+		
+	nChannels = numberOfChannels = nchan = property( NumberOfChannels )
+	nSamples  = numberOfSamples  = nsamp = property( NumberOfSamples  )
+	duration  = property( Duration )
+	
+	_classNamePrefix = ''
+	def __str__( self ):  return self._report( with_repr='short', indent='' )
+	def __repr__( self ): return self._report( with_repr='short', indent='' )
+	def _short_repr( self, *p ): return '<%s%s 0x%0*X>' % ( self._classNamePrefix, self.__class__.__name__, ( 16 if sys.maxsize > 2 ** 32 else 8 ), id( self ) )
+	def _super_repr( self, *p ): return object.__repr__( self )
+	def _report( self, with_repr='short', indent='' ):
+		s = ''
+		if with_repr:
+			if   with_repr in [ True, 'short' ]:   f = self._short_repr
+			elif with_repr in [ 'super', 'long' ]: f = self._super_repr
+			elif callable( with_repr ): f = with_repr
+			else: f = object.__repr__
+			s = indent + f( self ) + '\n'
+			indent += '    '
+		indent = ''.join( c if c.isspace() else ' ' for c in indent )
+		secondLine = ' '.join( part for part in [
+			'label: %s' % self.label if self.label else '',
+			'(file %s)' % self.filename if self.filename else '',
+		] if part )
+		if secondLine: s += indent + secondLine + '\n'
+		s += indent + '%g bits, %g channels, %s samples @ %g Hz = %g sec\n' % ( self.bits, self.NumberOfChannels(), self.NumberOfSamples(), self.fs, self.Duration() )
+		return s.rstrip( '\n' )
+	
+	def str2dat( self, raw, nSamples=None, nChannels=None, dtype=None ):
+		if dtype is None: dtype = self.__dtype_encoded
+		else: dtype = dtype.lower()
+		canonical_dtype, nbits, nbytes, signed, factor = DTYPES[ dtype ]
+		if nChannels is None: nChannels = self.NumberOfChannels()
+		y = numpy.fromstring( raw, dtype=canonical_dtype )
+		if nSamples is None: nSamples = int( y.size / nChannels )
+		y.shape = ( nSamples, nChannels )
+		y = y.astype( self.dtype_in_memory )
+		if factor:
+			if not signed: y -= factor
+			y /= factor
+		return y
+
+	def dat2str(self, data=None, dtype=None):
+		"""
+		Converts from a `numpy.array` to a string. `data`
+		defaults to the whole of `s.y`
+		
+		The string output contains raw bytes which can be
+		written, for example, to an open audio stream.
+		"""
+		if isinstance(data,str): return data
+		if data is None: data = self.y
+		if dtype is None: dtype = self.__dtype_encoded
+		else: dtype = dtype.lower()
+		canonical_dtype, nbits, nbytes, signed, factor = DTYPES[ dtype ]
+		nChannels = NumberOfChannels(data)
+		nSamples = NumberOfSamples(data)
+		if nChannels != self.NumberOfChannels():
+			raise ValueError( 'data has a different number of channels from object' )
+		if factor:
+			data = data * factor
+			data = numpy.clip(data, -factor, factor - 1)
+			if not signed: data += factor
+			#data += 0.5 # in principle the astype method should perform a floor() operation, so adding 0.5 first should be a good idea. however, for some reason it doesn't correctly reconstruct the original raw data when this is added
+		data = data.astype( dtype )
+		data = data.tostring()
+		return data
+
+	def Concatenate( self, *args ):
+		"""
+		Concatenate the instance, in time, with the specified
+		arguments (which may be other `Sound` instances and/or
+		numpy arrays and/or numeric scalars indicating durations
+		of silent intervals in seconds). Replace the sample
+		array `self.y` with the result. Similar results can be
+		obtained with the `%=` operator or the global function
+		`Concatenate()`.
+		"""
+		s = Concatenate( self, *args )
+		self.y = s.y
+		return self._BumpRevision()
+	Cat = Concatenate
+	
+	def Stack( self, *args ):
+		"""
+		Stack the instance, across channels, with the specified
+		arguments (which may be other `Sound` instances and/or
+		numpy arrays). Replace the sample array `self.y` with
+		the result. Similar results can be obtained with the
+		`&=` operator or the global function `Stack()`.
+		"""
+		args = _FlattenSequence( args )
+		while args: self &= args.pop( 0 )
+		return self._BumpRevision()
+		
+	def AutoScale( self, max_abs_amp=0.95 ):
+		"""
+		Remove the median from each channel (see `.Center()`)
+		and then rescale the waveform so that its maximum
+		absolute value (across all channels) is `max_abs_amp`.
+		The array `self.y` is modified in place.
+		"""
+		self.Center()
+		m = abs( self.y ).max()
+		self.y *= ( max_abs_amp / m )
+		return self._BumpRevision()
+	
+	def Center( self ):
+		"""
+		Remove the DC offset from each channel by subtracting
+		the median value.
+		"""
+		try: med = numpy.median( self.y, axis=ACROSS_SAMPLES ) # newer numpy versions only
+		except: med = numpy.median( self.y ) # older numpy versions only (grr!)
+		self.y -= numpy.expand_dims( med, ACROSS_SAMPLES )
+		return self._BumpRevision()
+		
+	def Reverse( self ):
+		"""
+		Reverse the sound in time. The array `self.y` is 
+		modified in-place.
+		"""
+		self.y.flat = self.y[ _SubscriptHelper( slice( None, None, -1 ), slice( None ) ) ].flat
+		return self._BumpRevision()			
+	
+	def Fade( self, risetime=0, falltime=0, hann=False ):
+		"""
+		If `risetime` is greater than zero, it denotes the
+		duration (in seconds) over which the sound is to be
+		faded-in at the beginning.
+		
+		If `falltime` is greater than zero, it denotes the
+		duration of the corresponding fade-out at the end.
+		
+		If `hann` is true, then a raised-cosine function is
+		used for fading instead of a linear ramp.
+		
+		The array `self.y` is modified in-place.
+		"""
+		if risetime: self[ :float( risetime ) ]  *= MakeRise( risetime, fs=self.fs, hann=hann )
+		if falltime: self[ -float( falltime ): ] *= MakeFall( falltime, fs=self.fs, hann=hann )
+		return self._BumpRevision()
+	
+	def Cut( self, start=None, stop=None, units='seconds' ):
+		"""
+		Shorten the instance's internal sample array by taking
+		only samples from `start` to `stop`.  Either end-point
+		may be `None`. Either may be a positive number of
+		seconds (measured from the start) or a negative number
+		of seconds (measured from the end).
+		"""
+		nSamples = NumberOfSamples( self )
+		if   units in [ 's', 'sec', 'seconds' ]: fs = float( self.fs )
+		elif units == 'samples': fs = 1.0
+		elif units in [ 'ms', 'msec', 'milliseconds' ]: fs = self.fs / 1000.0
+		else: raise ValueError( 'unrecognized `units` option %r' % units )
+		
+		if isinstance( start, str ): start = DecodeTimecodeString( start )
+		if isinstance( stop,  str ): stop  = DecodeTimecodeString( stop  )
+		if start is None: start = 0.0
+		if  stop is None:  stop = nSamples / fs
+		if start < 0.0: start += nSamples / fs
+		if  stop < 0.0:  stop += nSamples / fs
+		start = max( 0,        int( round( start * fs ) ) )
+		stop  = min( nSamples, int( round(  stop * fs ) ) )
+		stop = max( start, stop )
+		self.y = self.y[ _SubscriptHelper( slice( start, stop ), slice( None ) ) ].copy()
+		return self._BumpRevision()
+	
+	def Detect( self, threshold=0.05, center=True, p=0, eachChannel=False, units='seconds' ):	
+		"""
+		This method finds time(s) at which the absolute signal
+		amplitude exceeds the specified `threshold`.
+		
+		If `center` is truthy, subtract the median of each
+		channel first.
+		
+		`p` denotes the location of interest, as a proportion
+		of the duration of the above-threshold data. So, 0.0
+		means "the first time the signal exceeds the threshold",
+		1.0 means "the last time the signal exceeds the threshold",
+		and 0.5 means halfway in between those two time points.
+		`p` may be a scalar, in which case the method returns one
+		output argument. Alternatively `p` may be a sequence, in
+		which case a sequence of output arguments is returned, each
+		one corresponding to an element of `p`.
+		
+		If `eachChannel` is truthy, each output will itself be a
+		sequence (one element per channel). If it is untruthy,
+		each output will be a scalar (the signal is considered to
+		have exceeded the threshold when *any* of its channels
+		exceeds the threshold).
+		
+		`units` may be `'seconds'`, `'milliseconds'` or `'samples'`
+		and it dictates the units in which the outputs are
+		expressed.
+		"""
+		if   units in [ 's', 'sec', 'seconds' ]: fs = float( self.fs )
+		elif units == 'samples': fs = 1.0
+		elif units in [ 'ms', 'msec', 'milliseconds' ]: fs = self.fs / 1000.0
+		else: raise ValueError( 'unrecognized `units` option %r' % units )
+		if center: self = self.Copy().Center()
+		y = abs( self.y ).swapaxes( 0, ACROSS_CHANNELS )
+		p = numpy.array( p, dtype=float )
+		scalarP = ( p.ndim == 0 )
+		p = p.ravel()
+		if not eachChannel: y = [ numpy.max( y, axis=0 ) ]
+		results = []
+		for channel in y:
+			where = numpy.where( channel > threshold )[ 0 ]
+			if not len( where ): results.append( [ None ] * len( p )  )
+			start, stop = where[ 0 ], where[ -1 ] + 1
+			result = ( start + ( stop - start ) * p ) / fs 
+			if units == 'samples': result = numpy.round( result ).astype( int )
+			results.append( result )
+		results = list( zip( *results ) )
+		if not eachChannel: results = [ each[ 0 ] for each in results ]
+		return results[ 0 ] if scalarP else results
+		
+	def Trim(self, threshold=0.05, tailoff=0.2, buildup=0):
+		"""
+		Remove samples from the beginning and end of a sound,
+		according to amplitude.
+		
+		The new waveform will start `buildup` seconds prior to
+		the first sample on which the absolute amplitude in any
+		channel exceeds `threshold`. It will end `tailoff`
+		seconds after the *last* sample on which `threshold` is
+		exceeded.
+		"""
+		start, stop = self.Detect( threshold=threshold, center=False, p=[0, 1], eachChannel=False, units='samples' )
+		start -= round(float(buildup) * float(self.fs))
+		start = max(start, 0)
+		stop += round(float(tailoff) * float(self.fs))
+		stop = min(stop, self.NumberOfSamples())
+		return self.Cut( start, stop, units='samples' )
+		
+	def IsolateChannels( self, ind, *moreIndices ):
+		"""
+		Select particular channels, discarding the others.
+		The following are all equivalent, for selecting the
+		first two channels::
+		
+			t = s.IsolateChannels(0, 1)       # ordinary 0-based indexing
+			t = s.IsolateChannels([0, 1])
+			t = s.IsolateChannels('1', '2')   # when you use strings, you
+			t = s.IsolateChannels(['1', '2']) # can index the channels
+			t = s.IsolateChannels('12')       # using 1-based numbering
+		
+		Equivalently, you can also use slicing notation,
+		selecting channels via the second dimension::
+		
+			t = s[:, [0, 1]]
+			t = s[:, '12'] # again, strings mean 1-based indexing
+		
+		"""
+		ind = _ChannelIndices( ind, *moreIndices )
+		self.y = self.y[ _SubscriptHelper( slice( None ), ind ) ]
+		return self._BumpRevision()
+	
+	def MixDownToMono(self):
+		"""
+		Average the sound waveforms across all channels,
+		replacing `self.y` with the single-channel result.
+		"""
+		self.y = numpy.expand_dims( self.y.mean( axis=ACROSS_CHANNELS ), ACROSS_CHANNELS )
+		return self._BumpRevision()
+	
+	def PadEndTo(self, seconds):
+		"""
+		Append silence to the instance's internal array as
+		necessary to ensure that the total duration is at
+		least the specified number of `seconds`.
+		"""
+		if isinstance(seconds, Sound):
+			seconds = seconds.Duration()
+		extra_sec = seconds - self.Duration()
+		if extra_sec > 0.0:
+			s = Concatenate(self, extra_sec)
+			self.y = s.y
+		return self._BumpRevision()
+	
+	def PadStartTo(self, seconds):
+		"""
+		Prepend silence to the instance's internal array as
+		necessary to ensure that the total duration is at
+		least the specified number of `seconds`.
+		"""
+		if isinstance(seconds, Sound):
+			seconds = seconds.Duration()
+		extra_sec = seconds - self.Duration()
+		if extra_sec > 0.0:
+			s = Concatenate(extra_sec, self)
+			self.y = s.y
+		return self._BumpRevision()
+	
+	def Resample( self, newfs ):
+		"""
+		Change the instance's sampling frequency. Replace
+		its internal array with a new array, interpolated
+		at the new sampling frequency `newfs` (expressed
+		in Hz).
+		"""
+		if hasattr( newfs, 'fs' ): newfs = newfs.fs
+		if newfs != self.fs:
+			newN = int( 0.5 + self.NumberOfSamples() * float( newfs ) / self.fs )
+			self.y = _InterpolateSamples( self.y, numpy.linspace( 0, self.NumberOfSamples(), newN, endpoint=False ) )
+			self.fs = newfs
+		return self._BumpRevision()
+
+	def Left( self ):
+		"""
+		Return a new `Sound` instance containing a view of
+		alternate channels, starting at the first.
+		"""
+		s = self.copy() # new instance...
+		alternate = slice( 0, None, 2 )
+		s.y = self.y[ _SubscriptHelper( slice( None ), alternate ) ]  # ...but a view into the original array
+		return s
+
+	def Right( self ):
+		"""
+		Return a new `Sound` instance containing a view of
+		alternate channels, starting at the second (unless
+		there is only one channel, in which case return that).
+		"""
+		s = self.copy() # new instance...
+		alternate = slice( 1 if self.NumberOfChannels() > 1 else 0, None, 2 )
+		s.y = self.y[ _SubscriptHelper( slice( None ), alternate ) ]  # ...but a view into the original array
+		return s
+		
+	def SplitChannels( self, nChannelsEach=1 ):
+		"""
+		Return a list of new `Sound` instances, each
+		containing a view into the original data, each
+		limited to `nChannelsEach` consecutive channels.
+		"""
+		return [ self[ :, start : start + nChannelsEach ] for start in range( 0, self.NumberOfChannels(), nChannelsEach ) ]
+	
+
+	def _BumpRevision(self):
+		self.__revision += 1
+		return self
+		
+	def _PrepareForArithmetic( self, other, equalize_channels=True, equalize_duration=True ):
+		if IsActuallyNumpyArray( other ) and other.ndim <= 1 and other.size <= 32:
+			other = other.tolist()
+		if isinstance( other, Sound ):
+			if self.fs != other.fs:
+				raise ValueError( 'incompatible sampling rates' )
+			other = other.y
+		me = self.y
+		if isinstance( other, list ) and False not in [ isinstance( x, ( bool, int, float ) ) for x in other ]:
+			other = numpy.concatenate( [ numpy.asmatrix( x, dtype=numpy.float64 ).A for x in other ], axis=ACROSS_CHANNELS )
+			equalize_duration = False
+		if IsActuallyNumpyArray( other ):
+			if other.ndim == 1: other = numpy.expand_dims( other, ACROSS_CHANNELS )
+			if equalize_channels:
+				if NumberOfChannels( other ) == 1 and NumberOfChannels( me ) > 1:
+					other = other.repeat( NumberOfChannels( me ), axis=ACROSS_CHANNELS )
+				if NumberOfChannels( other ) > 1 and NumberOfChannels( me ) == 1:
+					me = me.repeat( NumberOfChannels( other ), axis=ACROSS_CHANNELS )
+			nChannels_me = NumberOfChannels( me )
+			nChannels_other = NumberOfChannels( other )
+			if equalize_channels and nChannels_other != nChannels_me:
+				raise ValueError( 'incompatible numbers of channels' )
+			if equalize_duration:
+				needed = NumberOfSamples( other ) - NumberOfSamples( me )
+				if needed > 0:
+					extra = Silence( needed, nChannels_me, me )
+					me = numpy.concatenate( ( me, extra ), axis=ACROSS_SAMPLES )
+				if needed < 0:
+					extra = Silence( -needed, nChannels_other, other )
+					other = numpy.concatenate( ( other, extra ), axis=ACROSS_SAMPLES )
+		return ( me, other )
+	
+	# addition, subtraction
+	def __iadd__( self, other ):
+		( me, other ) = self._PrepareForArithmetic( other )
+		me += other
+		self.y = me
+		self._BumpRevision()
+		return self
+	def __add__( self, other ):
+		return self.copy().__iadd__( other )
+	def __radd__( self, other ):
+		return self.__add__( other )
+	def __isub__(self, other):
+		( me, other ) = self._PrepareForArithmetic( other )
+		me -= other
+		self.y = me
+		self._BumpRevision()
+		return self
+	def __sub__( self, other ):
+		return self.copy().__isub__( other )
+	def __rsub__( self, other ):
+		s = self.__mul__( -1 )
+		s.__iadd__( other )
+		return s
+
+	# multiplication, division
+	def __imul__( self, other ):
+		( me, other ) = self._PrepareForArithmetic( other )
+		me *= other
+		self.y = me		
+		self._BumpRevision()
+		return self
+	def __mul__( self, other ):
+		return self.copy().__imul__( other )
+	def __rmul__( self, other ):
+		return self.__mul__( other )
+	def __idiv__( self, other ):
+		( me, other ) = self._PrepareForArithmetic( other )
+		me /= other
+		self.y = me		
+		self._BumpRevision()
+		return self
+	def __div__( self, other ):
+		return self.copy().__idiv__( other )
+	__truediv__ = __div__
+	__itruediv__ = __idiv__
+
+	# Channel-stacking using the & operator
+	def __iand__( self, other ):
+		if isinstance( other, ( int, float ) ):
+			other = self[ :, 0 ] * 0 + other
+		if not ( isinstance( other, Sound ) or IsActuallyNumpyArray( other ) ):
+			raise TypeError( 'w1 & w2 only works if w1 and w2 are both wavs, or if w2 is a numpy.array' )
+		( me, other ) = self._PrepareForArithmetic( other, equalize_channels=False )
+		if me.size == 0: me = other
+		elif other.size: me = numpy.concatenate( ( me, other ), axis=ACROSS_CHANNELS )
+		self.y = me
+		self._BumpRevision()
+		return self
+	def __and__( self, other ):
+		return self.copy().__iand__( other )
+	
+	# Concatenation using the % operator
+	def __imod__( self, other ):
+		self.Concatenate( other )
+		self._BumpRevision()
+		return self
+	def __mod__( self, other ):
+		return Concatenate( self, other )
+	def __rmod__( self, other ):
+		return Concatenate( other, self )
+
+	# Unary + and - (both cause data to be deep-copied)
+	def __neg__( self ): return -1.0 * self
+	def __pos__( self ): return self.copy()
+
+	# Slicing with [] indexing, (first ranges expressed in seconds, second channel index or range):
+	def __getitem__(self, range):
+		subs = self._TranslateSlice(range)
+		s = Sound(fs=self.fs, bits=self.bits, nChannels=NumberOfChannels(self))
+		s.y = self.y[subs[0],subs[1]]
+		return s
+
+	def __setitem__(self, range, val):
+		subs = self._TranslateSlice(range)
+		if isinstance(val,Sound): val = val.y
+		try: self.y[subs] = val
+		except Exception as error:
+			try: val.size, max( val.shape ), val.flat
+			except: pass
+			else:
+				dst = self.y[subs]
+				if dst.size == val.size == max( dst.shape ) == max( val.shape ):
+					dst.flat = val.flat
+					error = None
+			if error: raise( error )
+		
+		self._BumpRevision()
+
+	def _TranslateSlice( self, range ):
+		chans = slice( None )
+		if isinstance( range, ( tuple, list ) ):
+			range, chans = range
+			if not isinstance( chans, ( int, slice ) ): chans = _ChannelIndices( chans )
+		if not isinstance( range, slice ): raise TypeError( 'indices must be ranges, expressed in seconds' )
+
+		start, stop, step = None, None, None
+		if range.step is not None:
+			raise ValueError( 'custom step sizes are not possible when slicing %s objects in time' % self.__class__.__name__ )
+		if range.start is not None:
+			start = SecondsToSamples( range.start, self, int )
+			if range.stop is not None:
+				stop = min( range.stop, self.Duration() )
+				duration = float( stop ) - float( range.start )
+				stop  = SecondsToSamples( duration, self, int ) + start
+		elif range.stop is not None:
+			stop = SecondsToSamples( range.stop, self, int )
+
+		return _SubscriptHelper( slice( start, stop, step ), chans )
+	
+	def SecondsToSamples( self, seconds, rounding='round' ):
+		"""
+		Convert seconds to samples given the `Sound` instance's
+		sampling frequency. `seconds` may be a scalar, or a
+		sequence or array. The `rounding` approach may be
+		`'floor'`, `'round'`, `'ceil'`, `'none'` or `'int'`.
+		The `'int'` option rounds in the same way as `'floor'`
+		but returns integers---all other options return
+		floating-point numbers.
+	
+		See also: `.SamplesToSeconds()`
+		"""
+		return SecondsToSamples( seconds, self, rounding=rounding )
+		
+	def SamplesToSeconds( self, samples ):
+		"""
+		Convert samples to seconds given at the sampling
+		frequency of the instance. `samples` may be a scalar,
+		or a sequence or array. The result is returned in
+		floating-point.
+	
+		See also: `.SecondsToSamples()`
+		"""
+		return SamplesToSeconds( samples, self )
+	
+	def MakeHannWindow( self, plateau_duration=0 ):
+		"""
+		Return a single-channel `Sound` object of the same
+		duration and sampling frequency as `self`, containing
+		a Hann or Tukey window---i.e. a raised-cosine "fade-in",
+		followed by an optional plateau, followed by a raised-
+		cosine "fade-out".
+		"""
+		return MakeHannWindow( duration=self.Duration(), fs=self.fs, plateau_duration=plateau_duration )
+		
+	def Play( self, *pargs, **kwargs ):
+		"""
+		This quick-and-dirty method allows you to play a
+		`Sound`. It creates a `Player` instance in verbose mode,
+		uses it to play the sound, waits for it to finish (or
+		for the user to press ctrl-C), then destroys the `Player`
+		again.
+		
+		You will get a better user experience, and better
+		performance, if you explicitly create a `Player`
+		instance of your own and work with that.
+		
+		Arguments are passed through to the `Player.Play()`
+		method.
+		"""
+		from . import BackEnd; from .BackEnd import CURRENT_BACK_END as impl
+		kwargs.setdefault( 'verbose', True )
+		p = impl.Player( self, **kwargs )
+		p.Play( *pargs )
+		p.Wait()
+		if kwargs[ 'verbose' ]: print( '\nFor better performance, use Player() instances, not the Sound.Play() method.\n' )
+	
+	def Set( self, **kwargs ):
+		for k, v in kwargs.items(): setattr( self, k, v )
+		return self
+		
+Sound.Envelope = Envelope
+Sound.ACROSS_SAMPLES  = ACROSS_SAMPLES
+Sound.ACROSS_CHANNELS = ACROSS_CHANNELS
+
+
+def TestSound( *channels ):
+	"""
+	Return an 8-channel `Sound` object, read from a `.wav`
+	file that is bundled with `audiomath`, suitable for
+	testing multi-channel sound output devices. Optionally,
+	you can select particular channels using the same
+	argument conventions as the `.IsolateChannels()` method.
+	For example, you could choose to return only the first
+	two channels, as follows::
+	
+		s = TestSound('12')
+	"""
+	s = Sound( 'test12345678' )
+	if channels:
+		channels = _ChannelIndices( *channels )
+		s.IsolateChannels( channels )
+		s.label = 'test' + ''.join( '%d' % ( i + 1 ) for i in channels )
+	return s
+

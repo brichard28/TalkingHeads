@@ -1,0 +1,3 @@
+#!C:\Users\Lab User\Desktop\Experiments\Eli\PyCharm Projects\perceptual-org-eeg\venv38\Scripts\python.exe
+from numba.pycc import main
+main()

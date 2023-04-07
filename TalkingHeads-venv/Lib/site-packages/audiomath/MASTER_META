@@ -1,0 +1,102 @@
+{
+	'version'    : '1.17.0',
+	
+	'homepage'   : 'https://audiomath.readthedocs.io',
+	'repository' : 'https://bitbucket.org/snapproject/audiomath-gitrepo',
+	'repo-short' : 'audiomath-gitrepo',
+	'tracker'    : 'https://bitbucket.org/snapproject/audiomath-gitrepo/issues',
+	#'forum'      : 'https://groups.google.com/d/forum/audiomath-project',
+	
+	'year'       : '2008-2022',
+	'author'     : 'Jeremy Hill',
+	'email'      : 'jezhill@gmail.com',
+
+	'long_description' : """\
+audiomath is a package for Python programmers who want to record, manipulate,
+visualize or play sound waveforms. It allows you to:
+
+- Represent sounds as numeric arrays via the third-party Python package `numpy`
+  (required). The arrays are contained within high-level objects, allowing common
+  operations to be performed with minimal coding---for example: slicing and
+  concatenation in time, selection and stacking of channels, resampling, mixing,
+  rescaling and modulation.
+  
+- Plot the resulting waveforms, via the third-party Python package `matplotlib`
+  (optional).
+  
+- Read and write uncompressed `.wav` files (via the Python standard library).
+
+- Read other audio formats using the third-party AVbin library (binaries are
+  included in the package, for a selection of platforms).
+
+- Record and play back sounds using the third-party PortAudio library (binaries
+  are included in the package, for a selection of platforms).
+
+- Play sounds using the alternative PsychPortAudio back-end, from the (optional)
+  `psychtoolbox` package, allowing very precise control of latency
+  
+- Plug in other recording/playback back-ends with moderate development effort.	
+""",
+
+	'license_template' : """\
+This file is part of the audiomath project, a Python package for
+recording, manipulating and playing sound files.
+
+Copyright (c) {year} {author}
+
+audiomath is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see http://www.gnu.org/licenses/ .
+
+The audiomath distribution includes binaries from the third-party
+AVbin and PortAudio projects, released under their own licenses.
+See the respective copyright, licensing and disclaimer information
+for these projects in the subdirectories `audiomath/_wrap_avbin`
+and `audiomath/_wrap_portaudio` . It also includes a fork of the
+third-party Python package `pycaw`, released under its original
+license (see `audiomath/pycaw_fork.py`).
+""",
+
+	'citation'   : """
+		Hill NJ, Mooney SWJ & Prusky GT (2021). audiomath: a neuroscientist's sound
+		toolkit. Heliyon 7(2):e06236. https://doi.org/10.1016/j.heliyon.2021.e06236
+	""",
+  
+	'bibtex'     : """
+		@article{hill2020audiomath,
+			author  = {Hill, N. Jeremy  and  Mooney, Scott W. J.  and  Prusky, Glen T.},
+			title   = {{audiomath}: a Neuroscientist's Sound Toolkit},
+			journal = {Heliyon},
+			volume  = {7},
+			number  = {2},
+			pages   = {e06236},
+			month   = {February},
+			year    = {2021},
+			date    = {2021-02-10},
+			doi     = {10.1016/j.heliyon.2021.e06236},
+			url     = {https://doi.org/10.1016/j.heliyon.2021.e06236},
+		}
+	""",
+	
+	'manifest' : [
+		{ 'paths' : [ 'COPYING', 'MASTER_META' ] },
+		{ 'regex' : r'rst/.*\.(rst)$' },
+		{ 'regex' : r'example_media/.*\.(wav|mp3|ogg|m4a)$' },
+		{ 'regex' : r'ffmpeg(\.exe)?$',   'exclude_modes' : [ 'setup' ] },  # not installed in the package by default, but if you want you can put it either directly in the package directory, or in a subdir called aux-bin, and it will be accessible and will get packaged by pyinstaller
+		{ 'regex' : r'sox(\.exe)?$',      'exclude_modes' : [ 'setup' ] },  # not installed in the package by default, but if you want you can put it either directly in the package directory, or in a subdir called aux-bin, and it will be accessible and will get packaged by pyinstaller
+		{ 'regex' : r'aux-bin/.*(\.exe|\.dll)?$',  'exclude_modes' : [ 'setup' ] },
+		{ 'subpackage' : 'accel',           'regex' : r'.*\.(dll|so|dylib|h)$' },
+		{ 'subpackage' : '_wrap_portaudio', 'regex' : r'.*\.(dll|so|dylib|md)$' },
+		{ 'subpackage' : '_wrap_avbin',     'regex' : r'.*\.(dll|so|dylib|md)$' },
+	],
+	
+}

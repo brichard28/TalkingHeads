@@ -1,5 +1,5 @@
 %function test21(~,~)
-stimpath = 'C:\Users\benri\Documents\GitHub\TalkingHeads\GUI code';
+stimpath = 'D:\Experiments\TalkingHeads\GUI code';
 
 disp("Hello!")
 load([stimpath,'\F1 talker.mat'])

@@ -1,0 +1,71 @@
+Metadata-Version: 2.1
+Name: audiomath
+Version: 1.17.0
+Summary: A package for recording, reading, manipulating, playing and writing sound files
+Home-page: https://audiomath.readthedocs.io
+Author: Jeremy Hill
+Author-email: jezhill@gmail.com
+License: GPL v3+
+Platform: UNKNOWN
+Requires-Python: >=2.7, !=3.0.*, !=3.1.*, !=3.2.*, <4
+Description-Content-Type: text/x-rst
+License-File: COPYING
+Requires-Dist: numpy
+Requires-Dist: psutil ; platform_system == "Windows"
+Requires-Dist: comtypes ; platform_system == "Windows"
+Provides-Extra: audioread
+Requires-Dist: audioread ; extra == 'audioread'
+Provides-Extra: plotting
+Requires-Dist: matplotlib ; extra == 'plotting'
+Provides-Extra: stretching
+Requires-Dist: librosa ; extra == 'stretching'
+
+audiomath is a package for Python programmers who want to record, manipulate,
+visualize or play sound waveforms. It allows you to:
+
+- Represent sounds as numeric arrays via the third-party Python package `numpy`
+  (required). The arrays are contained within high-level objects, allowing common
+  operations to be performed with minimal coding---for example: slicing and
+  concatenation in time, selection and stacking of channels, resampling, mixing,
+  rescaling and modulation.
+  
+- Plot the resulting waveforms, via the third-party Python package `matplotlib`
+  (optional).
+  
+- Read and write uncompressed `.wav` files (via the Python standard library).
+
+- Read other audio formats using the third-party AVbin library (binaries are
+  included in the package, for a selection of platforms).
+
+- Record and play back sounds using the third-party PortAudio library (binaries
+  are included in the package, for a selection of platforms).
+
+- Play sounds using the alternative PsychPortAudio back-end, from the (optional)
+  `psychtoolbox` package, allowing very precise control of latency
+  
+- Plug in other recording/playback back-ends with moderate development effort.	
+
+
+See https://audiomath.readthedocs.io for full documentation and installation instructions.
+
+If you use audiomath in your work, please cite:
+
+* Hill NJ, Mooney SWJ & Prusky GT (2021). audiomath: a neuroscientist's sound
+  toolkit. Heliyon 7(2):e06236. https://doi.org/10.1016/j.heliyon.2021.e06236 ::
+
+      @article{hill2020audiomath,
+          author  = {Hill, N. Jeremy  and  Mooney, Scott W. J.  and  Prusky, Glen T.},
+          title   = {{audiomath}: a Neuroscientist's Sound Toolkit},
+          journal = {Heliyon},
+          volume  = {7},
+          number  = {2},
+          pages   = {e06236},
+          month   = {February},
+          year    = {2021},
+          date    = {2021-02-10},
+          doi     = {10.1016/j.heliyon.2021.e06236},
+          url     = {https://doi.org/10.1016/j.heliyon.2021.e06236},
+      }
+
+
+

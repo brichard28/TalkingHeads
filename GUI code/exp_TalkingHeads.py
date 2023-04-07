@@ -24,14 +24,14 @@ while not eng_instruct.workspace['release']:
     
 eng_instruct.quit()
 
-n_trials = 6
+n_trials = 4
 itrial = 0
 
 eng_trial = matlab.engine.start_matlab()
 
 all_responses_this_subject = []
 
-conditions_data_frame = pandas.read_csv("C:\\Users\\benri\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "all_conditions.csv")
+conditions_data_frame = pandas.read_csv("D:\\Experiments\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "all_conditions.csv")
 all_conditions = conditions_data_frame['0']
 
 while itrial < n_trials:
@@ -39,7 +39,7 @@ while itrial < n_trials:
     condition_this_trial = all_conditions[itrial]
     
     # Present Video
-    filename = "C:\\Users\\benri\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "_trial_" + str(itrial) + "_cond_ " + str(condition_this_trial) + ".mp4"
+    filename = "D:\\Experiments\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "_trial_" + str(itrial) + "_cond_ " + str(condition_this_trial) + ".mp4"
     os.add_dll_directory('C:/Program Files/VideoLAN/VLC')
 
     media_player = vlc.MediaPlayer()
@@ -65,7 +65,7 @@ while itrial < n_trials:
     
     itrial += 1
 
-os.mkdir("C:\\Users\\benri\\Documents\\GitHub\\TalkingHeads\\Output\\s_" + SubID)
+os.mkdir("D:\\Experiments\\TalkingHeads\\Output\\s_" + SubID)
 
-pandas.DataFrame(all_responses_this_subject).to_csv("C:\\Users\\benri\\Documents\\GitHub\\TalkingHeads\\Output\\s_" + SubID + "\\" + SubID + "all_responses.csv")
+pandas.DataFrame(all_responses_this_subject).to_csv("D:\\Experiments\\TalkingHeads\\Output\\s_" + SubID + "\\" + SubID + "all_responses.csv")
 
