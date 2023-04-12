@@ -31,7 +31,7 @@ SubID=input("Enter subject id:")
 if not os.path.exists("D:\\Experiments\\TalkingHeads\\stim\\s_" + SubID):
     os.mkdir("D:\\Experiments\\TalkingHeads\\stim\\s_" + SubID)
     
-num_trials= 4
+num_trials= 48
 
 all_sentences_F1 = [];
 all_sentences_F2 = [];
@@ -147,22 +147,36 @@ for itrial in range(num_trials):
     audio1_spatialized = spatialize_seq(audio1_dict,0,0.0005,fs_1)
     audio2_spatialized = spatialize_seq(audio2_dict,0,0.0005,fs_2)
     
-    if condition_this_trial == 'match left' or condition_this_trial == 'mismatch left':
+    if condition_this_trial == 'match left' :
         audio1_spatialized = audio1_spatialized[1]
-        audio1_spatialized = audio1_spatialized["audio1_r"]
+        audio1_spatialized = audio1_spatialized["audio1_l"]
         rmsset = 0.02;
         rms = np.sqrt(np.mean(audio1_spatialized**2))
         audio1_spatialized = audio1_spatialized * rmsset/rms;
         sf.write("D:\\Experiments\\TalkingHeads\\stim\\sentence_1_spatialized.wav", audio1_spatialized,fs_1)
-        
+
         audio2_spatialized = audio2_spatialized[1]
-        audio2_spatialized = audio2_spatialized["audio2_l"]
+        audio2_spatialized = audio2_spatialized["audio2_r"]
         rmsset = 0.02;
         rms = np.sqrt(np.mean(audio2_spatialized**2))
         audio2_spatialized = audio2_spatialized * rmsset/rms;
         sf.write("D:\\Experiments\\TalkingHeads\\stim\\sentence_2_spatialized.wav",  audio2_spatialized, fs_2)
+    elif  condition_this_trial == 'mismatch left':
+            audio1_spatialized = audio1_spatialized[1]
+            audio1_spatialized = audio1_spatialized["audio1_r"]
+            rmsset = 0.02;
+            rms = np.sqrt(np.mean(audio1_spatialized ** 2))
+            audio1_spatialized = audio1_spatialized * rmsset / rms;
+            sf.write("D:\\Experiments\\TalkingHeads\\stim\\sentence_1_spatialized.wav", audio1_spatialized, fs_1)
 
-    elif condition_this_trial == 'match right' or condition_this_trial == 'mismatch right':
+            audio2_spatialized = audio2_spatialized[1]
+            audio2_spatialized = audio2_spatialized["audio2_l"]
+            rmsset = 0.02;
+            rms = np.sqrt(np.mean(audio2_spatialized ** 2))
+            audio2_spatialized = audio2_spatialized * rmsset / rms;
+            sf.write("D:\\Experiments\\TalkingHeads\\stim\\sentence_2_spatialized.wav", audio2_spatialized, fs_2)
+
+    elif condition_this_trial == 'match right':
         audio1_spatialized = audio1_spatialized[1]
         audio1_spatialized = audio1_spatialized["audio1_l"]
         rmsset = 0.02;
@@ -172,6 +186,19 @@ for itrial in range(num_trials):
 
         audio2_spatialized = audio2_spatialized[1]
         audio2_spatialized = audio2_spatialized["audio2_r"]
+        rms = np.sqrt(np.mean(audio2_spatialized**2))
+        audio2_spatialized = audio2_spatialized * rmsset/rms;
+        sf.write("D:\\Experiments\\TalkingHeads\\stim\\sentence_2_spatialized.wav",  audio2_spatialized, fs_1)
+    elif  condition_this_trial == 'mismatch right':
+        audio1_spatialized = audio1_spatialized[1]
+        audio1_spatialized = audio1_spatialized["audio1_r"]
+        rmsset = 0.02;
+        rms = np.sqrt(np.mean(audio1_spatialized**2))
+        audio1_spatialized = audio1_spatialized * rmsset/rms;
+        sf.write("D:\\Experiments\\TalkingHeads\\stim\\sentence_1_spatialized.wav", audio1_spatialized, fs_1)
+
+        audio2_spatialized = audio2_spatialized[1]
+        audio2_spatialized = audio2_spatialized["audio2_l"]
         rms = np.sqrt(np.mean(audio2_spatialized**2))
         audio2_spatialized = audio2_spatialized * rmsset/rms;
         sf.write("D:\\Experiments\\TalkingHeads\\stim\\sentence_2_spatialized.wav",  audio2_spatialized, fs_1)

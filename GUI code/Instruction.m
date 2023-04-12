@@ -57,8 +57,7 @@ release = false;
 % UIWAIT makes Instruction wait for user response (see UIRESUME)
 %uiwait(handles.figure1);
 
- fig= handles.figure1;
-set(fig, 'Units', 'normalized', 'Position', [0, 0, 1, 1]);
+
      
 infoText = varargin{1};
 actionButtonText = varargin{2};
