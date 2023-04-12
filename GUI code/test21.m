@@ -1,5 +1,5 @@
 %function test21(~,~)
-stimpath = 'D:\Experiments\TalkingHeads\GUI code';
+stimpath = 'C:\Users\maana\Documents\GitHub\TalkingHeads\GUI code';
 
 disp("Hello!")
 load([stimpath,'\F1 talker.mat'])
@@ -13,6 +13,7 @@ buttonresponse = strings(1,5);
 
 titletext = 'Response';
 exitbuttontext = 'exit';
+
 
 % trial_count=1;
 % switch trial_count

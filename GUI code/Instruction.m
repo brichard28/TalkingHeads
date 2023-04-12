@@ -57,6 +57,9 @@ release = false;
 % UIWAIT makes Instruction wait for user response (see UIRESUME)
 %uiwait(handles.figure1);
 
+ fig= handles.figure1;
+set(fig, 'Units', 'normalized', 'Position', [0, 0, 1, 1]);
+     
 infoText = varargin{1};
 actionButtonText = varargin{2};
 
@@ -67,11 +70,10 @@ guidata(hObject,handles);
 
 
 
-
  set(handles.actionButton,'String',actionButtonText,'Visible','on')
  set(handles.infoText,'String',infoText)
        
-        
+  
 
 
 % --- Outputs from this function are returned to the command line.
