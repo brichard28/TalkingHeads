@@ -24,7 +24,7 @@ while not eng_instruct.workspace['release']:
     
 eng_instruct.quit()
 
-n_trials = 80
+n_trials = 4
 itrial = 0
 
 eng_trial = matlab.engine.start_matlab()

@@ -68,9 +68,8 @@ exitbuttontext = varargin{6};
 handles.output = hObject;
 guidata(hObject,handles);
 %handles.response = strings(1,5);
-fig= handles.figure1;
-set(fig, 'Units', 'normalized', 'Position', [0, 0, 1, 1]);
-set(handles.figure1,'Name',title_text)
+
+
 disp(handles.guiState)
 switch handles.guiState
     case 'open'

@@ -31,7 +31,7 @@ SubID=input("Enter subject id:")
 if not os.path.exists("D:\\Experiments\\TalkingHeads\\stim\\s_" + SubID):
     os.mkdir("D:\\Experiments\\TalkingHeads\\stim\\s_" + SubID)
     
-num_trials= 80
+num_trials= 4
 
 all_sentences_F1 = [];
 all_sentences_F2 = [];
