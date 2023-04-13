@@ -54,7 +54,7 @@ function gui2_OpeningFcn(hObject, eventdata, handles, varargin)
 % handles    structure with handles and user data (see GUIDATA)
 % varargin   command line arguments to gui2 (see VARARGIN)
 global buttonresponse
-
+%set(handles.figure1,'Position',get(0,'ScreenSize'))
 
 % UIWAIT makes gui2 wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
@@ -68,8 +68,6 @@ exitbuttontext = varargin{6};
 handles.output = hObject;
 guidata(hObject,handles);
 %handles.response = strings(1,5);
-
-
 disp(handles.guiState)
 switch handles.guiState
     case 'open'
