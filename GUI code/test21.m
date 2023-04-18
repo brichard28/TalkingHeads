@@ -54,9 +54,9 @@ actionbuttontext = 'Submit';
 % subjectresponse{Word}
 gui2('response',infotext,buttontext,actionbuttontext,titletext,exitbuttontext);
 
-
-
 resp = buttonresponse;%string(subjectresponse{Word});
+
+%Feedback
 
 % end
 

@@ -12,7 +12,11 @@ from moviepy.editor import *
 import vlc
 import pandas
 
+import tkinter as tk
+
 SubID = input('Enter Subject ID: ')
+right_answer= pandas.read_csv("D:\\Experiments\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "Answerkey.csv")
+right_answer= right_answer.iloc[:,1:6].values.tolist()
 
 eng_instruct = matlab.engine.start_matlab()
 
@@ -25,9 +29,9 @@ while not eng_instruct.workspace['release']:
 eng_instruct.quit()
 
 
-n_trials = 48
+n_trials = 4
 
-n_trials = 12
+
 
 itrial = 0
 
@@ -66,10 +70,24 @@ while itrial < n_trials:
     
     curr_response = eng_trial.workspace['resp'];
     all_responses_this_subject.append(curr_response);
+    a=all_responses_this_subject
+    num_correct=0
+    for i in range(5):
+        if a[itrial][i] == right_answer[itrial][i]:
+            num_correct += 1
+    a1=str(num_correct)+" out of 5 words correct"
+            
+    textbox = tk.Tk()
+    textbox.eval('tk::PlaceWindow . center')
+    textbox.geometry("300x100")
+    label = tk.Label(textbox, text=a1)
+    label.pack()
+    textbox.update()
+    textbox.mainloop()     
     
     itrial += 1
 
 os.mkdir("D:\\Experiments\\TalkingHeads\\Output\\s_" + SubID)
 
-pandas.DataFrame(all_responses_this_subject).to_csv("D:\\Experiments\\TalkingHeads\\Output\\s_" + SubID + "\\" + SubID + "all_responses.csv")
+pandas.DataFrame(all_responses_this_subject).to_csv("D:\Experiments\\TalkingHeads\\Output\\s_" + SubID + "\\" + SubID + "all_responses.csv")
 
