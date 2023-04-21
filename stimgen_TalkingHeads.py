@@ -209,7 +209,7 @@ for itrial in range(num_trials):
        
     # Generating Videos
     base_dir = "D:\\Experiments\\TalkingHeads\\stim\\Structured Sentences F1_MP4"
-    base_dir2 = "D:\\Experiments\\TalkingHeads\GitHub\\TalkingHeads\\stim\\Structured Sentences F2_MP4"
+    base_dir2 = "D:\\Experiments\\TalkingHeads\\stim\\Structured Sentences F2_MP4"
     cl1= VideoFileClip(os.path.join(base_dir,sentence1))
     audioclip = AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\sentence_1_spatialized.wav")
     cl1 = cl1.set_audio(audioclip)
