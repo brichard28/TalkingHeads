@@ -20,6 +20,11 @@ textbox = tk.Tk()
 textbox.eval('tk::PlaceWindow . center')
 textbox.geometry("300x100")
 label = tk.Label(textbox, text=a1)
+def hide_label():
+    label.pack_forget()
+button = tk.Button(textbox, text="Close", command=hide_label)
+
 label.pack()
+button.pack()
 textbox.update()
 textbox.mainloop()     
