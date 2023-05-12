@@ -32,7 +32,7 @@ if not os.path.exists("D:\\Experiments\\TalkingHeads\\stim\\s_" + SubID):
     os.mkdir("D:\\Experiments\\TalkingHeads\\stim\\s_" + SubID)
     
 
-num_trials= 8
+num_trials= 4
 
 
 
