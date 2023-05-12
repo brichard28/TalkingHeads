@@ -217,7 +217,27 @@ for itrial in range(num_trials):
     cl2= VideoFileClip(os.path.join(base_dir2,sentence2))
     audioclip = AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\sentence_2_spatialized.wav")
     cl2 = cl2.set_audio(audioclip)
-  
+    num=random.randint(0,1)
+    
+    if num==0:
+        cl1= VideoFileClip(os.path.join(base_dir,sentence1))
+        audioclip = AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\sentence_1_spatialized.wav")
+        cl1 = cl1.set_audio(audioclip)
+        
+        cl2= VideoFileClip(os.path.join(base_dir2,sentence2))
+        audioclip = AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\sentence_2_spatialized.wav")
+        cl2 = cl2.set_audio(audioclip)
+    elif num==1:
+        cl1= VideoFileClip(os.path.join(base_dir2,sentence2))
+        audioclip = AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\sentence_2_spatialized.wav")
+        cl1 = cl1.set_audio(audioclip)
+        
+        cl2= VideoFileClip(os.path.join(base_dir,sentence1))
+        audioclip = AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\sentence_1_spatialized.wav")
+        cl2 = cl2.set_audio(audioclip)
+        
+        
+    
 
     raw_duration_clip_1 = cl1.duration
     raw_duration_clip_2 = cl2.duration
