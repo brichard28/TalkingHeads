@@ -150,7 +150,9 @@ for itrial in range(num_trials):
     audio2_dict = dict({"audio2":audio_2})
     audio1_spatialized = spatialize_seq(audio1_dict,0,0.0005,fs_1)
     audio2_spatialized = spatialize_seq(audio2_dict,0,0.0005,fs_2)
+    talkerindex=[]
     num=random.randint(0,1)
+    talkerindex.append(num)
     if num==0:
         if condition_this_trial == 'match left' :
             audio1_spatialized = audio1_spatialized[1]
@@ -394,14 +396,25 @@ df1_list= df1["0"].tolist()
 df2_list= df2["0"].tolist()
 df3_list= df3["0"].tolist()
 answerkey=[]
+
 for itrial in range(num_trials):
-    a=df1_list[itrial]
-    if a== "match left" or a=="mismatch left":
-        b=df2_list[itrial]
-        answerkey.append(b)
-    elif a=="match right" or a=="mismatch right":
-        c=df3_list[itrial]
-        answerkey.append(c)
+    if talkerindex[itrial]==0:
+         a=df1_list[itrial]
+         if a== "match left" or a=="mismatch left":
+             b=df2_list[itrial]
+             answerkey.append(b)
+         elif a=="match right" or a=="mismatch right":
+             c=df3_list[itrial]
+             answerkey.append(c)
+    elif talkerindex[itrial]==1:
+         a=df1_list[itrial]
+         if a== "match left" or a=="mismatch left":
+             b=df3_list[itrial]
+             answerkey.append(b)
+         elif a=="match right" or a=="mismatch right":
+             c=df2_list[itrial]
+             answerkey.append(c)
+       
         
 def Convert2(string2):
      li=list(string2.split("_"))
