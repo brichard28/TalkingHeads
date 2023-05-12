@@ -59,9 +59,9 @@ for itrial in range(num_trials):
     # Defining sentence Variables 
     Name= ['Allen','Doris','Kathy','Lucy','Nina','Peter','Rachel','Steven','Thomas','William']
     Verb= ["bought","gives","got","has","kept","ordered","prefers","sees","sold","wants"]
-    number=["nineteen","seven","fifteen","four","sixty","three","eight","twelve","four","two"]
-    adjective=["large","pretty","small","green","cheap","old","red","heavy","white","dark"]
-    plural= ["chairs","sofas","desks","tables","flowers","toys","spoons","windows","houses","rings"]
+    number=["eight","fifteen","four","nine","nineteen","seven","sixty","three","twelve","two"]
+    adjective=["cheap","dark","green","heavy","large","old","pretty","red","small","white"]
+    plural= ["chairs","desks","flowers","houses","rings","sofas","spoons","tables","toys","windows"]
     num=["_1"]
     ext=[".mp4"]
     
