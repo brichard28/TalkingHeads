@@ -19,14 +19,24 @@ audio_file2=AudioSegment.from_file("C:/Users/maana/Documents/GitHub/TalkingHeads
 audio_frame1 = audio_file1[start_time1:end_time1]
 audio_frame2 = audio_file2[start_time2:end_time2]
 
-panned_audio1 = audio_frame1.pan(-1)
-panned_audio2 = audio_frame2.pan(1)
+panned_audio_matchedleft1 = audio_frame1.pan(-1)
+panned_audio_mismatchleft1= audio_frame1.pan(1)
+panned_audio_matchedright1=audio_frame1.pan(1)
+panned_audio_mismatchright1=audio_frame1.pan(-1)
 
-panned_audiomismatch1= audio_frame1.pan(1)
-panned_audiomismatch2= audio_frame2.pan(-1) 
 
-panned_audio1.export("C:/Users/maana/Documents/GitHub/TalkingHeads/stim/Audio Cue/Chairs_F1.wav", format="wav")
-panned_audio2.export("C:/Users/maana/Documents/GitHub/TalkingHeads/stim/Audio Cue/Houses_F2.wav", format="wav")
+panned_audio_matchedright2 = audio_frame2.pan(1)
+panned_audio_mismatchright2= audio_frame2.pan(-1)
+panned_audio_matchedleft2 = audio_frame2.pan(-1)
+panned_audio_mismatchleft2= audio_frame2.pan(1)  
 
-panned_audiomismatch1.export("C:/Users/maana/Documents/GitHub/TalkingHeads/stim/Audio Cue/Chairs_F1_mismatch.wav", format="wav")
-panned_audiomismatch2.export("C:/Users/maana/Documents/GitHub/TalkingHeads/stim/Audio Cue/Houses_F2_mismatch.wav", format="wav")
+panned_audio_matchedleft1.export("C:/Users/maana/Documents/GitHub/TalkingHeads/stim/Audio Cue/Chairs_F1_matchedleft.wav", format="wav")
+panned_audio_mismatchleft1.export("C:/Users/maana/Documents/GitHub/TalkingHeads/stim/Audio Cue/Chairs_F1_mismatchedleft.wav", format="wav")
+panned_audio_matchedright1.export("C:/Users/maana/Documents/GitHub/TalkingHeads/stim/Audio Cue/Chairs_F1_matchedright.wav", format="wav")
+panned_audio_mismatchright1.export("C:/Users/maana/Documents/GitHub/TalkingHeads/stim/Audio Cue/Chairs_F1_mismatchedright.wav", format="wav")
+
+panned_audio_matchedright2.export("C:/Users/maana/Documents/GitHub/TalkingHeads/stim/Audio Cue/Houses_F2_matchedright.wav", format="wav")
+panned_audio_mismatchright2.export("C:/Users/maana/Documents/GitHub/TalkingHeads/stim/Audio Cue/Houses_F2_mismatchedright.wav", format="wav")
+panned_audio_matchedleft2.export("C:/Users/maana/Documents/GitHub/TalkingHeads/stim/Audio Cue/Houses_F2_matchedleft.wav", format="wav")
+panned_audio_mismatchleft2.export("C:/Users/maana/Documents/GitHub/TalkingHeads/stim/Audio Cue/Houses_F2_mismatchedleft.wav", format="wav")
+
