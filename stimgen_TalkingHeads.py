@@ -210,13 +210,7 @@ for itrial in range(num_trials):
     # Generating Videos
     base_dir = "D:\\Experiments\\TalkingHeads\\stim\\Structured Sentences F1_MP4"
     base_dir2 = "D:\\Experiments\\TalkingHeads\\stim\\Structured Sentences F2_MP4"
-    cl1= VideoFileClip(os.path.join(base_dir,sentence1))
-    audioclip = AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\sentence_1_spatialized.wav")
-    cl1 = cl1.set_audio(audioclip)
     
-    cl2= VideoFileClip(os.path.join(base_dir2,sentence2))
-    audioclip = AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\sentence_2_spatialized.wav")
-    cl2 = cl2.set_audio(audioclip)
     num=random.randint(0,1)
     
     if num==0:
@@ -259,36 +253,68 @@ for itrial in range(num_trials):
     clip1 = cl1;
     clip2 = cl2;
     combined=clips_array([[clip1,clip2]])
+    
        
     if condition_this_trial == 'match right':  
         right_cue = ImageSequenceClip(["right_visual_cue.jpg"], durations = [2])
         right_cue = right_cue.resize(newsize=combined.size)
-        audioclip_right_match=AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\Audio Cue\\Houses_F2.wav")
-        right_cue= right_cue.set_audio(audioclip_right_match)
-        combined_with_cue = CompositeVideoClip([right_cue, # starts at t=0
-                            combined.set_start(1)]) # start at t=1s  
+        if num==0:
+            audioclip_right_match=AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\Audio Cue\\Houses_F2.wav")
+            right_cue= right_cue.set_audio(audioclip_right_match)
+            combined_with_cue = CompositeVideoClip([right_cue, # starts at t=0
+                                combined.set_start(1)]) # start at t=1s
+        
+        elif num==1:
+            audioclip_right_match=AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1.wav")
+            right_cue= right_cue.set_audio(audioclip_right_match)
+            combined_with_cue = CompositeVideoClip([right_cue, # starts at t=0
+                                combined.set_start(1)]) # start at t=1s
     elif condition_this_trial == 'mismatch right':
         right_cue = ImageSequenceClip(["right_visual_cue.jpg"], durations = [2])
         right_cue = right_cue.resize(newsize=combined.size)
-        audioclip_right_match=AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\Audio Cue\\Houses_F2_mismatch.wav")
-        right_cue= right_cue.set_audio(audioclip_right_match)
-        combined_with_cue = CompositeVideoClip([right_cue, # starts at t=0
-                            combined.set_start(1)]) # start at t=1s 
+        if num==0:
+            audioclip_right_match=AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\Audio Cue\\Houses_F2_mismatch.wav")
+            right_cue= right_cue.set_audio(audioclip_right_match)
+            combined_with_cue = CompositeVideoClip([right_cue, # starts at t=0
+                                combined.set_start(1)]) # start at t=1s 
+        elif num==1:
+                audioclip_right_match=AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1_mismatch.wav")
+                right_cue= right_cue.set_audio(audioclip_right_match)
+                combined_with_cue = CompositeVideoClip([right_cue, # starts at t=0
+                                    combined.set_start(1)]) # start at t=1s 
+            
+        
     elif condition_this_trial == 'match left':  
         left_cue = ImageSequenceClip(["left_visual_cue.jpg"], durations = [2])
         left_cue = left_cue.resize(newsize=combined.size)
-        audioclip_left_match=AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1.wav")
-        left_cue= left_cue.set_audio(audioclip_left_match)
-        combined_with_cue = CompositeVideoClip([left_cue, # starts at t=0
-                            combined.set_start(1)]) # start at t=1s
+        if num==0:
+            audioclip_left_match=AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1.wav")
+            left_cue= left_cue.set_audio(audioclip_left_match)
+            combined_with_cue = CompositeVideoClip([left_cue, # starts at t=0
+                                combined.set_start(1)]) # start at t=1s
+        elif num==1:
+            audioclip_left_match=AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\Audio Cue\\Houses_F2.wav")
+            left_cue= left_cue.set_audio(audioclip_left_match)
+            combined_with_cue = CompositeVideoClip([left_cue, # starts at t=0
+                                combined.set_start(1)]) # start at t=1s
+            
+        
         
     elif condition_this_trial == 'mismatch left':
      left_cue = ImageSequenceClip(["left_visual_cue.jpg"], durations = [2])
      left_cue = left_cue.resize(newsize=combined.size)
-     audioclip_left_match=AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1_mismatch.wav")
-     left_cue= left_cue.set_audio(audioclip_left_match)
-     combined_with_cue = CompositeVideoClip([left_cue, # starts at t=0
-                         combined.set_start(1)]) # start at t=1s
+     if num==0:
+         audioclip_left_match=AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1_mismatch.wav")
+         left_cue= left_cue.set_audio(audioclip_left_match)
+         combined_with_cue = CompositeVideoClip([left_cue, # starts at t=0
+                             combined.set_start(1)]) # start at t=1s
+    elif num==1:
+        audioclip_left_match=AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\Audio Cue\\Houses_F2_mismatch.wav")
+        left_cue= left_cue.set_audio(audioclip_left_match)
+        combined_with_cue = CompositeVideoClip([left_cue, # starts at t=0
+                            combined.set_start(1)]) # start at t=1s
+         
+     
     
     #clip1= cl1; #.subclip(0,duration1)
     #d2= cl2.set_duration(3)
