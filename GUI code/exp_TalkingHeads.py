@@ -29,7 +29,7 @@ while not eng_instruct.workspace['release']:
 eng_instruct.quit()
 
 
-n_trials = 8
+n_trials = 48
 
 
 
