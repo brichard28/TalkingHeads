@@ -25,18 +25,18 @@ from utils import *
 import pdb
 import numpy.matlib
 
-SubID=input("Enter subject id:")
+SubID=input("Enter subject id:") #Subject ID
 
 # make folder if it doesn't exist already
 if not os.path.exists("D:\\Experiments\\TalkingHeads\\stim\\s_" + SubID):
     os.mkdir("D:\\Experiments\\TalkingHeads\\stim\\s_" + SubID)
     
 
-num_trials= 4
+num_trials= 4  #set the number of trials
 
 
 
-
+# create empty arrays for sentences
 all_sentences_F1 = [];
 all_sentences_F2 = [];
 
@@ -46,15 +46,19 @@ condition_array = []
 for icondition in range(len(possible_conditions)):
     curr_condition = possible_conditions[icondition]
     condition_array_this_condition = []
-    for i in range(int(num_trials/len(possible_conditions))):
+    for i in range(int(num_trials/len(possible_conditions))):        
         condition_array_this_condition.append(curr_condition)
     condition_array.extend(condition_array_this_condition)
-
+#shuffle the conditiond
 np.random.shuffle(condition_array)
 
-for itrial in range(num_trials):
+# define array for toggling talkers left and right
+talkerindex=[]
+
+
+for itrial in range(num_trials): # for each trial...
     
-    condition_this_trial = condition_array[itrial]
+    condition_this_trial = condition_array[itrial] # choose the condition for this trial
 
     # Defining sentence Variables 
     Name= ['Allen','Doris','Kathy','Lucy','Nina','Peter','Rachel','Steven','Thomas','William']
@@ -139,24 +143,23 @@ for itrial in range(num_trials):
     
     
     # Get audio for each sentence
-    audio_base_dir = "D:\\Experiments\\TalkingHeads\\stim\\Structured Sentences F1_Mp3"
-    audio_base_dir2 = "D:\\Experiments\\TalkingHeads\\stim\\Structured Sentences F2_Mp3"
-    fs_1, audio_1 = wavfile.read(os.path.join(audio_base_dir,sentence1.replace(".mp4",".wav")))
-    audio_1 =  audio_1*(1/np.max(audio_1))
-    fs_2, audio_2 = wavfile.read(os.path.join(audio_base_dir2,sentence2.replace(".mp4",".wav")))
-    audio_2 =  audio_2*(1/np.max(audio_2))
+    audio_base_dir = "D:\\Experiments\\TalkingHeads\\stim\\Structured Sentences F1_Mp3" #audio base directory for talker 1
+    audio_base_dir2 = "D:\\Experiments\\TalkingHeads\\stim\\Structured Sentences F2_Mp3" # audio base directory for talker 2
+    fs_1, audio_1 = wavfile.read(os.path.join(audio_base_dir,sentence1.replace(".mp4",".wav"))) #reading audio for talker 1
+    audio_1 =  audio_1*(1/np.max(audio_1)) #normalizing for RMS
+    fs_2, audio_2 = wavfile.read(os.path.join(audio_base_dir2,sentence2.replace(".mp4",".wav"))) #reading audio for talker 2
+    audio_2 =  audio_2*(1/np.max(audio_2)) #normalizing for RMS
 
-    audio1_dict = dict({"audio1":audio_1})
-    audio2_dict = dict({"audio2":audio_2})
-    audio1_spatialized = spatialize_seq(audio1_dict,0,0.0005,fs_1)
-    audio2_spatialized = spatialize_seq(audio2_dict,0,0.0005,fs_2)
-    talkerindex=[]
+    audio1_dict = dict({"audio1":audio_1}) #Creating dictionaries for audio 1
+    audio2_dict = dict({"audio2":audio_2}) #Creating dictionaries for audio 2
+    audio1_spatialized = spatialize_seq(audio1_dict,0,0.0005,fs_1) #Spatializing audio to both directions
+    audio2_spatialized = spatialize_seq(audio2_dict,0,0.0005,fs_2) #Spatializing audio to both directions
+    
    
     
     
-    for i in range(num_trials):
-        num=random.randint(0,1)
-        talkerindex.append(num)
+    num=random.randint(0,1) # whether or not to flip talkers
+    talkerindex.append(num) # append to tracking array
     
     
     
