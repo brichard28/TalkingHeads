@@ -10,7 +10,7 @@ from pydub import AudioSegment
 
 
 
-start_time1 = 2000 
+start_time1 = 1970 
 end_time1 = 2837 
 start_time2 = 2000 
 end_time2 = 3104
