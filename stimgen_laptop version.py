@@ -446,7 +446,7 @@ for i in range(num_trials):
     
 
 
-df = pandas.DataFrame(columns=['Column1', 'Column2','Column3','Column4','Column5'])
+df = pandas.DataFrame(list_to_string,columns=['Column1', 'Column2','Column3','Column4','Column5'])
 
 for sublist in list_to_string:
     df.loc[len(df)] = sublist

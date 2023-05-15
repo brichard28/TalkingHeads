@@ -411,18 +411,18 @@ for itrial in range(num_trials): # Creating answe key according to condition
     if talkerindex[itrial]==0:
          a=df1_list[itrial]
          if a== "match left" or a=="mismatch left":
-             b=df2_list[itrial,:]
+             b=df2_list[itrial]
              answerkey.append(b)
          elif a=="match right" or a=="mismatch right":
-             c=df3_list[itrial,:]
+             c=df3_list[itrial]
              answerkey.append(c)
     elif talkerindex[itrial]==1:
          a=df1_list[itrial]
          if a== "match left" or a=="mismatch left":
-             b=df3_list[itrial,:]
+             b=df3_list[itrial]
              answerkey.append(b)
          elif a=="match right" or a=="mismatch right":
-             c=df2_list[itrial,:]
+             c=df2_list[itrial]
              answerkey.append(c)
        
         
@@ -444,7 +444,7 @@ for i in range(num_trials):
     
 
 
-df = pandas.DataFrame(answerkey,columns=['Column1', 'Column2','Column3','Column4','Column5']) #Saving
+df = pandas.DataFrame(list_to_string,columns=['Column1', 'Column2','Column3','Column4','Column5']) #Saving
 
 for sublist in list_to_string:
     df.loc[len(df)] = sublist
