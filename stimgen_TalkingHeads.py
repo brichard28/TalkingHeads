@@ -69,21 +69,7 @@ for itrial in range(num_trials): # for each trial...
     num=["_1"]
     ext=[".mp4"]
     
-    original_lists = {
-        'Name': Name,
-        'Verb': Verb,
-        'Number': number,
-        'Adjective': adjective,
-        'Plural': plural
-    }
-    if all(len(lst) == 0 for lst in original_lists.values()):
-        # Refill the lists once they are empty
-        Name = original_lists['Name']
-        Verb = original_lists['Verb']
-        Number = original_lists['Number']
-        adjective = original_lists['Adjective']
-        plural = original_lists['Plural']
-    
+   
     # Finding if Sentence 1 is in the directory
     l=[Name,Verb,number,adjective,plural]
     print(l)
@@ -125,16 +111,20 @@ for itrial in range(num_trials): # for each trial...
     
     # Remove the words from sentence 1 from originial list 
     Name.remove(name)
-    
+    Name1=Name
+    print(Name1)
     Verb.remove(verb)
-    
+    Verb1=Verb
+    print(Verb1)
     number.remove(nu)
-    
-    
+    number1=number
+    print(number1)
     adjective.remove(ad)
-    
+    adjective1=adjective
+    print(adjective1)
     plural.remove(pl)
-    
+    plural1=plural
+    print(plural1)
     
     # Generating Sentence 2
     path2= "D:\\Experiments\\TalkingHeads\\stim\\Structured Sentences F2_MP4"
@@ -152,27 +142,7 @@ for itrial in range(num_trials): # for each trial...
             all_sentences_F2.append(sentence2)
 
             break
-    list_to_string1= Convert(sentence2)
-        
-    b= str(list_to_string1[0])
-    word1= Convert1(b)
-    name1= word1[0]
-    verb1= word1[1]
-    nu1=word1[2]
-    ad1=word1[3]
-    pl1=word1[4]
-        
-    # Remove the words from sentence 2 from originial list 
-    Name.remove(name1)
-        
-    Verb.remove(verb1)
-        
-    number.remove(nu1)
-        
-        
-    adjective.remove(ad1)
-        
-    plural.remove(pl1)
+   
     
     
     
