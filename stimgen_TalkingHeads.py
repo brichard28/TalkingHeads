@@ -152,27 +152,27 @@ for itrial in range(num_trials): # for each trial...
             all_sentences_F2.append(sentence2)
 
             break
-        list_to_string1= Convert(sentence2)
+    list_to_string1= Convert(sentence2)
         
-        b= str(list_to_string1[0])
-        word1= Convert1(b)
-        name1= word1[0]
-        verb1= word1[1]
-        nu1=word1[2]
-        ad1=word1[3]
-        pl1=word1[4]
+    b= str(list_to_string1[0])
+    word1= Convert1(b)
+    name1= word1[0]
+    verb1= word1[1]
+    nu1=word1[2]
+    ad1=word1[3]
+    pl1=word1[4]
         
-        # Remove the words from sentence 2 from originial list 
-        Name.remove(name1)
+    # Remove the words from sentence 2 from originial list 
+    Name.remove(name1)
         
-        Verb.remove(verb1)
+    Verb.remove(verb1)
         
-        number.remove(nu1)
+    number.remove(nu1)
         
         
-        adjective.remove(ad1)
+    adjective.remove(ad1)
         
-        plural.remove(pl1)
+    plural.remove(pl1)
     
     
     
