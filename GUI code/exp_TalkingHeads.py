@@ -76,12 +76,17 @@ while itrial < n_trials:
         if a[itrial][i] == right_answer[itrial][i]:
             num_correct += 1
     a1=str(num_correct)+" out of 5 words correct"
-            
+    def hide_label():
+        label.pack_forget()
+        button.pack_forget()
+        textbox.destroy()        
     textbox = tk.Tk()
     textbox.eval('tk::PlaceWindow . center')
     textbox.geometry("300x100")
     label = tk.Label(textbox, text=a1)
+    button = tk.Button(textbox, text="OK", command=hide_label)
     label.pack()
+    button.pack()
     textbox.update()
     textbox.mainloop()     
     
