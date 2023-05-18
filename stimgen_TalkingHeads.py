@@ -28,8 +28,8 @@ import numpy.matlib
 SubID=input("Enter subject id:")
 
 # make folder if it doesn't exist already
-if not os.path.exists("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID):
-    os.mkdir("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID)
+if not os.path.exists("D:\\Experiments\\TalkingHeads\\stim\\s_" + SubID):
+    os.mkdir("D:\\Experiments\\TalkingHeads\\stim\\s_" + SubID)
     
 
 
