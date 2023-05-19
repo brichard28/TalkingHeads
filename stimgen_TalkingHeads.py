@@ -215,7 +215,7 @@ for itrial in range(num_trials):
         number=number1.copy()
         adjective=adjective1.copy()
         plural = plural1.copy() 
-    
+    print(num_tries)
    
     
     
