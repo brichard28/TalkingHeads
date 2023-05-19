@@ -92,7 +92,7 @@ for itrial in range(num_trials):
     obj=os.listdir(path)
     obj1= str(obj)
     num_tries = 0
-    while num_tries < 500:
+    while num_tries <= 499:
         l1= ' '.join([random.choice(i) for i in l])
         l3= ''.join([random.choice(i) for i in l2])
         l4=l1+l3
@@ -162,7 +162,7 @@ for itrial in range(num_trials):
     obj2= str(obj0)
     L=[Name,Verb,number,adjective,plural]
     num_tries = 0
-    while num_tries < 500:
+    while num_tries <= 499:
         L1= ' '.join([random.choice(i) for i in L])
         L2= ''.join([random.choice(i) for i in l2])
         L3=L1+L2
