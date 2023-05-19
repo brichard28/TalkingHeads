@@ -97,12 +97,13 @@ for itrial in range(num_trials):
         l3= ''.join([random.choice(i) for i in l2])
         l4=l1+l3
         ind= obj1.find(l4)
-        num_tries += 1
         if ind>-1:
             sentence1=l4
             print(sentence1)
             all_sentences_F1.append(sentence1)
             break
+        num_tries += 1
+
 
     # If it cannot find a combination with limited words, draw from all words just for this trial, then refill words
     # Do the same for the second sentence later
@@ -167,13 +168,14 @@ for itrial in range(num_trials):
         L2= ''.join([random.choice(i) for i in l2])
         L3=L1+L2
         ind1= obj2.find(L3)
-        num_tries += 1
         if ind1>-1:
             sentence2=L3
             print(sentence2)
             all_sentences_F2.append(sentence2)
 
             break
+        num_tries += 1
+
     # If it cannot find a combination with limited words, draw from all words just for this trial, then refill words
     # Do the same for the second sentence later
     if num_tries == 500:
