@@ -184,7 +184,7 @@ for itrial in range(num_trials):
             l1= ' '.join([random.choice(i) for i in l])
             l3= ''.join([random.choice(i) for i in l2])
             l4=l1+l3
-            ind= obj1.find(l4)
+            ind= obj2.find(l4)
             if ind>-1:
                 sentence2=l4
                 print(sentence2)
@@ -257,19 +257,19 @@ for itrial in range(num_trials):
             audio2_spatialized = audio2_spatialized * rmsset/rms; #normalizing audio
             sf.write("D:\\Experiments\\TalkingHeads\\stim\\sentence_2_spatialized.wav",  audio2_spatialized, fs_2) #writing audio file to .wav
         elif  condition_this_trial == 'mismatch left':  #mismatch left condition
-                audio1_spatialized = audio1_spatialized[1] # indexing in to dictionary
-                audio1_spatialized = audio1_spatialized["audio1_r"] #spatializing to the right
-                rmsset = 0.02; #seting rms value
-                rms = np.sqrt(np.mean(audio1_spatialized ** 2)) # calculating rms
-                audio1_spatialized = audio1_spatialized * rmsset / rms; #normalizing audio
-                sf.write("D:\\Experiments\\TalkingHeads\\stim\\sentence_1_spatialized.wav", audio1_spatialized, fs_1) #writing audio file to .wav
+            audio1_spatialized = audio1_spatialized[1] # indexing in to dictionary
+            audio1_spatialized = audio1_spatialized["audio1_r"] #spatializing to the right
+            rmsset = 0.02; #seting rms value
+            rms = np.sqrt(np.mean(audio1_spatialized ** 2)) # calculating rms
+            audio1_spatialized = audio1_spatialized * rmsset / rms; #normalizing audio
+            sf.write("D:\\Experiments\\TalkingHeads\\stim\\sentence_1_spatialized.wav", audio1_spatialized, fs_1) #writing audio file to .wav
 
-                audio2_spatialized = audio2_spatialized[1] # indexing in to dictionary 
-                audio2_spatialized = audio2_spatialized["audio2_l"] #spatializing to the left
-                rmsset = 0.02; #seting rms value
-                rms = np.sqrt(np.mean(audio2_spatialized ** 2)) # calculating rms
-                audio2_spatialized = audio2_spatialized * rmsset / rms; #normalizing audio
-                sf.write("D:\\Experiments\\TalkingHeads\\stim\\sentence_2_spatialized.wav", audio2_spatialized, fs_2) #writing audio file to .wav
+            audio2_spatialized = audio2_spatialized[1] # indexing in to dictionary 
+            audio2_spatialized = audio2_spatialized["audio2_l"] #spatializing to the left
+            rmsset = 0.02; #seting rms value
+            rms = np.sqrt(np.mean(audio2_spatialized ** 2)) # calculating rms
+            audio2_spatialized = audio2_spatialized * rmsset / rms; #normalizing audio
+            sf.write("D:\\Experiments\\TalkingHeads\\stim\\sentence_2_spatialized.wav", audio2_spatialized, fs_2) #writing audio file to .wav
 
         elif condition_this_trial == 'match right': #match right condition
             audio1_spatialized = audio1_spatialized[1] # indexing in to dictionary 
@@ -314,19 +314,19 @@ for itrial in range(num_trials):
             audio2_spatialized = audio2_spatialized * rmsset/rms; #normalizing audio
             sf.write("D:\\Experiments\\TalkingHeads\\stim\\sentence_2_spatialized.wav",  audio2_spatialized, fs_2) #writing audio file to .wav
         elif  condition_this_trial == 'mismatch left': #mismatch left 
-                audio1_spatialized = audio1_spatialized[1] # indexing in to dictionary 
-                audio1_spatialized = audio1_spatialized["audio1_l"] #spatializing to the left
-                rmsset = 0.02; #seting rms value
-                rms = np.sqrt(np.mean(audio1_spatialized ** 2)) # calculating rms
-                audio1_spatialized = audio1_spatialized * rmsset / rms; # normalizing audio
-                sf.write("D:\\Experiments\\TalkingHeads\\stim\\sentence_1_spatialized.wav", audio1_spatialized, fs_1) #writing audio file to .wav
+            audio1_spatialized = audio1_spatialized[1] # indexing in to dictionary 
+            audio1_spatialized = audio1_spatialized["audio1_l"] #spatializing to the left
+            rmsset = 0.02; #seting rms value
+            rms = np.sqrt(np.mean(audio1_spatialized ** 2)) # calculating rms
+            audio1_spatialized = audio1_spatialized * rmsset / rms; # normalizing audio
+            sf.write("D:\\Experiments\\TalkingHeads\\stim\\sentence_1_spatialized.wav", audio1_spatialized, fs_1) #writing audio file to .wav
 
-                audio2_spatialized = audio2_spatialized[1] # indexing in to dictionary
-                audio2_spatialized = audio2_spatialized["audio2_r"] #spatializing to the right
-                rmsset = 0.02; #seting rms value
-                rms = np.sqrt(np.mean(audio2_spatialized ** 2)) # calculating rms
-                audio2_spatialized = audio2_spatialized * rmsset / rms; # normalizing audio
-                sf.write("D:\\Experiments\\TalkingHeads\\stim\\sentence_2_spatialized.wav", audio2_spatialized, fs_2)#writing audio file to .wav
+            audio2_spatialized = audio2_spatialized[1] # indexing in to dictionary
+            audio2_spatialized = audio2_spatialized["audio2_r"] #spatializing to the right
+            rmsset = 0.02; #seting rms value
+            rms = np.sqrt(np.mean(audio2_spatialized ** 2)) # calculating rms
+            audio2_spatialized = audio2_spatialized * rmsset / rms; # normalizing audio
+            sf.write("D:\\Experiments\\TalkingHeads\\stim\\sentence_2_spatialized.wav", audio2_spatialized, fs_2)#writing audio file to .wav
 
         elif condition_this_trial == 'match right':   #match right 
             audio1_spatialized = audio1_spatialized[1] # indexing in to dictionary 
