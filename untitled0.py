@@ -1,46 +1,20 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Apr 25 12:16:45 2023
+Created on Sun May 14 20:24:28 2023
 
 @author: maana
 """
-import pandas
+from pydub import AudioSegment
 
-conditions=pandas.read_csv("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\s_419_pilot4\\419_pilot4all_conditions.csv")
-conditions = conditions.iloc[:,1].values.tolist()
-right_answer= pandas.read_csv("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\s_419_pilot4\\419_pilot4Answerkey.csv")
-right_answer= right_answer.iloc[:,1:6].values.tolist()
-responses=pandas.read_csv("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\Output\\s_419_pilot4\\419_pilot4all_responses.csv")
-responses=responses.iloc[:,1:6].values.tolist()
-score = []
-match_right=[]
-match_rightscore=[]
-match_left=[]
-mismatch_right=[]
-mismatch_left=[]
-same_elements = 0
-for i in range(len(right_answer)):
-    
-    for j in range(len(right_answer[i])):
-        if right_answer[i][j] == responses[i][j]:
-            same_elements += 1
-            score.append(same_elements)
-
-avg= sum(score)/len(score)    
-abg_percent= (avg/5)*100      
-mright_responses=[]
-mright_answer=[]
-
-for i1 in range(len(conditions)):
-    
-    if conditions[i1]=='match right':
-        a=responses[i1]
-        match_right.append(a)
-       
-        
-                    
-        
-
-                
-                
-   
+start_time1 = 1970 
+end_time1 = 2837 
+audio_file1 = AudioSegment.from_file("C:/Users/maana/Documents/GitHub/TalkingHeads/stim/Structured Sentences F1_Mp3/Kathy gives nine old chairs_1.wav", format="wav")
+audio_frame1 = audio_file1[start_time1:end_time1]
+panned_audio_matchedleft1 = audio_frame1.pan(-1)
+panned_audio_mismatchleft1= audio_frame1.pan(1)
+panned_audio_matchedright1=audio_frame1.pan(1)
+panned_audio_mismatchright1=audio_frame1.pan(-1)
+panned_audio_matchedleft1.export("C:/Users/maana/Documents/GitHub/TalkingHeads/stim/Audio Cue/Chairs_F1_matchedleft.wav", format="wav")
+panned_audio_mismatchleft1.export("C:/Users/maana/Documents/GitHub/TalkingHeads/stim/Audio Cue/Chairs_F1_mismatchedleft.wav", format="wav")
+panned_audio_matchedright1.export("C:/Users/maana/Documents/GitHub/TalkingHeads/stim/Audio Cue/Chairs_F1_matchedright.wav", format="wav")
+panned_audio_mismatchright1.export("C:/Users/maana/Documents/GitHub/TalkingHeads/stim/Audio Cue/Chairs_F1_mismatchedright.wav", format="wav")
