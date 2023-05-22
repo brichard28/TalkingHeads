@@ -39,7 +39,7 @@ if not os.path.exists("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\
     os.mkdir("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID)
     
 
-num_trials= 4
+num_trials= 48
 
 
 

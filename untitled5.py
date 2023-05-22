@@ -173,8 +173,8 @@ for itrial in range(num_trials):
             l4=l1+l3
             ind= obj1.find(l4)
             if ind>-1:
-                sentence1=l4
-                print(sentence1)
+                sentence2=l4
+                print(sentence2)
                 all_sentences_F2.append(sentence2)
                 break
        
