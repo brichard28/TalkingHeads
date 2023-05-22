@@ -180,12 +180,12 @@ for itrial in range(num_trials):
     # If it cannot find a combination with limited words, draw from all words just for this trial, then refill words
     # Do the same for the second sentence later
     if num_tries == 500:
-        l=[Name1,Verb1,number1,adjective1,plural1]
+        LL=[Name1,Verb1,number1,adjective1,plural1]
         while True:
-            l1= ' '.join([random.choice(i) for i in l])
-            l3= ''.join([random.choice(i) for i in l2])
-            l4=l1+l3
-            ind= obj1.find(l4)
+            ll1= ' '.join([random.choice(i) for i in L])
+            ll3= ''.join([random.choice(i) for i in l2])
+            ll4=ll1+ll3
+            ind= obj2.find(ll4)
             if ind>-1:
                 sentence2=l4
                 print(sentence2)
