@@ -4,7 +4,7 @@ from time import perf_counter
 from serial import Serial
 import time
 
-dlp = Serial(port='/dev/ttyUSB0', baudrate=115200)  # open serial port
+dlp = Serial(port='ASIO Fireface USB', baudrate=115200)  # open serial port
 # byte codes to control line 1:
 ON1 = b'1'
 OFF1 = b'Q'
