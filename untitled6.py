@@ -26,7 +26,9 @@ atten = 0.1
 each_sample_number = np.arange(duration_s * sps)
 waveform = np.sin(2 * np.pi * each_sample_number * freq_hz / sps)
 waveform_quiet = waveform * atten
-waveform_quiet = np.transpose(np.stack(((waveform_quiet,waveform_quiet,np.zeros(np.shape(waveform_quiet)),np.ones(np.shape(waveform_quiet))))))
+trigger_channel_3 = np.zeros(np.shape(waveform_quiet))
+trigger_channel_3[452] = 1
+waveform_quiet = np.transpose(np.stack(((waveform_quiet,waveform_quiet,trigger_channel_3,np.zeros(np.shape(waveform_quiet))))))
 print(np.shape(waveform_quiet))
 # Play the waveform out the speakers
 sd.default.device = 'ASIO Fireface USB'
