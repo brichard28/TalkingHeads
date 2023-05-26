@@ -8,6 +8,7 @@ Created on Wed May 24 10:22:58 2023
 import numpy as np
 import sounddevice as sd
 import time
+import serial
 
 # Samples per second
 sps = 44100
@@ -16,17 +17,19 @@ sps = 44100
 freq_hz = 440.0
 
 # Duration
-duration_s = 5.0
+duration_s = 1.0
 
 # Attenuation so the sound is reasonable
-atten = 0.3
+atten = 0.1
 
 # NumpPy magic to calculate the waveform
 each_sample_number = np.arange(duration_s * sps)
 waveform = np.sin(2 * np.pi * each_sample_number * freq_hz / sps)
 waveform_quiet = waveform * atten
-
+waveform_quiet = np.transpose(np.stack(((waveform_quiet,waveform_quiet,np.zeros(np.shape(waveform_quiet)),np.ones(np.shape(waveform_quiet))))))
+print(np.shape(waveform_quiet))
 # Play the waveform out the speakers
-sd.play(waveform_quiet, sps)
+sd.default.device = 'ASIO Fireface USB'
+sd.play(waveform_quiet, sps,mapping=[1,2,3,4])
 time.sleep(duration_s)
 sd.stop()

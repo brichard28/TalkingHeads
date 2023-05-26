@@ -14,7 +14,8 @@ sID = inputInfo{1};
 
 tic;
 % params = abr_tests(ear,rate,N);
-params = abr_tests_Triggy(ear,rate,N);
+params = abr_tes
+ts_Triggy(ear,rate,N);
 save(['matFiles/', todayStr '_' sID '_ClickABRparams.mat'],'params');
 t=toc;
 fprintf('Experiment complete. Total time elapsed %d min %d sec.\n',floor(t/60),floor(mod(t,60)));
