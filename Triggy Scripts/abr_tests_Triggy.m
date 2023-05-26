@@ -70,7 +70,8 @@ fprintf('Success! Connected to %s.\n', Devices(i).name);
 
 Triggy = 1;
 while Triggy
-    trigtype = input('Are you using the Triggy? (y/n)', 's');
+    trigtype = inputdlg('Are you using the Triggy? (y/n)', 's');
+    trigtype=char(trigtype)
     switch trigtype
         case {'Y', 'y', 'Yes', 'yes', 'YES',}
             TrigType = 'Triggy';
@@ -91,7 +92,7 @@ click_peSPL = clickThr + click_dBnHL; % click presentation level (dB peSPL)
 max_dBSPL = 107; % maximum dBSPL; calibrated from 250-Hz sine tone, amp = 1 (was 119)
 if max_dBSPL<(max(click_dBnHL+clickThr))
     amp = db2mag([0 -10]);
-    warning('Adjust headphone amplifier gain! Press any key to continue...');
+   warning('Adjust headphone amplifier gain! Press any key to continue...');
     pause;
 else
     amp = db2mag(click_peSPL - max_dBSPL); % click amplitude (linear scale)
@@ -137,6 +138,7 @@ for n = 2
     for rep = 1:nReps
         fprintf('Block %d, run: %d of %d\n', n, rep, nReps)
         % Load the stimuli and play back; hold up matlab while playing
+        
         pageno = playrec('play',[stim,trig],stimchanList);
         playrec('block',pageno);
         

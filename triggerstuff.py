@@ -45,7 +45,11 @@ import time
 import numpy as np
 import matplotlib.pyplot as plt
 import psychopy
-import matlab.engine
+# import matlab.engine
+# import matlab
+import sounddevice as sd
+from scipy.io.wavfile import write
+
 
 # import spyral
 
@@ -54,29 +58,46 @@ import serial
 
 # TRIGGER STUFF
 
-
-import serial.tools.list_ports
-ports = serial.tools.list_ports.comports()
-
-for port, desc, hwid in sorted(ports):
-    print("{}:{}[{}]".format(port,desc,hwid))
-port = serial.Serial(port = 'COM4', baudrate = 115200)
+sd.default.device = 'ASIO Fireface USB'
+# import serial.tools.list_ports
+# ports = serial.tools.list_ports.comports()
+#
+# for port, desc, hwid in sorted(ports):
+#     print("{}:{}[{}]".format(port,desc,hwid))
+# port = serial.Serial(port = 'COM4', baudrate = 115200)
 trigger_sent = False
 
-eng = matlab.engine.start_matlab()
-Devices=eng.playrec('getDevices')
-print(Devices)
-if eng.isempty(Devices):
-    print('There are no devices available using the selected host APIs.\nPlease make sure the RME is powered on!')
-else:
-    i=1
-    while ~strcmp(Devices(i).name,'ASIO Fireface USB') and i <= length(Devices):
-        i=i+1
+#eng = matlab.engine.start_matlab()
+framerate = 44100
+time = np.linspace(0,5)
+stim = float(100) * np.sin(2.0*np.pi*float(440)*(time/framerate))
+plt.plot(stim)
+trig = np.ones(np.shape(stim))
+print(np.shape(stim))
+print(np.shape(trig))
+send_to_triggy = np.transpose(np.stack((stim,trig)))
+print(np.shape(send_to_triggy))
+sd.play(send_to_triggy,44100)
+# Devices = dict()
+# Devices = eng.playrec('getDevices')[0,:]
+# print(Devices)
+# eng.playrec('init',44100,0,-1,20,-1);
+# eng.playrec('play',matlab.double(send_to_triggy.tolist()),[1,2,3,4,5,6])
+#eng.playrec('init',44100,0,-1,20,-1)
 
-fs = Devices[i].defaultSampleRate
-playDev = Devices[i].deviceID
-eng.playrec('init',fs,playDev,-1,20,-1)
-print('Success! Connected')
+# Devices=eng.playrec('getDevices')
+# print(Devices)
+# if eng.isempty(Devices):
+#     print('There are no devices available using the selected host APIs.\nPlease make sure the RME is powered on!')
+# else:
+#     i=1
+#     while ~strcmp(Devices(i).name,'ASIO Fireface USB') and i <= length(Devices):
+#         i=i+1
+#
+# fs = Devices[i].defaultSampleRate
+# playDev = Devices[i].deviceID
+#
+# print('Success! Connected')
 
 # for n_triggers in range(5):
 #     x = 27
@@ -90,4 +111,4 @@ print('Success! Connected')
 #     time.sleep(1)
 #
 
-port.close()
+#port.close()
