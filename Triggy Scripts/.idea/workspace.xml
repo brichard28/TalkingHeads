@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="0d01c975-cb51-441d-96e9-897e25980ba9" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../stimgen_TalkingHeads.py" beforeDir="false" afterPath="$PROJECT_DIR$/../stimgen_TalkingHeads.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../untitled6.py" beforeDir="false" afterPath="$PROJECT_DIR$/../untitled6.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -49,7 +48,7 @@
       <updated>1685035406202</updated>
       <workItem from="1685035407463" duration="21000" />
       <workItem from="1685109385338" duration="8694000" />
-      <workItem from="1685451772158" duration="730000" />
+      <workItem from="1685451772158" duration="1660000" />
     </task>
     <servers />
   </component>
