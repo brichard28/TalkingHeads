@@ -420,7 +420,7 @@ for itrial in range(num_trials):
             combined_with_cue = CompositeVideoClip([right_cue, # starts at t=0
                                 combined.set_start(1)]) # start at t=1s
             combined_with_cue_0= combined_with_cue.audio
-            combined_with_cue_1=combined_with_cue_0.to_soundarray
+            combined_with_cue_1=combined_with_cue_0.to_soundarray()
             
             trigger_channel_3 = np.zeros(np.shape(combined_with_cue_1))
             trigger_channel_3[0] = 0.03
@@ -445,7 +445,7 @@ for itrial in range(num_trials):
             combined_with_cue = CompositeVideoClip([right_cue, # starts at t=0
                                 combined.set_start(1)]) # start at t=1s
             combined_with_cue_0= combined_with_cue.audio
-            combined_with_cue_1=combined_with_cue_0.to_soundarray
+            combined_with_cue_1=combined_with_cue_0.to_soundarray()
             
             trigger_channel_3 = np.zeros(np.shape(combined_with_cue_1))
             trigger_channel_3[0] = 0.03
@@ -466,7 +466,7 @@ for itrial in range(num_trials):
             combined_with_cue = CompositeVideoClip([right_cue, # starts at t=0
                                 combined.set_start(1)]) # start at t=1s 
             combined_with_cue_0= combined_with_cue.audio
-            combined_with_cue_1=combined_with_cue_0.to_soundarray
+            combined_with_cue_1=combined_with_cue_0.to_soundarray()
             
             trigger_channel_3 = np.zeros(np.shape(combined_with_cue_1))
             trigger_channel_3[0] = 0.03
@@ -484,7 +484,7 @@ for itrial in range(num_trials):
                 combined_with_cue = CompositeVideoClip([right_cue, # starts at t=0
                                     combined.set_start(1)]) # start at t=1s 
                 combined_with_cue_0= combined_with_cue.audio
-                combined_with_cue_1=combined_with_cue_0.to_soundarray
+                combined_with_cue_1=combined_with_cue_0.to_soundarray()
                 
                 trigger_channel_3 = np.zeros(np.shape(combined_with_cue_1))
                 trigger_channel_3[0] = 0.03
@@ -507,7 +507,7 @@ for itrial in range(num_trials):
             combined_with_cue = CompositeVideoClip([left_cue, # starts at t=0
                                 combined.set_start(1)]) # start at t=1s
             combined_with_cue_0= combined_with_cue.audio
-            combined_with_cue_1=combined_with_cue_0.to_soundarray
+            combined_with_cue_1=combined_with_cue_0.to_soundarray()
             
             trigger_channel_3 = np.zeros(np.shape(combined_with_cue_1))
             trigger_channel_3[0] = 0.03
@@ -525,7 +525,7 @@ for itrial in range(num_trials):
             combined_with_cue = CompositeVideoClip([left_cue, # starts at t=0
                                 combined.set_start(1)]) # start at t=1s
             combined_with_cue_0= combined_with_cue.audio
-            combined_with_cue_1=combined_with_cue_0.to_soundarray
+            combined_with_cue_1=combined_with_cue_0.to_soundarray()
             
             trigger_channel_3 = np.zeros(np.shape(combined_with_cue_1))
             trigger_channel_3[0] = 0.03
@@ -548,15 +548,16 @@ for itrial in range(num_trials):
             combined_with_cue = CompositeVideoClip([left_cue, # starts at t=0
                              combined.set_start(1)]) # start at t=1s
             combined_with_cue_0= combined_with_cue.audio
-            combined_with_cue_1=combined_with_cue_0.to_soundarray
+            combined_with_cue_0 = combined_with_cue_0.set_fps(combined_with_cue.fps)
+            combined_with_cue_1=combined_with_cue_0.to_soundarray()
             
             trigger_channel_3 = np.zeros(np.shape(combined_with_cue_1))
             trigger_channel_3[0] = 0.03
             #trigger_channel_3[452] = 0
             trigger_channel_4 = np.zeros(np.shape(combined_with_cue_1))
-            trigger_channel_4[33000] = 0.03
+            trigger_channel_4[round(2*combined_with_cue.fps)] = 0.03
             trigger_channel_5 = np.zeros(np.shape(combined_with_cue_1))
-            trigger_channel_5[33000] = 0.03
+            trigger_channel_5[len(trigger_channel_5)-1] = 0.03
             combined_with_cue_1= np.transpose(np.stack(((combined_with_cue_1,combined_with_cue_0,trigger_channel_3,trigger_channel_4,trigger_channel_5))))
             combined_with_cue = CompositeVideoClip([combined_with_cue_1, # starts at t=0
                                 combined.set_start(1)])
@@ -566,7 +567,7 @@ for itrial in range(num_trials):
             combined_with_cue = CompositeVideoClip([left_cue, # starts at t=0
                             combined.set_start(1)]) # start at t=1s
             combined_with_cue_0= combined_with_cue.audio
-            combined_with_cue_1=combined_with_cue_0.to_soundarray
+            combined_with_cue_1=combined_with_cue_0.to_soundarray()
             
             trigger_channel_3 = np.zeros(np.shape(combined_with_cue_1))
             trigger_channel_3[0] = 0.03
