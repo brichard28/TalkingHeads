@@ -413,6 +413,12 @@ for itrial in range(num_trials):
             right_cue= right_cue.set_audio(audioclip_right_match)
             combined_with_cue = CompositeVideoClip([right_cue, # starts at t=0
                                 combined.set_start(1)]) # start at t=1s
+
+            # Now that it's combined....grab the audio from combined_with_cue (should be 2 channel audio)
+
+            # Add triggers to the audio (channels 3-6)
+
+            # set the audio back to combined_with_cue
         
         elif flips==1: # F2 on left and F1 on right
             audioclip_right_match=AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1_matchedright.wav")
