@@ -35,7 +35,7 @@ if not os.path.exists("D:\\Experiments\\TalkingHeads\\stim\\s_" + SubID):
 
 all_sentences_F1 = [];
 all_sentences_F2 = [];
-num_trials=48
+num_trials=8
 possible_conditions = ["match left","mismatch left","match right","mismatch right"]
 # create array of conditions, ensuring there are equal amounts
 condition_array = []
@@ -424,9 +424,9 @@ for itrial in range(num_trials):
             trigger_channel_4[round(2*combined_with_cue.fps)] = 0.03
             trigger_channel_5 = np.zeros(np.shape(combined_with_cue_1))
             trigger_channel_5[len(trigger_channel_5)-1] = 0.03
-            combined_with_cue_1= np.transpose(np.stack(((combined_with_cue_1,combined_with_cue_0,trigger_channel_3,trigger_channel_4,trigger_channel_5))))
-            combined_with_cue = CompositeVideoClip([combined_with_cue_1, # starts at t=0
-                                combined.set_start(1)])
+            combined_with_cue_1= np.transpose(np.stack(((combined_with_cue_1,trigger_channel_3,trigger_channel_4,trigger_channel_5))))
+            print(np.shape(combined_with_cue_1))
+            combined_with_cue.set_audio(combined_with_cue_1)
             # Now that it's combined....grab the audio from combined_with_cue (should be 2 channel audio)
 
             # Add triggers to the audio (channels 3-6)
@@ -449,9 +449,9 @@ for itrial in range(num_trials):
             trigger_channel_4[round(2*combined_with_cue.fps)] = 0.03
             trigger_channel_5 = np.zeros(np.shape(combined_with_cue_1))
             trigger_channel_5[len(trigger_channel_5)-1] = 0.03
-            combined_with_cue_1= np.transpose(np.stack(((combined_with_cue_1,combined_with_cue_0,trigger_channel_3,trigger_channel_4,trigger_channel_5))))
-            combined_with_cue = CompositeVideoClip([combined_with_cue_1, # starts at t=0
-                                combined.set_start(1)])
+            combined_with_cue_1= np.transpose(np.stack(((combined_with_cue_1,trigger_channel_3,trigger_channel_4,trigger_channel_5))))
+            print(np.shape(combined_with_cue_1))
+            combined_with_cue.set_audio(combined_with_cue_1)
     elif condition_this_trial == 'mismatch right':
         right_cue = ImageSequenceClip(["right_visual_cue.jpg"], durations = [2])
         right_cue = right_cue.resize(newsize=combined.size)
@@ -471,30 +471,30 @@ for itrial in range(num_trials):
             trigger_channel_4[round(2*combined_with_cue.fps)] = 0.03
             trigger_channel_5 = np.zeros(np.shape(combined_with_cue_1))
             trigger_channel_5[len(trigger_channel_5)-1] = 0.03
-            combined_with_cue_1= np.transpose(np.stack(((combined_with_cue_1,combined_with_cue_0,trigger_channel_3,trigger_channel_4,trigger_channel_5))))
-            combined_with_cue = CompositeVideoClip([combined_with_cue_1, # starts at t=0
-                                combined.set_start(1)])
+            combined_with_cue_1= np.transpose(np.stack(((combined_with_cue_1,trigger_channel_3,trigger_channel_4,trigger_channel_5))))
+            print(np.shape(combined_with_cue_1))
+            combined_with_cue.set_audio(combined_with_cue_1)
            
            
         elif flips==1: # F2 on left and F1 on right
-                audioclip_right_match=AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1_mismatchedright.wav")
-                right_cue= right_cue.set_audio(audioclip_right_match)
-                combined_with_cue = CompositeVideoClip([right_cue, # starts at t=0
-                                    combined.set_start(1)]) # start at t=1s
-                combined_with_cue_0= combined_with_cue.audio
-                combined_with_cue_0 = combined_with_cue_0.set_fps(combined_with_cue.fps)
-                combined_with_cue_1=combined_with_cue_0.to_soundarray()
+            audioclip_right_match=AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1_mismatchedright.wav")
+            right_cue= right_cue.set_audio(audioclip_right_match)
+            combined_with_cue = CompositeVideoClip([right_cue, # starts at t=0
+                                combined.set_start(1)]) # start at t=1s
+            combined_with_cue_0= combined_with_cue.audio
+            combined_with_cue_0 = combined_with_cue_0.set_fps(combined_with_cue.fps)
+            combined_with_cue_1=combined_with_cue_0.to_soundarray()
                 
-                trigger_channel_3 = np.zeros(np.shape(combined_with_cue_1))
-                trigger_channel_3[0] = 0.03
-                #trigger_channel_3[452] = 0
-                trigger_channel_4 = np.zeros(np.shape(combined_with_cue_1))
-                trigger_channel_4[round(2*combined_with_cue.fps)] = 0.03
-                trigger_channel_5 = np.zeros(np.shape(combined_with_cue_1))
-                trigger_channel_5[len(trigger_channel_5)-1] = 0.03
-                combined_with_cue_1= np.transpose(np.stack(((combined_with_cue_1,combined_with_cue_0,trigger_channel_3,trigger_channel_4,trigger_channel_5))))
-                combined_with_cue = CompositeVideoClip([combined_with_cue_1, # starts at t=0
-                                    combined.set_start(1)])
+            trigger_channel_3 = np.zeros(np.shape(combined_with_cue_1))
+            trigger_channel_3[0] = 0.03
+            #trigger_channel_3[452] = 0
+            trigger_channel_4 = np.zeros(np.shape(combined_with_cue_1))
+            trigger_channel_4[round(2*combined_with_cue.fps)] = 0.03
+            trigger_channel_5 = np.zeros(np.shape(combined_with_cue_1))
+            trigger_channel_5[len(trigger_channel_5)-1] = 0.03
+            combined_with_cue_1= np.transpose(np.stack(((combined_with_cue_1,trigger_channel_3,trigger_channel_4,trigger_channel_5))))
+            print(np.shape(combined_with_cue_1))
+            combined_with_cue.set_audio(combined_with_cue_1)
         
     elif condition_this_trial == 'match left':  
         left_cue = ImageSequenceClip(["left_visual_cue.jpg"], durations = [2])
@@ -515,9 +515,9 @@ for itrial in range(num_trials):
             trigger_channel_4[round(2*combined_with_cue.fps)] = 0.03
             trigger_channel_5 = np.zeros(np.shape(combined_with_cue_1))
             trigger_channel_5[len(trigger_channel_5)-1] = 0.03
-            combined_with_cue_1= np.transpose(np.stack(((combined_with_cue_1,combined_with_cue_0,trigger_channel_3,trigger_channel_4,trigger_channel_5))))
-            combined_with_cue = CompositeVideoClip([combined_with_cue_1, # starts at t=0
-                                combined.set_start(1)])
+            combined_with_cue_1= np.transpose(np.stack(((combined_with_cue_1,trigger_channel_3,trigger_channel_4,trigger_channel_5))))
+            print(np.shape(combined_with_cue_1))
+            combined_with_cue.set_audio(combined_with_cue_1)
             
          
         elif flips==1: # F2 on left and F1 on right
@@ -536,9 +536,9 @@ for itrial in range(num_trials):
             trigger_channel_4[round(2*combined_with_cue.fps)] = 0.03
             trigger_channel_5 = np.zeros(np.shape(combined_with_cue_1))
             trigger_channel_5[len(trigger_channel_5)-1] = 0.03
-            combined_with_cue_1= np.transpose(np.stack(((combined_with_cue_1,combined_with_cue_0,trigger_channel_3,trigger_channel_4,trigger_channel_5))))
-            combined_with_cue = CompositeVideoClip([combined_with_cue_1, # starts at t=0
-                                combined.set_start(1)])
+            combined_with_cue_1= np.transpose(np.stack(((combined_with_cue_1,trigger_channel_3,trigger_channel_4,trigger_channel_5))))
+            print(np.shape(combined_with_cue_1))
+            combined_with_cue.set_audio(combined_with_cue_1)
             
             
         
@@ -562,9 +562,9 @@ for itrial in range(num_trials):
             trigger_channel_4[round(2*combined_with_cue.fps)] = 0.03
             trigger_channel_5 = np.zeros(np.shape(combined_with_cue_1))
             trigger_channel_5[len(trigger_channel_5)-1] = 0.03
-            combined_with_cue_1= np.transpose(np.stack(((combined_with_cue_1,combined_with_cue_0,trigger_channel_3,trigger_channel_4,trigger_channel_5))))
-            combined_with_cue = CompositeVideoClip([combined_with_cue_1, # starts at t=0
-                                combined.set_start(1)])
+            combined_with_cue_1 = np.transpose(np.stack(((combined_with_cue_1, trigger_channel_3, trigger_channel_4, trigger_channel_5))))
+            print(np.shape(combined_with_cue_1))
+            combined_with_cue.set_audio(combined_with_cue_1)
             
         elif flips==1: # F2 on left and F1 on right
             audioclip_left_match=AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\Audio Cue\\Houses_F2_mismatchedleft.wav")
@@ -582,9 +582,9 @@ for itrial in range(num_trials):
             trigger_channel_4[round(2*combined_with_cue.fps)] = 0.03
             trigger_channel_5 = np.zeros(np.shape(combined_with_cue_1))
             trigger_channel_5[len(trigger_channel_5)-1] = 0.03
-            combined_with_cue_1= np.transpose(np.stack(((combined_with_cue_1,combined_with_cue_0,trigger_channel_3,trigger_channel_4,trigger_channel_5))))
-            combined_with_cue = CompositeVideoClip([combined_with_cue_1, # starts at t=0
-                                combined.set_start(1)])
+            combined_with_cue_1 = np.transpose(np.stack(((combined_with_cue_1, trigger_channel_3, trigger_channel_4, trigger_channel_5))))
+            print(np.shape(combined_with_cue_1))
+            combined_with_cue.set_audio(combined_with_cue_1)
             
      
     
