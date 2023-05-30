@@ -53,21 +53,21 @@ while itrial < n_trials:
     media_player = vlc.MediaPlayer()
     
     # Get list of output devices
-    def get_device():
-        mods = media_player.audio_output_device_enum()
-        if mods:
-            mod = mods
-            while mod:
-                mod = mod.contents
-                # If VB-Cable is found, return it's module and device id
-                if 'ASIO Fireface USB' in str(mod.description):
-                    device = mod.device
-                    module = mod.description
-                    return device,module
-                mod = mod.next
+    # def get_device():
+    #     mods = media_player.audio_output_device_enum()
+    #     if mods:
+    #         mod = mods
+    #         while mod:
+    #             mod = mod.contents
+    #             # If VB-Cable is found, return it's module and device id
+    #             if 'ASIO Fireface USB' in str(mod.description):
+    #                 device = mod.device
+    #                 module = mod.description
+    #                 return device,module
+    #             mod = mod.next
             
-    device, module = get_device()
-    media_player.audio_output_device_set(None, device)
+    #device, module = get_device()
+    #media_player.audio_output_device_set(None, device)
     media = vlc.Media(os.path.abspath(filename))
     media_player.set_fullscreen(True)
 
