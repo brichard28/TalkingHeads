@@ -54,7 +54,7 @@ while itrial < n_trials:
     
     # Get list of output devices
     def get_device():
-        mods = player.audio_output_device_enum()
+        mods = media_player.audio_output_device_enum()
         if mods:
             mod = mods
             while mod:
