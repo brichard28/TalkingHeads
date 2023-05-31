@@ -44,7 +44,7 @@ all_conditions = conditions_data_frame['0']
 
 
 def get_device():
-    mods = media_player.audio_output_device_enum()
+    mods = vlc.audio_output_device_enum()
     if mods:
         mod = mods
         while mod:
@@ -72,7 +72,7 @@ while itrial < n_trials:
 
             
     device, module = get_device()
-    media_player.audio_output_device_set(None, device)
+    vlc.audio_output_device_set(None, device)
     media = vlc.Media(os.path.abspath(filename))
     media_player.set_fullscreen(True)
 
