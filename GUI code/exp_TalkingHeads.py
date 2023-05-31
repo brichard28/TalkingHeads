@@ -42,6 +42,22 @@ all_responses_this_subject = []
 conditions_data_frame = pandas.read_csv("D:\\Experiments\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "all_conditions.csv")
 all_conditions = conditions_data_frame['0']
 
+
+def get_device():
+    mods = media_player.audio_output_device_enum()
+    if mods:
+        mod = mods
+        while mod:
+            mod = mod.contents
+            print(str(mod.description))
+            if '4 - DELL U2415 (AMD High Definition Audio Device)' in str(mod.description):
+                print('yahoo!')
+                device = mod.device
+                module = mod.description
+                return device, module
+            mod = mod.next
+
+
 while itrial < n_trials:
     
     condition_this_trial = all_conditions[itrial]
@@ -53,26 +69,17 @@ while itrial < n_trials:
     media_player = vlc.MediaPlayer()
     
     # Get list of output devices
-    # def get_device():
-    #     mods = media_player.audio_output_device_enum()
-    #     if mods:
-    #         mod = mods
-    #         while mod:
-    #             mod = mod.contents
-    #             # If VB-Cable is found, return it's module and device id
-    #             if 'ASIO Fireface USB' in str(mod.description):
-    #                 device = mod.device
-    #                 module = mod.description
-    #                 return device,module
-    #             mod = mod.next
+
             
-    #device, module = get_device()
-    #media_player.audio_output_device_set(None, device)
+    device, module = get_device()
+    media_player.audio_output_device_set(None, device)
     media = vlc.Media(os.path.abspath(filename))
     media_player.set_fullscreen(True)
 
     media_player.set_media(media)
     media_player.set_position(0.5)
+    print('Audio Device Being Used:')
+    print(media_player.audio_output_device_get())
     release = False
     
     media_player.play()

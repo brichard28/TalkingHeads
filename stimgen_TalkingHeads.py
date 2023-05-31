@@ -418,12 +418,12 @@ for itrial in range(num_trials):
             combined_with_cue_1=combined_with_cue_0.to_soundarray()
             
             trigger_channel_3 = np.zeros(len(combined_with_cue_1))
-            trigger_channel_3[0] = 0.03
+            trigger_channel_3[0] = 50
             #trigger_channel_3[452] = 0
             trigger_channel_4 = np.zeros(len(combined_with_cue_1))
-            trigger_channel_4[round(2*combined_with_cue.fps)] = 0.03
+            trigger_channel_4[round(2*combined_with_cue.fps)] = 50
             trigger_channel_5 = np.zeros(len(combined_with_cue_1))
-            trigger_channel_5[len(trigger_channel_5)-1] = 0.03
+            trigger_channel_5[len(trigger_channel_5)-1] = 50
             combined_with_cue_1= np.transpose(np.stack(((combined_with_cue_1[:,0],combined_with_cue_1[:,1],trigger_channel_3,trigger_channel_4,trigger_channel_5))))
             print(np.shape(combined_with_cue_1))
             combined_with_cue.set_audio(combined_with_cue_1)
@@ -443,12 +443,12 @@ for itrial in range(num_trials):
             combined_with_cue_1=combined_with_cue_0.to_soundarray()
             
             trigger_channel_3 = np.zeros(len(combined_with_cue_1))
-            trigger_channel_3[0] = 0.03
+            trigger_channel_3[0] = 50
             #trigger_channel_3[452] = 0
             trigger_channel_4 = np.zeros(len(combined_with_cue_1))
-            trigger_channel_4[round(2*combined_with_cue.fps)] = 0.03
+            trigger_channel_4[round(2*combined_with_cue.fps)] = 50
             trigger_channel_5 = np.zeros(len(combined_with_cue_1))
-            trigger_channel_5[len(trigger_channel_5)-1] = 0.03
+            trigger_channel_5[len(trigger_channel_5)-1] = 50
             combined_with_cue_1= np.transpose(np.stack(((combined_with_cue_1[:,0],combined_with_cue_1[:,1],trigger_channel_3,trigger_channel_4,trigger_channel_5))))
             print(np.shape(combined_with_cue_1))
             combined_with_cue.set_audio(combined_with_cue_1)
@@ -465,12 +465,12 @@ for itrial in range(num_trials):
             combined_with_cue_1=combined_with_cue_0.to_soundarray()
             
             trigger_channel_3 = np.zeros(len(combined_with_cue_1))
-            trigger_channel_3[0] = 0.03
+            trigger_channel_3[0] = 50
             #trigger_channel_3[452] = 0
             trigger_channel_4 = np.zeros(len(combined_with_cue_1))
-            trigger_channel_4[round(2*combined_with_cue.fps)] = 0.03
+            trigger_channel_4[round(2*combined_with_cue.fps)] = 50
             trigger_channel_5 = np.zeros(len(combined_with_cue_1))
-            trigger_channel_5[len(trigger_channel_5)-1] = 0.03
+            trigger_channel_5[len(trigger_channel_5)-1] = 50
             combined_with_cue_1= np.transpose(np.stack(((combined_with_cue_1[:,0],combined_with_cue_1[:,1],trigger_channel_3,trigger_channel_4,trigger_channel_5))))
             print(np.shape(combined_with_cue_1))
             combined_with_cue.set_audio(combined_with_cue_1)
@@ -486,12 +486,12 @@ for itrial in range(num_trials):
             combined_with_cue_1=combined_with_cue_0.to_soundarray()
                 
             trigger_channel_3 = np.zeros(len(combined_with_cue_1))
-            trigger_channel_3[0] = 0.03
+            trigger_channel_3[0] = 50
             #trigger_channel_3[452] = 0
             trigger_channel_4 = np.zeros(len(combined_with_cue_1))
-            trigger_channel_4[round(2*combined_with_cue.fps)] = 0.03
+            trigger_channel_4[round(2*combined_with_cue.fps)] = 50
             trigger_channel_5 = np.zeros(len(combined_with_cue_1))
-            trigger_channel_5[len(trigger_channel_5)-1] = 0.03
+            trigger_channel_5[len(trigger_channel_5)-1] = 50
             combined_with_cue_1= np.transpose(np.stack(((combined_with_cue_1[:,0],combined_with_cue_1[:,1],trigger_channel_3,trigger_channel_4,trigger_channel_5))))
             print(np.shape(combined_with_cue_1))
             combined_with_cue.set_audio(combined_with_cue_1)
@@ -509,12 +509,12 @@ for itrial in range(num_trials):
             combined_with_cue_1=combined_with_cue_0.to_soundarray()
             
             trigger_channel_3 = np.zeros(len(combined_with_cue_1))
-            trigger_channel_3[0] = 0.03
+            trigger_channel_3[0] = 50
             #trigger_channel_3[452] = 0
             trigger_channel_4 = np.zeros(len(combined_with_cue_1))
-            trigger_channel_4[round(2*combined_with_cue.fps)] = 0.03
+            trigger_channel_4[round(2*combined_with_cue.fps)] = 50
             trigger_channel_5 = np.zeros(len(combined_with_cue_1))
-            trigger_channel_5[len(trigger_channel_5)-1] = 0.03
+            trigger_channel_5[len(trigger_channel_5)-1] = 50
             combined_with_cue_1= np.transpose(np.stack(((combined_with_cue_1[:,0],combined_with_cue_1[:,1],trigger_channel_3,trigger_channel_4,trigger_channel_5))))
             print(np.shape(combined_with_cue_1))
             combined_with_cue.set_audio(combined_with_cue_1)
@@ -530,12 +530,12 @@ for itrial in range(num_trials):
             combined_with_cue_1=combined_with_cue_0.to_soundarray()
             
             trigger_channel_3 = np.zeros(len(combined_with_cue_1))
-            trigger_channel_3[0] = 0.03
+            trigger_channel_3[0] = 50
             #trigger_channel_3[452] = 0
             trigger_channel_4 = np.zeros(len(combined_with_cue_1))
-            trigger_channel_4[round(2*combined_with_cue.fps)] = 0.03
+            trigger_channel_4[round(2*combined_with_cue.fps)] = 50
             trigger_channel_5 = np.zeros(len(combined_with_cue_1))
-            trigger_channel_5[len(trigger_channel_5)-1] = 0.03
+            trigger_channel_5[len(trigger_channel_5)-1] = 50
             combined_with_cue_1= np.transpose(np.stack(((combined_with_cue_1[:,0],combined_with_cue_1[:,1],trigger_channel_3,trigger_channel_4,trigger_channel_5))))
             print(np.shape(combined_with_cue_1))
             combined_with_cue.set_audio(combined_with_cue_1)
@@ -556,12 +556,12 @@ for itrial in range(num_trials):
             combined_with_cue_1=combined_with_cue_0.to_soundarray()
             
             trigger_channel_3 = np.zeros(len(combined_with_cue_1))
-            trigger_channel_3[0] = 0.03
+            trigger_channel_3[0] = 50
             #trigger_channel_3[452] = 0
             trigger_channel_4 = np.zeros(len(combined_with_cue_1))
-            trigger_channel_4[round(2*combined_with_cue.fps)] = 0.03
+            trigger_channel_4[round(2*combined_with_cue.fps)] = 50
             trigger_channel_5 = np.zeros(len(combined_with_cue_1))
-            trigger_channel_5[len(trigger_channel_5)-1] = 0.03
+            trigger_channel_5[len(trigger_channel_5)-1] = 50
             combined_with_cue_1= np.transpose(np.stack(((combined_with_cue_1[:,0],combined_with_cue_1[:,1],trigger_channel_3,trigger_channel_4,trigger_channel_5))))
             print(np.shape(combined_with_cue_1))
             combined_with_cue.set_audio(combined_with_cue_1)
@@ -576,12 +576,12 @@ for itrial in range(num_trials):
             combined_with_cue_1=combined_with_cue_0.to_soundarray()
             
             trigger_channel_3 = np.zeros(len(combined_with_cue_1))
-            trigger_channel_3[0] = 0.03
+            trigger_channel_3[0] = 50
             #trigger_channel_3[452] = 0
             trigger_channel_4 =np.zeros(len(combined_with_cue_1))
-            trigger_channel_4[round(2*combined_with_cue.fps)] = 0.03
+            trigger_channel_4[round(2*combined_with_cue.fps)] = 50
             trigger_channel_5 = np.zeros(len(combined_with_cue_1))
-            trigger_channel_5[len(trigger_channel_5)-1] = 0.03
+            trigger_channel_5[len(trigger_channel_5)-1] = 50
             combined_with_cue_1= np.transpose(np.stack(((combined_with_cue_1[:,0],combined_with_cue_1[:,1],trigger_channel_3,trigger_channel_4,trigger_channel_5))))
             print(np.shape(combined_with_cue_1))
             combined_with_cue.set_audio(combined_with_cue_1)
