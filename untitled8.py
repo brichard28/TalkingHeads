@@ -37,24 +37,25 @@ def vlc_set_device_test(filename: str):
     vlc.libvlc_audio_output_device_list_release(mods)
 
     # hard code device
-    pc_speaker = device_ids[1]
-    headset = device_ids[3]
+    pc_speaker = device_ids[4]
+    headset = device_ids[5]
 
     # play music to default device
-    player.play()
-    time.sleep(3)
+
+
 
     # set output device
-    player.audio_output_device_set(None, headset)
+    player.audio_output_device_set(pc_speaker, headset)
+    player.play()
+    time.sleep(5)
     # don't call player.stop()!!
     player.pause()
 
     # now music is playing from headset
-    player.play()
-    time.sleep(10)
+    #player.play()
+    #time.sleep(5)
 
     player.stop()
 
-
 if __name__ == '__main__':
-    vlc_set_device_test(r'D:\cheer up.mp3')
+    vlc_set_device_test('D:\\Experiments\\TalkingHeads\\stim\\s_trig4\\trig4_trial_0_cond_ match left.mp4')
