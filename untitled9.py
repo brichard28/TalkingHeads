@@ -1,26 +1,23 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed May 31 11:53:23 2023
+import moviepy
+import numpy as np
+import sounddevice as sd
 
-@author: maana
-"""
+video = moviepy.editor.VideoFileClip("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\s_trig4\\trig4_trial_0_cond_ match left.mp4")
+audio = video.audio
+audio= audio.set_fps(video.fps)
+audio0=audio.to_soundarray()
+trigger_channel_3 = np.zeros(len(audio0))
+trigger_channel_3[0] = 50
+#trigger_channel_3[452] = 0
+trigger_channel_4 =np.zeros(len(audio0))
+trigger_channel_4[round(2*video.fps)] = 50
+trigger_channel_5 = np.zeros(len(audio0))
+trigger_channel_5[len(trigger_channel_5)-1] = 50
+audio0= np.transpose(np.stack(((audio0[:,0],audio0[:,1],trigger_channel_3,trigger_channel_4,trigger_channel_5))))
+print(np.shape(audio0))
+video.set_audio(audio)
 
-import vlc
-import self
+sd.default.device = 'ASIO Fireface USB'
+sd.play(video,video.fps,mapping=[1,2,3,4,5])
 
-self.Instance = vlc.Instance("--verbose 9")
-self.player = self.Instance.media_player_new()
-
-devices = []
-mods = self.player.audio_output_device_enum()
-
-if mods:
-    mod = mods
-    while mod:
-        mod = mod.contents
-        devices.append(mod.device)
-        mod = mod.next
-        
-vlc.libvlc_audio_output_device_list_release(mods)
-
-self.player.audio_output_device_set(None, devices[0])  # this is the part I change on each run of the code.
+sd.stop()
