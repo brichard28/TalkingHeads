@@ -1,8 +1,13 @@
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 from moviepy.editor import *
 import numpy as np
 import sounddevice as sd
 import vlc
 
+<<<<<<< Updated upstream
 # Import the video as a moviepy object
 video = VideoFileClip("D:\\Experiments\\TalkingHeads\\stim\\s_mastertest001\\mastertest001_trial_0_cond_ match left.mp4")
 
@@ -20,6 +25,14 @@ trigger_channel_5 = np.zeros(len(current_audio))
 trigger_channel_5[len(trigger_channel_5) - 1] = 1
 current_audio_with_triggers = np.transpose(np.stack(((current_audio[:, 0], current_audio[:, 1], trigger_channel_3, trigger_channel_4, trigger_channel_5))))
 print(np.shape(current_audio_with_triggers))
+=======
+video = moviepy.editor.VideoFileClip("D:\\Experiments\\TalkingHeads\\stim\\s_trig4\\trig4_trial_0_cond_ match left.mp4")
+audio = video.audio
+
+
+sd.default.device = 'ASIO Fireface USB'
+sd.play(audio,video.fps,mapping=[1,2,3,4,5])
+>>>>>>> Stashed changes
 
 # Set the audio back to the moviepy object
 video.set_audio(current_audio_with_triggers)
