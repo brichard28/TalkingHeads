@@ -43,19 +43,7 @@ conditions_data_frame = pandas.read_csv("D:\\Experiments\\TalkingHeads\\stim\\s_
 all_conditions = conditions_data_frame['0']
 
 
-def get_device():
-    mods = vlc.audio_output_device_enum()
-    if mods:
-        mod = mods
-        while mod:
-            mod = mod.contents
-            print(str(mod.description))
-            if '4 - DELL U2415 (AMD High Definition Audio Device)' in str(mod.description):
-                print('yahoo!')
-                device = mod.device
-                module = mod.description
-                return device, module
-            mod = mod.next
+
 
 
 while itrial < n_trials:
@@ -67,22 +55,8 @@ while itrial < n_trials:
     os.add_dll_directory('C:/Program Files/VideoLAN/VLC')
 
     media_player = vlc.MediaPlayer()
-    current_audio = media_player.audio_get_track()
-    trigger_channel_3 = np.zeros(len(combined_with_cue_1))
-    trigger_channel_3[0] = 50
-    # trigger_channel_3[452] = 0
-    trigger_channel_4 = np.zeros(len(combined_with_cue_1))
-    trigger_channel_4[round(2 * combined_with_cue.fps)] = 50
-    trigger_channel_5 = np.zeros(len(combined_with_cue_1))
-    trigger_channel_5[len(trigger_channel_5) - 1] = 50
-    current_audio_with_triggers = np.transpose(np.stack(((current_audio[:,0],current_audio[:,1],trigger_channel_3,trigger_channel_4,trigger_channel_5))))
-    media_player.audio_set_track
-
-    # Get list of output devices
-
-            
-    device, module = get_device()
-    vlc.audio_output_device_set(None, device)
+    
+   
     media = vlc.Media(os.path.abspath(filename))
     media_player.set_fullscreen(True)
 
