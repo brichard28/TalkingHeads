@@ -23,6 +23,7 @@ from func_spatialization import spatialize_seq
 from utils import *
 import pdb
 import numpy.matlib
+from moviepy.audio.AudioClip import AudioArrayClip
 
 
 SubID=input("Enter subject id:")
@@ -36,7 +37,7 @@ if not os.path.exists("D:\\Experiments\\TalkingHeads\\stim\\s_" + SubID):
 
 all_sentences_F1 = [];
 all_sentences_F2 = [];
-num_trials=48
+num_trials=8
 possible_conditions = ["match left","mismatch left","match right","mismatch right"]
 # create array of conditions, ensuring there are equal amounts
 condition_array = []
@@ -184,10 +185,10 @@ for itrial in range(num_trials):
             l1= ' '.join([random.choice(i) for i in l])
             l3= ''.join([random.choice(i) for i in l2])
             l4=l1+l3
-            ind= obj1.find(l4)
+            ind= obj2.find(l4)
             if ind>-1:
-                sentence1=l4
-                print(sentence1)
+                sentence2=l4
+                print(sentence2)
                 all_sentences_F2.append(sentence2)
                 break
        
@@ -257,19 +258,19 @@ for itrial in range(num_trials):
             audio2_spatialized = audio2_spatialized * rmsset/rms; #normalizing audio
             sf.write("D:\\Experiments\\TalkingHeads\\stim\\sentence_2_spatialized.wav",  audio2_spatialized, fs_2) #writing audio file to .wav
         elif  condition_this_trial == 'mismatch left':  #mismatch left condition
-                audio1_spatialized = audio1_spatialized[1] # indexing in to dictionary
-                audio1_spatialized = audio1_spatialized["audio1_r"] #spatializing to the right
-                rmsset = 0.02; #seting rms value
-                rms = np.sqrt(np.mean(audio1_spatialized ** 2)) # calculating rms
-                audio1_spatialized = audio1_spatialized * rmsset / rms; #normalizing audio
-                sf.write("D:\\Experiments\\TalkingHeads\\stim\\sentence_1_spatialized.wav", audio1_spatialized, fs_1) #writing audio file to .wav
+            audio1_spatialized = audio1_spatialized[1] # indexing in to dictionary
+            audio1_spatialized = audio1_spatialized["audio1_r"] #spatializing to the right
+            rmsset = 0.02; #seting rms value
+            rms = np.sqrt(np.mean(audio1_spatialized ** 2)) # calculating rms
+            audio1_spatialized = audio1_spatialized * rmsset / rms; #normalizing audio
+            sf.write("D:\\Experiments\\TalkingHeads\\stim\\sentence_1_spatialized.wav", audio1_spatialized, fs_1) #writing audio file to .wav
 
-                audio2_spatialized = audio2_spatialized[1] # indexing in to dictionary 
-                audio2_spatialized = audio2_spatialized["audio2_l"] #spatializing to the left
-                rmsset = 0.02; #seting rms value
-                rms = np.sqrt(np.mean(audio2_spatialized ** 2)) # calculating rms
-                audio2_spatialized = audio2_spatialized * rmsset / rms; #normalizing audio
-                sf.write("D:\\Experiments\\TalkingHeads\\stim\\sentence_2_spatialized.wav", audio2_spatialized, fs_2) #writing audio file to .wav
+            audio2_spatialized = audio2_spatialized[1] # indexing in to dictionary 
+            audio2_spatialized = audio2_spatialized["audio2_l"] #spatializing to the left
+            rmsset = 0.02; #seting rms value
+            rms = np.sqrt(np.mean(audio2_spatialized ** 2)) # calculating rms
+            audio2_spatialized = audio2_spatialized * rmsset / rms; #normalizing audio
+            sf.write("D:\\Experiments\\TalkingHeads\\stim\\sentence_2_spatialized.wav", audio2_spatialized, fs_2) #writing audio file to .wav
 
         elif condition_this_trial == 'match right': #match right condition
             audio1_spatialized = audio1_spatialized[1] # indexing in to dictionary 
@@ -314,19 +315,19 @@ for itrial in range(num_trials):
             audio2_spatialized = audio2_spatialized * rmsset/rms; #normalizing audio
             sf.write("D:\\Experiments\\TalkingHeads\\stim\\sentence_2_spatialized.wav",  audio2_spatialized, fs_2) #writing audio file to .wav
         elif  condition_this_trial == 'mismatch left': #mismatch left 
-                audio1_spatialized = audio1_spatialized[1] # indexing in to dictionary 
-                audio1_spatialized = audio1_spatialized["audio1_l"] #spatializing to the left
-                rmsset = 0.02; #seting rms value
-                rms = np.sqrt(np.mean(audio1_spatialized ** 2)) # calculating rms
-                audio1_spatialized = audio1_spatialized * rmsset / rms; # normalizing audio
-                sf.write("D:\\Experiments\\TalkingHeads\\stim\\sentence_1_spatialized.wav", audio1_spatialized, fs_1) #writing audio file to .wav
+            audio1_spatialized = audio1_spatialized[1] # indexing in to dictionary 
+            audio1_spatialized = audio1_spatialized["audio1_l"] #spatializing to the left
+            rmsset = 0.02; #seting rms value
+            rms = np.sqrt(np.mean(audio1_spatialized ** 2)) # calculating rms
+            audio1_spatialized = audio1_spatialized * rmsset / rms; # normalizing audio
+            sf.write("D:\\Experiments\\TalkingHeads\\stim\\sentence_1_spatialized.wav", audio1_spatialized, fs_1) #writing audio file to .wav
 
-                audio2_spatialized = audio2_spatialized[1] # indexing in to dictionary
-                audio2_spatialized = audio2_spatialized["audio2_r"] #spatializing to the right
-                rmsset = 0.02; #seting rms value
-                rms = np.sqrt(np.mean(audio2_spatialized ** 2)) # calculating rms
-                audio2_spatialized = audio2_spatialized * rmsset / rms; # normalizing audio
-                sf.write("D:\\Experiments\\TalkingHeads\\stim\\sentence_2_spatialized.wav", audio2_spatialized, fs_2)#writing audio file to .wav
+            audio2_spatialized = audio2_spatialized[1] # indexing in to dictionary
+            audio2_spatialized = audio2_spatialized["audio2_r"] #spatializing to the right
+            rmsset = 0.02; #seting rms value
+            rms = np.sqrt(np.mean(audio2_spatialized ** 2)) # calculating rms
+            audio2_spatialized = audio2_spatialized * rmsset / rms; # normalizing audio
+            sf.write("D:\\Experiments\\TalkingHeads\\stim\\sentence_2_spatialized.wav", audio2_spatialized, fs_2)#writing audio file to .wav
 
         elif condition_this_trial == 'match right':   #match right 
             audio1_spatialized = audio1_spatialized[1] # indexing in to dictionary 
@@ -407,63 +408,129 @@ for itrial in range(num_trials):
    #Adding visual cues and audio cues    
     if condition_this_trial == 'match right':  
         right_cue = ImageSequenceClip(["right_visual_cue.jpg"], durations = [2])
+        right_cue_color= ImageSequenceClip(["colored_blocks_blue.png"], durations = [0.2])
+        
         right_cue = right_cue.resize(newsize=combined.size)
         if flips==0: # F1 on left and F2 on right
             audioclip_right_match=AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\Audio Cue\\Houses_F2_matchedright.wav")
             right_cue= right_cue.set_audio(audioclip_right_match)
             combined_with_cue = CompositeVideoClip([right_cue, # starts at t=0
                                 combined.set_start(1)]) # start at t=1s
+            x_position = combined_with_cue.size[0] - right_cue_color.size[0] - 10 
+            y_position = combined_with_cue.size[1] - right_cue_color.size[1] - 10  
+            right_cue_color = right_cue_color.set_position((x_position, y_position))
+            combined_with_cue = CompositeVideoClip([combined_with_cue, # starts at t=0
+                                right_cue_color])
+            
+
+
+            # Now that it's combined....grab the audio from combined_with_cue (should be 2 channel audio)
+
+            # Add triggers to the audio (channels 3-6)
+
+            # set the audio back to combined_with_cue
         
         elif flips==1: # F2 on left and F1 on right
             audioclip_right_match=AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1_matchedright.wav")
             right_cue= right_cue.set_audio(audioclip_right_match)
             combined_with_cue = CompositeVideoClip([right_cue, # starts at t=0
                                 combined.set_start(1)]) # start at t=1s
+
+            x_position = combined_with_cue.size[0] - right_cue_color.size[0] - 10 
+            y_position = combined_with_cue.size[1] - right_cue_color.size[1] - 10  
+            right_cue_color = right_cue_color.set_position((x_position, y_position))
+            combined_with_cue = CompositeVideoClip([combined_with_cue, # starts at t=0
+                                right_cue_color])
+           
+
     elif condition_this_trial == 'mismatch right':
         right_cue = ImageSequenceClip(["right_visual_cue.jpg"], durations = [2])
         right_cue = right_cue.resize(newsize=combined.size)
+        right_cue_color=ImageSequenceClip(["colored_blocks_green.png"], durations = [0.2])
         if flips==0: # F1 on left and F2 on right
             audioclip_right_match=AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\Audio Cue\\Houses_F2_mismatchedright.wav")
             right_cue= right_cue.set_audio(audioclip_right_match)
             combined_with_cue = CompositeVideoClip([right_cue, # starts at t=0
-                                combined.set_start(1)]) # start at t=1s 
+                                combined.set_start(1)]) # start at t=1s
+
+            x_position = combined_with_cue.size[0] - right_cue_color.size[0] - 10 
+            y_position = combined_with_cue.size[1] - right_cue_color.size[1] - 10  
+            right_cue_color = right_cue_color.set_position((x_position, y_position))
+            combined_with_cue = CompositeVideoClip([combined_with_cue, # starts at t=0
+                                right_cue_color])
+
         elif flips==1: # F2 on left and F1 on right
-                audioclip_right_match=AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1_mismatchedright.wav")
-                right_cue= right_cue.set_audio(audioclip_right_match)
-                combined_with_cue = CompositeVideoClip([right_cue, # starts at t=0
-                                    combined.set_start(1)]) # start at t=1s 
-            
-        
+            audioclip_right_match=AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1_mismatchedright.wav")
+            right_cue= right_cue.set_audio(audioclip_right_match)
+            combined_with_cue = CompositeVideoClip([right_cue, # starts at t=0
+                                combined.set_start(1)]) # start at t=1s
+
+            x_position = combined_with_cue.size[0] - right_cue_color.size[0] - 10 
+            y_position = combined_with_cue.size[1] - right_cue_color.size[1] - 10  
+            right_cue_color = right_cue_color.set_position((x_position, y_position))
+            combined_with_cue = CompositeVideoClip([combined_with_cue, # starts at t=0
+                                right_cue_color])
+           
+
     elif condition_this_trial == 'match left':  
         left_cue = ImageSequenceClip(["left_visual_cue.jpg"], durations = [2])
         left_cue = left_cue.resize(newsize=combined.size)
+        left_cue_color= ImageSequenceClip(["colored_blocks_red.png"], durations = [0.2])
         if flips==0: # F1 on left and F2 on right
             audioclip_left_match=AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1_matchedleft.wav")
             left_cue= left_cue.set_audio(audioclip_left_match)
             combined_with_cue = CompositeVideoClip([left_cue, # starts at t=0
                                 combined.set_start(1)]) # start at t=1s
+            x_position = combined_with_cue.size[0] - left_cue_color.size[0] - 10 
+            y_position = combined_with_cue.size[1] - left_cue_color.size[1] - 10  
+            left_cue_color = left_cue_color.set_position((x_position, y_position))
+            combined_with_cue = CompositeVideoClip([combined_with_cue, # starts at t=0
+                                left_cue_color])
+           
+
         elif flips==1: # F2 on left and F1 on right
             audioclip_left_match=AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\Audio Cue\\Houses_F2_matchedleft.wav")
             left_cue= left_cue.set_audio(audioclip_left_match)
             combined_with_cue = CompositeVideoClip([left_cue, # starts at t=0
                                 combined.set_start(1)]) # start at t=1s
+
+            x_position = combined_with_cue.size[0] - left_cue_color.size[0] - 10 
+            y_position = combined_with_cue.size[1] - left_cue_color.size[1] - 10  
+            left_cue_color = left_cue_color.set_position((x_position, y_position))
+            combined_with_cue = CompositeVideoClip([combined_with_cue, # starts at t=0
+                                left_cue_color])
+          
             
-        
-        
+
     elif condition_this_trial == 'mismatch left':
         left_cue = ImageSequenceClip(["left_visual_cue.jpg"], durations = [2])
         left_cue = left_cue.resize(newsize=combined.size)
+        left_cue_color=ImageSequenceClip(["colored_blocks_yellow.png"], durations = [0.2])
         if flips==0: # F1 on left and F2 on right
             audioclip_left_match=AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1_mismatchedleft.wav")
             left_cue= left_cue.set_audio(audioclip_left_match)
             combined_with_cue = CompositeVideoClip([left_cue, # starts at t=0
                              combined.set_start(1)]) # start at t=1s
+            x_position = combined_with_cue.size[0] - left_cue_color.size[0] - 10 
+            y_position = combined_with_cue.size[1] - left_cue_color.size[1] - 10  
+            left_cue_color = left_cue_color.set_position((x_position, y_position))
+            combined_with_cue = CompositeVideoClip([combined_with_cue, # starts at t=0
+                                left_cue_color])
+            
+
+
         elif flips==1: # F2 on left and F1 on right
             audioclip_left_match=AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\Audio Cue\\Houses_F2_mismatchedleft.wav")
             left_cue= left_cue.set_audio(audioclip_left_match)
-            combined_with_cue = CompositeVideoClip([left_cue, # starts at t=0
-                            combined.set_start(1)]) # start at t=1s
-         
+            combined_with_cue = CompositeVideoClip([left_cue,  # starts at t=0
+                            combined.set_start(1)])  # start at t=1s
+            x_position = combined_with_cue.size[0] - left_cue_color.size[0] - 10 
+            y_position = combined_with_cue.size[1] - left_cue_color.size[1] - 10  
+            left_cue_color = left_cue_color.set_position((x_position, y_position))
+            combined_with_cue = CompositeVideoClip([combined_with_cue, # starts at t=0
+                                left_cue_color])
+            
+
      
     
     #clip1= cl1; #.subclip(0,duration1)

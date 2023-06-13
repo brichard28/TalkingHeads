@@ -29,7 +29,7 @@ while not eng_instruct.workspace['release']:
 eng_instruct.quit()
 
 
-n_trials = 48
+n_trials = 8
 
 
 
@@ -42,6 +42,10 @@ all_responses_this_subject = []
 conditions_data_frame = pandas.read_csv("D:\\Experiments\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "all_conditions.csv")
 all_conditions = conditions_data_frame['0']
 
+
+
+
+
 while itrial < n_trials:
     
     condition_this_trial = all_conditions[itrial]
@@ -51,11 +55,15 @@ while itrial < n_trials:
     os.add_dll_directory('C:/Program Files/VideoLAN/VLC')
 
     media_player = vlc.MediaPlayer()
+    
+   
     media = vlc.Media(os.path.abspath(filename))
     media_player.set_fullscreen(True)
 
     media_player.set_media(media)
     media_player.set_position(0.5)
+    print('Audio Device Being Used:')
+    print(media_player.audio_output_device_get())
     release = False
     
     media_player.play()

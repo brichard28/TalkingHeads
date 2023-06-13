@@ -23,7 +23,12 @@ from utils import *
 import pdb
 import numpy.matlib
 
+SubID=input("Enter subject id:")
 
+# make folder if it doesn't exist already
+if not os.path.exists("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID):
+    os.mkdir("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID)
+    
 all_sentences_F1 = [];
 all_sentences_F2 = [];
 num_trials=48
@@ -173,8 +178,8 @@ for itrial in range(num_trials):
             l4=l1+l3
             ind= obj1.find(l4)
             if ind>-1:
-                sentence1=l4
-                print(sentence1)
+                sentence2=l4
+                print(sentence2)
                 all_sentences_F2.append(sentence2)
                 break
        
