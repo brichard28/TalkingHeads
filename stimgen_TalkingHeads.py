@@ -37,7 +37,7 @@ if not os.path.exists("D:\\Experiments\\TalkingHeads\\stim\\s_" + SubID):
 
 all_sentences_F1 = [];
 all_sentences_F2 = [];
-num_trials=8
+num_trials=4
 possible_conditions = ["match left","mismatch left","match right","mismatch right"]
 # create array of conditions, ensuring there are equal amounts
 condition_array = []
@@ -416,7 +416,7 @@ for itrial in range(num_trials):
             right_cue= right_cue.set_audio(audioclip_right_match)
             combined_with_cue = CompositeVideoClip([right_cue, # starts at t=0
                                 combined.set_start(1)]) # start at t=1s
-            x_position = combined_with_cue.size[0] - right_cue_color.size[0] - 10 
+            x_position =  10
             y_position = combined_with_cue.size[1] - right_cue_color.size[1] - 10  
             right_cue_color = right_cue_color.set_position((x_position, y_position))
             combined_with_cue = CompositeVideoClip([combined_with_cue, # starts at t=0
@@ -436,7 +436,7 @@ for itrial in range(num_trials):
             combined_with_cue = CompositeVideoClip([right_cue, # starts at t=0
                                 combined.set_start(1)]) # start at t=1s
 
-            x_position = combined_with_cue.size[0] - right_cue_color.size[0] - 10 
+            x_position =  10
             y_position = combined_with_cue.size[1] - right_cue_color.size[1] - 10  
             right_cue_color = right_cue_color.set_position((x_position, y_position))
             combined_with_cue = CompositeVideoClip([combined_with_cue, # starts at t=0
@@ -453,7 +453,7 @@ for itrial in range(num_trials):
             combined_with_cue = CompositeVideoClip([right_cue, # starts at t=0
                                 combined.set_start(1)]) # start at t=1s
 
-            x_position = combined_with_cue.size[0] - right_cue_color.size[0] - 10 
+            x_position =  10
             y_position = combined_with_cue.size[1] - right_cue_color.size[1] - 10  
             right_cue_color = right_cue_color.set_position((x_position, y_position))
             combined_with_cue = CompositeVideoClip([combined_with_cue, # starts at t=0
@@ -465,7 +465,7 @@ for itrial in range(num_trials):
             combined_with_cue = CompositeVideoClip([right_cue, # starts at t=0
                                 combined.set_start(1)]) # start at t=1s
 
-            x_position = combined_with_cue.size[0] - right_cue_color.size[0] - 10 
+            x_position =  10
             y_position = combined_with_cue.size[1] - right_cue_color.size[1] - 10  
             right_cue_color = right_cue_color.set_position((x_position, y_position))
             combined_with_cue = CompositeVideoClip([combined_with_cue, # starts at t=0
@@ -481,7 +481,7 @@ for itrial in range(num_trials):
             left_cue= left_cue.set_audio(audioclip_left_match)
             combined_with_cue = CompositeVideoClip([left_cue, # starts at t=0
                                 combined.set_start(1)]) # start at t=1s
-            x_position = combined_with_cue.size[0] - left_cue_color.size[0] - 10 
+            x_position = 10
             y_position = combined_with_cue.size[1] - left_cue_color.size[1] - 10  
             left_cue_color = left_cue_color.set_position((x_position, y_position))
             combined_with_cue = CompositeVideoClip([combined_with_cue, # starts at t=0
@@ -494,7 +494,7 @@ for itrial in range(num_trials):
             combined_with_cue = CompositeVideoClip([left_cue, # starts at t=0
                                 combined.set_start(1)]) # start at t=1s
 
-            x_position = combined_with_cue.size[0] - left_cue_color.size[0] - 10 
+            x_position =  10
             y_position = combined_with_cue.size[1] - left_cue_color.size[1] - 10  
             left_cue_color = left_cue_color.set_position((x_position, y_position))
             combined_with_cue = CompositeVideoClip([combined_with_cue, # starts at t=0
@@ -511,7 +511,7 @@ for itrial in range(num_trials):
             left_cue= left_cue.set_audio(audioclip_left_match)
             combined_with_cue = CompositeVideoClip([left_cue, # starts at t=0
                              combined.set_start(1)]) # start at t=1s
-            x_position = combined_with_cue.size[0] - left_cue_color.size[0] - 10 
+            x_position = 10
             y_position = combined_with_cue.size[1] - left_cue_color.size[1] - 10  
             left_cue_color = left_cue_color.set_position((x_position, y_position))
             combined_with_cue = CompositeVideoClip([combined_with_cue, # starts at t=0
@@ -524,7 +524,7 @@ for itrial in range(num_trials):
             left_cue= left_cue.set_audio(audioclip_left_match)
             combined_with_cue = CompositeVideoClip([left_cue,  # starts at t=0
                             combined.set_start(1)])  # start at t=1s
-            x_position = combined_with_cue.size[0] - left_cue_color.size[0] - 10 
+            x_position = 10
             y_position = combined_with_cue.size[1] - left_cue_color.size[1] - 10  
             left_cue_color = left_cue_color.set_position((x_position, y_position))
             combined_with_cue = CompositeVideoClip([combined_with_cue, # starts at t=0
