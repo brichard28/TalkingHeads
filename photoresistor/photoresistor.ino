@@ -10,7 +10,7 @@ void loop() {
   // put your main code here, to run repeatedly:
   int light= analogRead(photopin);
   Serial.println(light);
-  delay(100);
+  delay(10);
   
 
 }
