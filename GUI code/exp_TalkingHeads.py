@@ -29,7 +29,7 @@ while not eng_instruct.workspace['release']:
 eng_instruct.quit()
 
 
-n_trials = 8
+n_trials = 4
 
 
 
@@ -62,9 +62,9 @@ while itrial < n_trials:
 
     media_player.set_media(media)
     media_player.set_position(0.5)
-    print('Audio Device Being Used:')
-    print(media_player.audio_output_device_get())
-    release = False
+   # print('Audio Device Being Used:')
+    #print(media_player.audio_output_device_get())
+    #release = False
     
     media_player.play()
 
