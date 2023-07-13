@@ -37,7 +37,7 @@ if not os.path.exists("D:\\Experiments\\TalkingHeads\\stim\\s_" + SubID):
 
 all_sentences_F1 = [];
 all_sentences_F2 = [];
-num_trials=4
+num_trials=48
 possible_conditions = ["match left","mismatch left","match right","mismatch right"]
 # create array of conditions, ensuring there are equal amounts
 condition_array = []
@@ -408,7 +408,7 @@ for itrial in range(num_trials):
    #Adding visual cues and audio cues    
     if condition_this_trial == 'match right':  
         right_cue = ImageSequenceClip(["right_visual_cue.jpg"], durations = [2])
-        right_cue_color= ImageSequenceClip(["colored_blocks_blue.png"], durations = [0.2])
+        right_cue_color= ImageSequenceClip(["checkerboard.png"], durations = [0.001])
         
         right_cue = right_cue.resize(newsize=combined.size)
         if flips==0: # F1 on left and F2 on right
@@ -446,7 +446,7 @@ for itrial in range(num_trials):
     elif condition_this_trial == 'mismatch right':
         right_cue = ImageSequenceClip(["right_visual_cue.jpg"], durations = [2])
         right_cue = right_cue.resize(newsize=combined.size)
-        right_cue_color=ImageSequenceClip(["colored_blocks_green.png"], durations = [0.2])
+        right_cue_color=ImageSequenceClip(["checkerboard2.png"], durations = [0.002])
         if flips==0: # F1 on left and F2 on right
             audioclip_right_match=AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\Audio Cue\\Houses_F2_mismatchedright.wav")
             right_cue= right_cue.set_audio(audioclip_right_match)
@@ -475,7 +475,7 @@ for itrial in range(num_trials):
     elif condition_this_trial == 'match left':  
         left_cue = ImageSequenceClip(["left_visual_cue.jpg"], durations = [2])
         left_cue = left_cue.resize(newsize=combined.size)
-        left_cue_color= ImageSequenceClip(["colored_blocks_red.png"], durations = [0.2])
+        left_cue_color= ImageSequenceClip(["half_white_half_black.png"], durations = [0.003])
         if flips==0: # F1 on left and F2 on right
             audioclip_left_match=AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1_matchedleft.wav")
             left_cue= left_cue.set_audio(audioclip_left_match)
@@ -505,7 +505,7 @@ for itrial in range(num_trials):
     elif condition_this_trial == 'mismatch left':
         left_cue = ImageSequenceClip(["left_visual_cue.jpg"], durations = [2])
         left_cue = left_cue.resize(newsize=combined.size)
-        left_cue_color=ImageSequenceClip(["colored_blocks_yellow.png"], durations = [0.2])
+        left_cue_color=ImageSequenceClip(["half_white_half_black_vertical.png"], durations = [0.004])
         if flips==0: # F1 on left and F2 on right
             audioclip_left_match=AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1_mismatchedleft.wav")
             left_cue= left_cue.set_audio(audioclip_left_match)

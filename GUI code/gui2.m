@@ -120,7 +120,9 @@ function varargout = gui2_OutputFcn(hObject, eventdata, handles)
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
 global buttonresponse
+set(handles.figure1, 'units','normalized','outerposition',[0 0 1 1]);
 % Get default command line output from handles structure
 switch handles.guiState
     case 'response'
