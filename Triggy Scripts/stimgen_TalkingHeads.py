@@ -537,8 +537,7 @@ for itrial in range(num_trials):
     #d2= cl2.set_duration(3)
     #duration2= cl2.duration
     #clip2= cl2; #cl2.subclip(0,duration2)
-    combined_with_cue.write_videofile("D:\\Experiments\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "_trial_" + str(itrial) + "_cond_" + str(condition_this_trial) + ".mp4") # Writing the video
-
+    combined_with_cue.write_videofile("D:\\Experiments\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "_trial_" + str(itrial) + "_cond_ " + str(condition_this_trial) + ".mp4") # Writing the video
 
 
 pandas.DataFrame(all_sentences_F1).to_csv("D:\\Experiments\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "all_sentences_F1.csv") #  Creating CSv for F1 Sentences
