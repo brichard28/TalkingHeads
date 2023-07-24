@@ -4,3 +4,8 @@
 4.D:\Experiments\TalkingHeads\TalkingHeads-venv\Scripts\activate.bat
 5.cd D:\Experiments\TalkingHeads\GUI code
 6. python exp_TalkingHeads.py
+
+
+
+
+c:\users\lab user\documents\miniconda\envs\talkingheads-env\lib\site-packages (1.3.0)
