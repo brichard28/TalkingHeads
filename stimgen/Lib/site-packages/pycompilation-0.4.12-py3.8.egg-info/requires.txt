@@ -1,0 +1,14 @@
+
+[all]
+cython
+appdirs
+argh
+joblib
+pytest
+numpy
+Sphinx
+sphinx_rtd_theme
+numpydoc
+pytest-cov
+pytest-flakes
+pytest-pep8
