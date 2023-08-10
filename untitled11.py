@@ -1,55 +1,32 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Jun 29 09:07:48 2023
+Created on Wed Aug  9 12:41:40 2023
 
 @author: maana
 """
 
-from PIL import Image, ImageDraw
+import random
 
-# Set the size of each block and the dimensions of the grid
-block_size = 50
-grid_width = 5
-grid_height = 5
+possible_conditions = ["match left", "mismatch left", "match right", "mismatch right"]
+trials_per_block = 10
+blocks = []
 
-# Create a new image with the desired size
-image_width = grid_width * block_size
-image_height = grid_height * block_size
-image = Image.new("RGB", (image_width, image_height))
+# Define the trial combinations for each block
+block_1_trials = ["match right", "match left"] * (trials_per_block // 2)
+block_2_trials = ["mismatch right", "mismatch left"] * (trials_per_block // 2)
+block_3_trials = ["match right", "match left", "mismatch right", "mismatch left"] 
 
-# Create a draw object to manipulate the image
-draw = ImageDraw.Draw(image)
+# Combine the trial combinations for each block
+blocks.append(block_1_trials)
+blocks.append(block_2_trials)
+blocks.append(block_3_trials)
 
-# Define the patterns and their respective colors
-patterns = [
-    ("solid", (255, 0, 0)),       # Solid red
-    ("horizontal", (0, 255, 0)),  # Horizontal green stripes
-    ("vertical", (0, 0, 255)),    # Vertical blue stripes
-    ("diagonal", (255, 255, 0)),  # Diagonal yellow stripes
-]
+# Shuffle the trials within each block
+for block in blocks:
+    random.shuffle(block)
 
-# Iterate over the grid
-for x in range(grid_width):
-    for y in range(grid_height):
-        # Calculate the position of the current block
-        block_x = x * block_size
-        block_y = y * block_size
-
-        # Get the current pattern and color
-        pattern, color = patterns[(x + y) % len(patterns)]
-
-        # Draw the block using the pattern and color
-        if pattern == "solid":
-            draw.rectangle([(block_x, block_y), (block_x + block_size, block_y + block_size)], fill=color)
-        elif pattern == "horizontal":
-            for i in range(block_y, block_y + block_size, 5):
-                draw.line([(block_x, i), (block_x + block_size, i)], fill=color)
-        elif pattern == "vertical":
-            for i in range(block_x, block_x + block_size, 5):
-                draw.line([(i, block_y), (i, block_y + block_size)], fill=color)
-        elif pattern == "diagonal":
-            for i in range(block_size):
-                draw.line([(block_x + i, block_y), (block_x, block_y + i)], fill=color)
-
-# Save the image
-image.save("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\patterned_blocks.png")
+# Print the generated blocks
+for block_num, block in enumerate(blocks, start=1):
+    print(f"Block {block_num}:")
+    for trial in block:
+        print(trial)

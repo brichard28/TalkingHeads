@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
 """
+Created on Wed Aug  9 17:55:31 2023
+
+@author: maana
+"""
+
+# -*- coding: utf-8 -*-
+"""
 Created on Mon Mar 20 14:30:17 2023
 
 @author: Benjamin Richardson and Maanasa Guru Adimurthy 
@@ -29,15 +36,15 @@ from moviepy.audio.AudioClip import AudioArrayClip
 SubID=input("Enter subject id:")
 
 # make folder if it doesn't exist already
-if not os.path.exists("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID):
-    os.mkdir("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID)
+if not os.path.exists("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\practice\\all_" + SubID):
+    os.mkdir("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\practice\\all_" + SubID)
     
 
 
 
 all_sentences_F1 = [];
 all_sentences_F2 = [];
-num_trials=4
+num_trials=12
 possible_conditions = ["match left","mismatch left","match right","mismatch right"]
 # create array of conditions, ensuring there are equal amounts
 condition_array = []
@@ -537,16 +544,16 @@ for itrial in range(num_trials):
     #d2= cl2.set_duration(3)
     #duration2= cl2.duration
     #clip2= cl2; #cl2.subclip(0,duration2)
-    combined_with_cue.write_videofile("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "_trial_" + str(itrial) + "_cond_ " + str(condition_this_trial) + ".mp4") # Writing the video
+    combined_with_cue.write_videofile("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\practice\\all_" + SubID + "\\" + SubID + "_trial_" + str(itrial) + "_cond_ " + str(condition_this_trial) + ".mp4") # Writing the video
 
 
-pandas.DataFrame(all_sentences_F1).to_csv("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "all_sentences_F1.csv") #  Creating CSv for F1 Sentences
-pandas.DataFrame(all_sentences_F2).to_csv("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "all_sentences_F2.csv") #  Creating CSv for F2 Sentences
-pandas.DataFrame(condition_array).to_csv("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "all_conditions.csv") #  Creating CSV all conditions
+pandas.DataFrame(all_sentences_F1).to_csv("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\practice\\all_" + SubID + "\\" + SubID + "all_sentences_F1.csv") #  Creating CSv for F1 Sentences
+pandas.DataFrame(all_sentences_F2).to_csv("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\practice\\all_" + SubID + "\\" + SubID + "all_sentences_F2.csv") #  Creating CSv for F2 Sentences
+pandas.DataFrame(condition_array).to_csv("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\practice\\all_" + SubID + "\\" + SubID + "all_conditions.csv") #  Creating CSV all conditions
 
-df1=pandas.read_csv("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "all_conditions.csv") #reading all conditions
-df2=pandas.read_csv("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "all_sentences_F1.csv") # Reading F1 sentences
-df3=pandas.read_csv("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "all_sentences_F2.csv") # Reading F2 sentences
+df1=pandas.read_csv("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\practice\\all_" + SubID + "\\" + SubID + "all_conditions.csv") #reading all conditions
+df2=pandas.read_csv("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\practice\\all_" + SubID + "\\" + SubID + "all_sentences_F1.csv") # Reading F1 sentences
+df3=pandas.read_csv("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\practice\\all_" + SubID + "\\" + SubID + "all_sentences_F2.csv") # Reading F2 sentences
 df1_list= df1["0"].tolist() 
 df2_list= df2["0"].tolist()
 df3_list= df3["0"].tolist()
@@ -594,4 +601,4 @@ df = pandas.DataFrame(columns=['Column1', 'Column2','Column3','Column4','Column5
 for sublist in list_to_string:
     df.loc[len(df)] = sublist
 
-df.to_csv("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "Answerkey.csv")
+df.to_csv("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\practice\\all_" + SubID + "\\" + SubID + "Answerkey.csv")

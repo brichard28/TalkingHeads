@@ -29,16 +29,16 @@ from moviepy.audio.AudioClip import AudioArrayClip
 SubID=input("Enter subject id:")
 
 # make folder if it doesn't exist already
-if not os.path.exists("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID):
-    os.mkdir("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID)
+if not os.path.exists("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\practice\\m_" + SubID):
+    os.mkdir("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\practice\\m_" + SubID)
     
 
 
 
 all_sentences_F1 = [];
 all_sentences_F2 = [];
-num_trials=4
-possible_conditions = ["match left","mismatch left","match right","mismatch right"]
+num_trials=12
+possible_conditions = ["match left","match right"]
 # create array of conditions, ensuring there are equal amounts
 condition_array = []
 for icondition in range(len(possible_conditions)):
@@ -257,21 +257,7 @@ for itrial in range(num_trials):
             rms = np.sqrt(np.mean(audio2_spatialized**2)) # calculating rms
             audio2_spatialized = audio2_spatialized * rmsset/rms; #normalizing audio
             sf.write("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\sentence_2_spatialized.wav",  audio2_spatialized, fs_2) #writing audio file to .wav
-        elif  condition_this_trial == 'mismatch left':  #mismatch left condition
-            audio1_spatialized = audio1_spatialized[1] # indexing in to dictionary
-            audio1_spatialized = audio1_spatialized["audio1_r"] #spatializing to the right
-            rmsset = 0.02; #seting rms value
-            rms = np.sqrt(np.mean(audio1_spatialized ** 2)) # calculating rms
-            audio1_spatialized = audio1_spatialized * rmsset / rms; #normalizing audio
-            sf.write("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\sentence_1_spatialized.wav", audio1_spatialized, fs_1) #writing audio file to .wav
-
-            audio2_spatialized = audio2_spatialized[1] # indexing in to dictionary 
-            audio2_spatialized = audio2_spatialized["audio2_l"] #spatializing to the left
-            rmsset = 0.02; #seting rms value
-            rms = np.sqrt(np.mean(audio2_spatialized ** 2)) # calculating rms
-            audio2_spatialized = audio2_spatialized * rmsset / rms; #normalizing audio
-            sf.write("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\sentence_2_spatialized.wav", audio2_spatialized, fs_2) #writing audio file to .wav
-
+        
         elif condition_this_trial == 'match right': #match right condition
             audio1_spatialized = audio1_spatialized[1] # indexing in to dictionary 
             audio1_spatialized = audio1_spatialized["audio1_l"] #spatializing to the left
@@ -285,20 +271,7 @@ for itrial in range(num_trials):
             rms = np.sqrt(np.mean(audio2_spatialized**2))  # calculating rms
             audio2_spatialized = audio2_spatialized * rmsset/rms;#normalizing audio
             sf.write("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\sentence_2_spatialized.wav",  audio2_spatialized, fs_1)#writing audio file to .wav
-        elif  condition_this_trial == 'mismatch right': #mismatch right condition
-            audio1_spatialized = audio1_spatialized[1] # indexing in to dictionary 
-            audio1_spatialized = audio1_spatialized["audio1_r"] #spatializing to the right
-            rmsset = 0.02; #seting rms value
-            rms = np.sqrt(np.mean(audio1_spatialized**2)) # calculating rms
-            audio1_spatialized = audio1_spatialized * rmsset/rms; #normalizing audio
-            sf.write("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\sentence_1_spatialized.wav", audio1_spatialized, fs_1)#writing audio file to .wav
-
-            audio2_spatialized = audio2_spatialized[1] # indexing in to dictionary 
-            audio2_spatialized = audio2_spatialized["audio2_l"] #spatializing to the left
-            rms = np.sqrt(np.mean(audio2_spatialized**2))# calculating rms
-            audio2_spatialized = audio2_spatialized * rmsset/rms; #normalizing audio
-            sf.write("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\sentence_2_spatialized.wav",  audio2_spatialized, fs_1)#writing audio file to .wav
-    
+        
     if flips==1:                     # F2 on left and F1 on right
         if condition_this_trial == 'match left' : #match left 
             audio1_spatialized = audio1_spatialized[1] # indexing in to dictionary 
@@ -314,21 +287,7 @@ for itrial in range(num_trials):
             rms = np.sqrt(np.mean(audio2_spatialized**2)) # calculating rms
             audio2_spatialized = audio2_spatialized * rmsset/rms; #normalizing audio
             sf.write("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\sentence_2_spatialized.wav",  audio2_spatialized, fs_2) #writing audio file to .wav
-        elif  condition_this_trial == 'mismatch left': #mismatch left 
-            audio1_spatialized = audio1_spatialized[1] # indexing in to dictionary 
-            audio1_spatialized = audio1_spatialized["audio1_l"] #spatializing to the left
-            rmsset = 0.02; #seting rms value
-            rms = np.sqrt(np.mean(audio1_spatialized ** 2)) # calculating rms
-            audio1_spatialized = audio1_spatialized * rmsset / rms; # normalizing audio
-            sf.write("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\sentence_1_spatialized.wav", audio1_spatialized, fs_1) #writing audio file to .wav
-
-            audio2_spatialized = audio2_spatialized[1] # indexing in to dictionary
-            audio2_spatialized = audio2_spatialized["audio2_r"] #spatializing to the right
-            rmsset = 0.02; #seting rms value
-            rms = np.sqrt(np.mean(audio2_spatialized ** 2)) # calculating rms
-            audio2_spatialized = audio2_spatialized * rmsset / rms; # normalizing audio
-            sf.write("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\sentence_2_spatialized.wav", audio2_spatialized, fs_2)#writing audio file to .wav
-
+        
         elif condition_this_trial == 'match right':   #match right 
             audio1_spatialized = audio1_spatialized[1] # indexing in to dictionary 
             audio1_spatialized = audio1_spatialized["audio1_r"] #spatializing to the right
@@ -342,19 +301,6 @@ for itrial in range(num_trials):
             rms = np.sqrt(np.mean(audio2_spatialized**2)) # calculating rms
             audio2_spatialized = audio2_spatialized * rmsset/rms; # normalizing audio
             sf.write("C:\\Users\\maana\\Documents\GitHub\\TalkingHeads\\stim\\sentence_2_spatialized.wav",  audio2_spatialized, fs_1)#writing audio file to .wav
-        elif  condition_this_trial == 'mismatch right': #mismatch right 
-            audio1_spatialized = audio1_spatialized[1]# indexing in to dictionary 
-            audio1_spatialized = audio1_spatialized["audio1_l"] #spatializing to the left
-            rmsset = 0.02; #seting rms value
-            rms = np.sqrt(np.mean(audio1_spatialized**2)) # calculating rms 
-            audio1_spatialized = audio1_spatialized * rmsset/rms;# normalizing audio
-            sf.write("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\sentence_1_spatialized.wav", audio1_spatialized, fs_1)#writing audio file to .wav
-
-            audio2_spatialized = audio2_spatialized[1]# indexing in to dictionary 
-            audio2_spatialized = audio2_spatialized["audio2_r"] #spatializing to the right
-            rms = np.sqrt(np.mean(audio2_spatialized**2)) # calculating rms
-            audio2_spatialized = audio2_spatialized * rmsset/rms; # normalizing audio
-            sf.write("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\sentence_2_spatialized.wav",  audio2_spatialized, fs_1)#writing audio file to .wav
         
         
    
@@ -443,33 +389,7 @@ for itrial in range(num_trials):
                                 right_cue_color])
            
 
-    elif condition_this_trial == 'mismatch right':
-        right_cue = ImageSequenceClip(["right_visual_cue.jpg"], durations = [2])
-        right_cue = right_cue.resize(newsize=combined.size)
-        right_cue_color=ImageSequenceClip(["colored_blocks_white.png"], durations = [0.004])
-        if flips==0: # F1 on left and F2 on right
-            audioclip_right_match=AudioFileClip("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\Audio Cue\\Houses_F2_mismatchedright.wav")
-            right_cue= right_cue.set_audio(audioclip_right_match)
-            combined_with_cue = CompositeVideoClip([right_cue, # starts at t=0
-                                combined.set_start(1)]) # start at t=1s
-
-            x_position =  20
-            y_position = combined_with_cue.size[1] - right_cue_color.size[1] - 20  
-            right_cue_color = right_cue_color.set_position((x_position, y_position))
-            combined_with_cue = CompositeVideoClip([combined_with_cue, # starts at t=0
-                                right_cue_color])
-
-        elif flips==1: # F2 on left and F1 on right
-            audioclip_right_match=AudioFileClip("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1_mismatchedright.wav")
-            right_cue= right_cue.set_audio(audioclip_right_match)
-            combined_with_cue = CompositeVideoClip([right_cue, # starts at t=0
-                                combined.set_start(1)]) # start at t=1s
-
-            x_position =  20
-            y_position = combined_with_cue.size[1] - right_cue_color.size[1] - 20  
-            right_cue_color = right_cue_color.set_position((x_position, y_position))
-            combined_with_cue = CompositeVideoClip([combined_with_cue, # starts at t=0
-                                right_cue_color])
+    
            
 
     elif condition_this_trial == 'match left':  
@@ -502,33 +422,7 @@ for itrial in range(num_trials):
           
             
 
-    elif condition_this_trial == 'mismatch left':
-        left_cue = ImageSequenceClip(["left_visual_cue.jpg"], durations = [2])
-        left_cue = left_cue.resize(newsize=combined.size)
-        left_cue_color=ImageSequenceClip(["colored_blocks_white.png"], durations = [0.004])
-        if flips==0: # F1 on left and F2 on right
-            audioclip_left_match=AudioFileClip("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1_mismatchedleft.wav")
-            left_cue= left_cue.set_audio(audioclip_left_match)
-            combined_with_cue = CompositeVideoClip([left_cue, # starts at t=0
-                             combined.set_start(1)]) # start at t=1s
-            x_position = 20
-            y_position = combined_with_cue.size[1] - left_cue_color.size[1] - 20  
-            left_cue_color = left_cue_color.set_position((x_position, y_position))
-            combined_with_cue = CompositeVideoClip([combined_with_cue, # starts at t=0
-                                left_cue_color])
-            
-
-
-        elif flips==1: # F2 on left and F1 on right
-            audioclip_left_match=AudioFileClip("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\Audio Cue\\Houses_F2_mismatchedleft.wav")
-            left_cue= left_cue.set_audio(audioclip_left_match)
-            combined_with_cue = CompositeVideoClip([left_cue,  # starts at t=0
-                            combined.set_start(1)])  # start at t=1s
-            x_position = 20
-            y_position = combined_with_cue.size[1] - left_cue_color.size[1] - 20  
-            left_cue_color = left_cue_color.set_position((x_position, y_position))
-            combined_with_cue = CompositeVideoClip([combined_with_cue, # starts at t=0
-                                left_cue_color])
+    
             
 
      
@@ -537,16 +431,15 @@ for itrial in range(num_trials):
     #d2= cl2.set_duration(3)
     #duration2= cl2.duration
     #clip2= cl2; #cl2.subclip(0,duration2)
-    combined_with_cue.write_videofile("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "_trial_" + str(itrial) + "_cond_ " + str(condition_this_trial) + ".mp4") # Writing the video
+    combined_with_cue.write_videofile("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\practice\\m_" + SubID + "\\" + SubID + "_trial_" + str(itrial) + "_cond_ " + str(condition_this_trial) + ".mp4") # Writing the video
 
 
-pandas.DataFrame(all_sentences_F1).to_csv("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "all_sentences_F1.csv") #  Creating CSv for F1 Sentences
-pandas.DataFrame(all_sentences_F2).to_csv("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "all_sentences_F2.csv") #  Creating CSv for F2 Sentences
-pandas.DataFrame(condition_array).to_csv("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "all_conditions.csv") #  Creating CSV all conditions
-
-df1=pandas.read_csv("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "all_conditions.csv") #reading all conditions
-df2=pandas.read_csv("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "all_sentences_F1.csv") # Reading F1 sentences
-df3=pandas.read_csv("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "all_sentences_F2.csv") # Reading F2 sentences
+pandas.DataFrame(all_sentences_F1).to_csv("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\practice\\m_" + SubID + "\\" + SubID + "all_sentences_F1.csv") #  Creating CSv for F1 Sentences
+pandas.DataFrame(all_sentences_F2).to_csv("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\practice\\m_" + SubID + "\\" + SubID + "all_sentences_F2.csv") #  Creating CSv for F2 Sentences
+pandas.DataFrame(condition_array).to_csv("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\practice\\m_" + SubID + "\\" + SubID + "all_conditions.csv") #  Creating CSV all conditions
+df1=pandas.read_csv("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\practice\\m_" + SubID + "\\" + SubID + "all_conditions.csv") #reading all conditions
+df2=pandas.read_csv("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\practice\\m_" + SubID + "\\" + SubID + "all_sentences_F1.csv") # Reading F1 sentences
+df3=pandas.read_csv("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\practice\\m_" + SubID + "\\" + SubID + "all_sentences_F2.csv") # Reading F2 sentences
 df1_list= df1["0"].tolist() 
 df2_list= df2["0"].tolist()
 df3_list= df3["0"].tolist()
@@ -555,18 +448,18 @@ answerkey=[] # answer key
 for itrial in range(num_trials): # Creating answe key according to condition
     if talkerindex[itrial]==0:
          a=df1_list[itrial]
-         if a== "match left" or a=="mismatch left":
+         if a== "match left" :
              b=df2_list[itrial]
              answerkey.append(b)
-         elif a=="match right" or a=="mismatch right":
+         elif a=="match right" :
              c=df3_list[itrial]
              answerkey.append(c)
     elif talkerindex[itrial]==1:
          a=df1_list[itrial]
-         if a== "match left" or a=="mismatch left":
+         if a== "match left" :
              b=df3_list[itrial]
              answerkey.append(b)
-         elif a=="match right" or a=="mismatch right":
+         elif a=="match right" :
              c=df2_list[itrial]
              answerkey.append(c)
        
@@ -594,4 +487,4 @@ df = pandas.DataFrame(columns=['Column1', 'Column2','Column3','Column4','Column5
 for sublist in list_to_string:
     df.loc[len(df)] = sublist
 
-df.to_csv("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "Answerkey.csv")
+df.to_csv("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\practice\\m_" + SubID + "\\" + SubID + "Answerkey.csv")
