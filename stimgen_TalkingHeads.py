@@ -29,8 +29,8 @@ from moviepy.audio.AudioClip import AudioArrayClip
 SubID=input("Enter subject id:")
 
 # make folder if it doesn't exist already
-if not os.path.exists("D:\\Experiments\\TalkingHeads\\stim\\s_" + SubID):
-    os.mkdir("D:\\Experiments\\TalkingHeads\\stim\\s_" + SubID)
+if not os.path.exists("C:\\Users\\Lab User\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID):
+    os.mkdir("C:\\Users\\Lab User\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID)
     
 
 
@@ -89,7 +89,7 @@ for itrial in range(num_trials):
     print(l)
     l2=[num,ext]
     print(l2)
-    path= "D:\\Experiments\\TalkingHeads\\stim\\Structured Sentences F1_MP4"
+    path= "C:\\Users\\Lab User\\Documents\\GitHub\\TalkingHeads\\stim\\Structured Sentences F1_MP4"
     obj=os.listdir(path)
     obj1= str(obj)
     num_tries = 0
@@ -159,7 +159,7 @@ for itrial in range(num_trials):
         #print(plural1)
     
     # Generating Sentence 2
-    path2= "D:\\Experiments\\TalkingHeads\\stim\\Structured Sentences F2_MP4"
+    path2= "C:\\Users\\Lab User\\Documents\\GitHub\\TalkingHeads\\stim\\Structured Sentences F2_MP4"
     obj0=os.listdir(path2)
     obj2= str(obj0)
     L=[Name,Verb,number,adjective,plural]
@@ -222,8 +222,8 @@ for itrial in range(num_trials):
     
     
     # Get audio for each sentence
-    audio_base_dir = "D:\\Experiments\\TalkingHeads\\stim\\Structured Sentences F1_Mp3" #audio base directory for talker 1
-    audio_base_dir2 = "D:\\Experiments\\TalkingHeads\\stim\\Structured Sentences F2_Mp3" # audio base directory for talker 2
+    audio_base_dir = "C:\\Users\\Lab User\\Documents\\GitHub\\TalkingHeads\\stim\\Structured Sentences F1_Mp3" #audio base directory for talker 1
+    audio_base_dir2 = "C:\\Users\\Lab User\\Documents\\GitHub\\TalkingHeads\\stim\\Structured Sentences F2_Mp3" # audio base directory for talker 2
     fs_1, audio_1 = wavfile.read(os.path.join(audio_base_dir,sentence1.replace(".mp4",".wav"))) #reading audio for talker 1
     audio_1 =  audio_1*(1/np.max(audio_1)) #normalizing for RMS
     fs_2, audio_2 = wavfile.read(os.path.join(audio_base_dir2,sentence2.replace(".mp4",".wav"))) #reading audio for talker 2
@@ -249,28 +249,28 @@ for itrial in range(num_trials):
             rmsset = 0.02; #seting rms value
             rms = np.sqrt(np.mean(audio1_spatialized**2)) # calculating rms
             audio1_spatialized = audio1_spatialized * rmsset/rms; #normalizing audio
-            sf.write("D:\\Experiments\\TalkingHeads\\stim\\sentence_1_spatialized.wav", audio1_spatialized,fs_1) #writing audio file to .wav 
+            sf.write("C:\\Users\\Lab User\\Documents\\GitHub\\TalkingHeads\\stim\\sentence_1_spatialized.wav", audio1_spatialized,fs_1) #writing audio file to .wav 
 
             audio2_spatialized = audio2_spatialized[1] # indexing in to dictionary
             audio2_spatialized = audio2_spatialized["audio2_r"] #spatializing to the right
             rmsset = 0.02; #seting rms value
             rms = np.sqrt(np.mean(audio2_spatialized**2)) # calculating rms
             audio2_spatialized = audio2_spatialized * rmsset/rms; #normalizing audio
-            sf.write("D:\\Experiments\\TalkingHeads\\stim\\sentence_2_spatialized.wav",  audio2_spatialized, fs_2) #writing audio file to .wav
+            sf.write("C:\\Users\\Lab User\\Documents\\GitHub\\TalkingHeads\\stim\\sentence_2_spatialized.wav",  audio2_spatialized, fs_2) #writing audio file to .wav
         elif  condition_this_trial == 'mismatch left':  #mismatch left condition
             audio1_spatialized = audio1_spatialized[1] # indexing in to dictionary
             audio1_spatialized = audio1_spatialized["audio1_r"] #spatializing to the right
             rmsset = 0.02; #seting rms value
             rms = np.sqrt(np.mean(audio1_spatialized ** 2)) # calculating rms
             audio1_spatialized = audio1_spatialized * rmsset / rms; #normalizing audio
-            sf.write("D:\\Experiments\\TalkingHeads\\stim\\sentence_1_spatialized.wav", audio1_spatialized, fs_1) #writing audio file to .wav
+            sf.write("C:\\Users\\Lab User\\Documents\\GitHub\\TalkingHeads\\stim\\sentence_1_spatialized.wav", audio1_spatialized, fs_1) #writing audio file to .wav
 
             audio2_spatialized = audio2_spatialized[1] # indexing in to dictionary 
             audio2_spatialized = audio2_spatialized["audio2_l"] #spatializing to the left
             rmsset = 0.02; #seting rms value
             rms = np.sqrt(np.mean(audio2_spatialized ** 2)) # calculating rms
             audio2_spatialized = audio2_spatialized * rmsset / rms; #normalizing audio
-            sf.write("D:\\Experiments\\TalkingHeads\\stim\\sentence_2_spatialized.wav", audio2_spatialized, fs_2) #writing audio file to .wav
+            sf.write("C:\\Users\\Lab User\\Documents\\GitHub\\TalkingHeads\\stim\\sentence_2_spatialized.wav", audio2_spatialized, fs_2) #writing audio file to .wav
 
         elif condition_this_trial == 'match right': #match right condition
             audio1_spatialized = audio1_spatialized[1] # indexing in to dictionary 
@@ -278,26 +278,26 @@ for itrial in range(num_trials):
             rmsset = 0.02; #seting rms value
             rms = np.sqrt(np.mean(audio1_spatialized**2)) # calculating rms
             audio1_spatialized = audio1_spatialized * rmsset/rms; #normalizing audio
-            sf.write("D:\\Experiments\\TalkingHeads\\stim\\sentence_1_spatialized.wav", audio1_spatialized, fs_1)#writing audio file to .wav
+            sf.write("C:\\Users\\Lab User\\Documents\\GitHub\\TalkingHeads\\stim\\sentence_1_spatialized.wav", audio1_spatialized, fs_1)#writing audio file to .wav
 
             audio2_spatialized = audio2_spatialized[1] # indexing in to dictionary 
             audio2_spatialized = audio2_spatialized["audio2_r"] #spatializing to the right
             rms = np.sqrt(np.mean(audio2_spatialized**2))  # calculating rms
             audio2_spatialized = audio2_spatialized * rmsset/rms;#normalizing audio
-            sf.write("D:\\Experiments\\TalkingHeads\\stim\\sentence_2_spatialized.wav",  audio2_spatialized, fs_1)#writing audio file to .wav
+            sf.write("C:\\Users\\Lab User\\Documents\\GitHub\\TalkingHeads\\stim\\sentence_2_spatialized.wav",  audio2_spatialized, fs_1)#writing audio file to .wav
         elif  condition_this_trial == 'mismatch right': #mismatch right condition
             audio1_spatialized = audio1_spatialized[1] # indexing in to dictionary 
             audio1_spatialized = audio1_spatialized["audio1_r"] #spatializing to the right
             rmsset = 0.02; #seting rms value
             rms = np.sqrt(np.mean(audio1_spatialized**2)) # calculating rms
             audio1_spatialized = audio1_spatialized * rmsset/rms; #normalizing audio
-            sf.write("D:\\Experiments\\TalkingHeads\\stim\\sentence_1_spatialized.wav", audio1_spatialized, fs_1)#writing audio file to .wav
+            sf.write("C:\\Users\\Lab User\\Documents\\GitHub\\TalkingHeads\\stim\\sentence_1_spatialized.wav", audio1_spatialized, fs_1)#writing audio file to .wav
 
             audio2_spatialized = audio2_spatialized[1] # indexing in to dictionary 
             audio2_spatialized = audio2_spatialized["audio2_l"] #spatializing to the left
             rms = np.sqrt(np.mean(audio2_spatialized**2))# calculating rms
             audio2_spatialized = audio2_spatialized * rmsset/rms; #normalizing audio
-            sf.write("D:\\Experiments\\TalkingHeads\\stim\\sentence_2_spatialized.wav",  audio2_spatialized, fs_1)#writing audio file to .wav
+            sf.write("C:\\Users\\Lab User\\Documents\\GitHub\\TalkingHeads\\stim\\sentence_2_spatialized.wav",  audio2_spatialized, fs_1)#writing audio file to .wav
     
     if flips==1:                     # F2 on left and F1 on right
         if condition_this_trial == 'match left' : #match left 
@@ -306,7 +306,7 @@ for itrial in range(num_trials):
             rmsset = 0.02; #seting rms value
             rms = np.sqrt(np.mean(audio1_spatialized**2)) # calculating rms
             audio1_spatialized = audio1_spatialized * rmsset/rms; #normalizing audio
-            sf.write("D:\\Experiments\\TalkingHeads\\stim\\sentence_1_spatialized.wav", audio1_spatialized,fs_1) #writing audio file to .wav
+            sf.write("C:\\Users\\Lab User\\Documents\\GitHub\\TalkingHeads\\stim\\sentence_1_spatialized.wav", audio1_spatialized,fs_1) #writing audio file to .wav
 
             audio2_spatialized = audio2_spatialized[1] # indexing in to dictionary 
             audio2_spatialized = audio2_spatialized["audio2_l"] #spatializing to the left
@@ -320,14 +320,14 @@ for itrial in range(num_trials):
             rmsset = 0.02; #seting rms value
             rms = np.sqrt(np.mean(audio1_spatialized ** 2)) # calculating rms
             audio1_spatialized = audio1_spatialized * rmsset / rms; # normalizing audio
-            sf.write("D:\\Experiments\\TalkingHeads\\stim\\sentence_1_spatialized.wav", audio1_spatialized, fs_1) #writing audio file to .wav
+            sf.write("C:\\Users\\Lab User\\Documents\\GitHub\\TalkingHeads\\stim\\sentence_1_spatialized.wav", audio1_spatialized, fs_1) #writing audio file to .wav
 
             audio2_spatialized = audio2_spatialized[1] # indexing in to dictionary
             audio2_spatialized = audio2_spatialized["audio2_r"] #spatializing to the right
             rmsset = 0.02; #seting rms value
             rms = np.sqrt(np.mean(audio2_spatialized ** 2)) # calculating rms
             audio2_spatialized = audio2_spatialized * rmsset / rms; # normalizing audio
-            sf.write("D:\\Experiments\\TalkingHeads\\stim\\sentence_2_spatialized.wav", audio2_spatialized, fs_2)#writing audio file to .wav
+            sf.write("C:\\Users\\Lab User\\Documents\\GitHub\\TalkingHeads\\stim\\sentence_2_spatialized.wav", audio2_spatialized, fs_2)#writing audio file to .wav
 
         elif condition_this_trial == 'match right':   #match right 
             audio1_spatialized = audio1_spatialized[1] # indexing in to dictionary 
@@ -335,50 +335,50 @@ for itrial in range(num_trials):
             rmsset = 0.02; #seting rms value
             rms = np.sqrt(np.mean(audio1_spatialized**2)) # calculating rms
             audio1_spatialized = audio1_spatialized * rmsset/rms;  # normalizing audio
-            sf.write("D:\\Experiments\\TalkingHeads\\stim\\sentence_1_spatialized.wav", audio1_spatialized, fs_1)#writing audio file to .wav
+            sf.write("C:\\Users\\Lab User\\Documents\\GitHub\\TalkingHeads\\stim\\sentence_1_spatialized.wav", audio1_spatialized, fs_1)#writing audio file to .wav
 
             audio2_spatialized = audio2_spatialized[1]
             audio2_spatialized = audio2_spatialized["audio2_l"]
             rms = np.sqrt(np.mean(audio2_spatialized**2)) # calculating rms
             audio2_spatialized = audio2_spatialized * rmsset/rms; # normalizing audio
-            sf.write("D:\\Experiments\\TalkingHeads\\stim\\sentence_2_spatialized.wav",  audio2_spatialized, fs_1)#writing audio file to .wav
+            sf.write("C:\\Users\\Lab User\\Documents\\GitHub\\TalkingHeads\\stim\\sentence_2_spatialized.wav",  audio2_spatialized, fs_1)#writing audio file to .wav
         elif  condition_this_trial == 'mismatch right': #mismatch right 
             audio1_spatialized = audio1_spatialized[1]# indexing in to dictionary 
             audio1_spatialized = audio1_spatialized["audio1_l"] #spatializing to the left
             rmsset = 0.02; #seting rms value
             rms = np.sqrt(np.mean(audio1_spatialized**2)) # calculating rms 
             audio1_spatialized = audio1_spatialized * rmsset/rms;# normalizing audio
-            sf.write("D:\\Experiments\\TalkingHeads\\stim\\sentence_1_spatialized.wav", audio1_spatialized, fs_1)#writing audio file to .wav
+            sf.write("C:\\Users\\Lab User\\Documents\\GitHub\\TalkingHeads\\stim\\sentence_1_spatialized.wav", audio1_spatialized, fs_1)#writing audio file to .wav
 
             audio2_spatialized = audio2_spatialized[1]# indexing in to dictionary 
             audio2_spatialized = audio2_spatialized["audio2_r"] #spatializing to the right
             rms = np.sqrt(np.mean(audio2_spatialized**2)) # calculating rms
             audio2_spatialized = audio2_spatialized * rmsset/rms; # normalizing audio
-            sf.write("D:\\Experiments\\TalkingHeads\\stim\\sentence_2_spatialized.wav",  audio2_spatialized, fs_1)#writing audio file to .wav
+            sf.write("C:\\Users\\Lab User\\Documents\\GitHub\\TalkingHeads\\stim\\sentence_2_spatialized.wav",  audio2_spatialized, fs_1)#writing audio file to .wav
         
         
    
        
  # Generating Videos
-    base_dir = "D:\\Experiments\\TalkingHeads\\stim\\Structured Sentences F1_MP4" #Video Directory for F1 talker
-    base_dir2 = "D:\\Experiments\\TalkingHeads\\stim\\Structured Sentences F2_MP4" #Video directory for F2 talker
+    base_dir = "C:\\Users\\Lab User\\Documents\\GitHub\\TalkingHeads\\stim\\Structured Sentences F1_MP4" #Video Directory for F1 talker
+    base_dir2 = "C:\\Users\\Lab User\\Documents\\GitHub\\TalkingHeads\\stim\\Structured Sentences F2_MP4" #Video directory for F2 talker
     
     
     if flips==0:  # F1 on left and F2 on right
         cl1= VideoFileClip(os.path.join(base_dir,sentence1)) #matching sentence for F1 talker in the Directory
-        audioclip = AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\sentence_1_spatialized.wav") # reading audio clip
+        audioclip = AudioFileClip("C:\\Users\\Lab User\\Documents\\GitHub\\TalkingHeads\\stim\\sentence_1_spatialized.wav") # reading audio clip
         cl1 = cl1.set_audio(audioclip) # seting audio to the video
         
         cl2= VideoFileClip(os.path.join(base_dir2,sentence2)) #matching sentence for F2 talker in the Directory
-        audioclip = AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\sentence_2_spatialized.wav") # reading audio clip
+        audioclip = AudioFileClip("C:\\Users\\Lab User\\Documents\\GitHub\\TalkingHeads\\stim\\sentence_2_spatialized.wav") # reading audio clip
         cl2 = cl2.set_audio(audioclip) # seting audio to the video
     elif flips==1: # F2 on left and F1 on right
         cl1= VideoFileClip(os.path.join(base_dir2,sentence2)) #matching sentence for F2 talker in the Directory
-        audioclip = AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\sentence_2_spatialized.wav") # reading audio clip
+        audioclip = AudioFileClip("C:\\Users\\Lab User\\Documents\\GitHub\\TalkingHeads\\stim\\sentence_2_spatialized.wav") # reading audio clip
         cl1 = cl1.set_audio(audioclip) # seting audio to the video
         
         cl2= VideoFileClip(os.path.join(base_dir,sentence1)) #matching sentence for F1 talker in the Directory
-        audioclip = AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\sentence_1_spatialized.wav") # reading audio clip
+        audioclip = AudioFileClip("C:\\Users\\Lab User\\Documents\\GitHub\\TalkingHeads\\stim\\sentence_1_spatialized.wav") # reading audio clip
         cl2 = cl2.set_audio(audioclip) # seting audio to the video
         
         
@@ -412,7 +412,7 @@ for itrial in range(num_trials):
         
         right_cue = right_cue.resize(newsize=combined.size)
         if flips==0: # F1 on left and F2 on right
-            audioclip_right_match=AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\Audio Cue\\Houses_F2_matchedright.wav")
+            audioclip_right_match=AudioFileClip("C:\\Users\\Lab User\\Documents\\GitHub\\TalkingHeads\\stim\\Audio Cue\\Houses_F2_matchedright.wav")
             right_cue= right_cue.set_audio(audioclip_right_match)
             combined_with_cue = CompositeVideoClip([right_cue, # starts at t=0
                                 combined.set_start(1)]) # start at t=1s
@@ -431,7 +431,7 @@ for itrial in range(num_trials):
             # set the audio back to combined_with_cue
         
         elif flips==1: # F2 on left and F1 on right
-            audioclip_right_match=AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1_matchedright.wav")
+            audioclip_right_match=AudioFileClip("C:\\Users\\Lab User\\Documents\\GitHub\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1_matchedright.wav")
             right_cue= right_cue.set_audio(audioclip_right_match)
             combined_with_cue = CompositeVideoClip([right_cue, # starts at t=0
                                 combined.set_start(1)]) # start at t=1s
@@ -448,7 +448,7 @@ for itrial in range(num_trials):
         right_cue = right_cue.resize(newsize=combined.size)
         right_cue_color=ImageSequenceClip(["colored_blocks_white.png"], durations = [0.004])
         if flips==0: # F1 on left and F2 on right
-            audioclip_right_match=AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\Audio Cue\\Houses_F2_mismatchedright.wav")
+            audioclip_right_match=AudioFileClip("C:\\Users\\Lab User\\Documents\\GitHub\\TalkingHeads\\stim\\Audio Cue\\Houses_F2_mismatchedright.wav")
             right_cue= right_cue.set_audio(audioclip_right_match)
             combined_with_cue = CompositeVideoClip([right_cue, # starts at t=0
                                 combined.set_start(1)]) # start at t=1s
@@ -460,7 +460,7 @@ for itrial in range(num_trials):
                                 right_cue_color])
 
         elif flips==1: # F2 on left and F1 on right
-            audioclip_right_match=AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1_mismatchedright.wav")
+            audioclip_right_match=AudioFileClip("C:\\Users\\Lab User\\Documents\\GitHub\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1_mismatchedright.wav")
             right_cue= right_cue.set_audio(audioclip_right_match)
             combined_with_cue = CompositeVideoClip([right_cue, # starts at t=0
                                 combined.set_start(1)]) # start at t=1s
@@ -477,7 +477,7 @@ for itrial in range(num_trials):
         left_cue = left_cue.resize(newsize=combined.size)
         left_cue_color= ImageSequenceClip(["colored_blocks_white.png"], durations = [0.004])
         if flips==0: # F1 on left and F2 on right
-            audioclip_left_match=AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1_matchedleft.wav")
+            audioclip_left_match=AudioFileClip("C:\\Users\\Lab User\\Documents\\GitHub\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1_matchedleft.wav")
             left_cue= left_cue.set_audio(audioclip_left_match)
             combined_with_cue = CompositeVideoClip([left_cue, # starts at t=0
                                 combined.set_start(1)]) # start at t=1s
@@ -489,7 +489,7 @@ for itrial in range(num_trials):
            
 
         elif flips==1: # F2 on left and F1 on right
-            audioclip_left_match=AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\Audio Cue\\Houses_F2_matchedleft.wav")
+            audioclip_left_match=AudioFileClip("C:\\Users\\Lab User\\Documents\\GitHub\\TalkingHeads\\stim\\Audio Cue\\Houses_F2_matchedleft.wav")
             left_cue= left_cue.set_audio(audioclip_left_match)
             combined_with_cue = CompositeVideoClip([left_cue, # starts at t=0
                                 combined.set_start(1)]) # start at t=1s
@@ -507,7 +507,7 @@ for itrial in range(num_trials):
         left_cue = left_cue.resize(newsize=combined.size)
         left_cue_color=ImageSequenceClip(["colored_blocks_white.png"], durations = [0.004])
         if flips==0: # F1 on left and F2 on right
-            audioclip_left_match=AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1_mismatchedleft.wav")
+            audioclip_left_match=AudioFileClip("C:\\Users\\Lab User\\Documents\\GitHub\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1_mismatchedleft.wav")
             left_cue= left_cue.set_audio(audioclip_left_match)
             combined_with_cue = CompositeVideoClip([left_cue, # starts at t=0
                              combined.set_start(1)]) # start at t=1s
@@ -520,7 +520,7 @@ for itrial in range(num_trials):
 
 
         elif flips==1: # F2 on left and F1 on right
-            audioclip_left_match=AudioFileClip("D:\\Experiments\\TalkingHeads\\stim\\Audio Cue\\Houses_F2_mismatchedleft.wav")
+            audioclip_left_match=AudioFileClip("C:\\Users\\Lab User\\Documents\\GitHub\\TalkingHeads\\stim\\Audio Cue\\Houses_F2_mismatchedleft.wav")
             left_cue= left_cue.set_audio(audioclip_left_match)
             combined_with_cue = CompositeVideoClip([left_cue,  # starts at t=0
                             combined.set_start(1)])  # start at t=1s
@@ -537,16 +537,16 @@ for itrial in range(num_trials):
     #d2= cl2.set_duration(3)
     #duration2= cl2.duration
     #clip2= cl2; #cl2.subclip(0,duration2)
-    combined_with_cue.write_videofile("D:\\Experiments\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "_trial_" + str(itrial) + "_cond_ " + str(condition_this_trial) + ".mp4") # Writing the video
+    combined_with_cue.write_videofile("C:\\Users\\Lab User\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "_trial_" + str(itrial) + "_cond_ " + str(condition_this_trial) + ".mp4") # Writing the video
 
 
-pandas.DataFrame(all_sentences_F1).to_csv("D:\\Experiments\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "all_sentences_F1.csv") #  Creating CSv for F1 Sentences
-pandas.DataFrame(all_sentences_F2).to_csv("D:\\Experiments\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "all_sentences_F2.csv") #  Creating CSv for F2 Sentences
-pandas.DataFrame(condition_array).to_csv("D:\\Experiments\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "all_conditions.csv") #  Creating CSV all conditions
+pandas.DataFrame(all_sentences_F1).to_csv("C:\\Users\\Lab User\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "all_sentences_F1.csv") #  Creating CSv for F1 Sentences
+pandas.DataFrame(all_sentences_F2).to_csv("C:\\Users\\Lab User\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "all_sentences_F2.csv") #  Creating CSv for F2 Sentences
+pandas.DataFrame(condition_array).to_csv("C:\\Users\\Lab User\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "all_conditions.csv") #  Creating CSV all conditions
 
-df1=pandas.read_csv("D:\\Experiments\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "all_conditions.csv") #reading all conditions
-df2=pandas.read_csv("D:\\Experiments\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "all_sentences_F1.csv") # Reading F1 sentences
-df3=pandas.read_csv("D:\\Experiments\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "all_sentences_F2.csv") # Reading F2 sentences
+df1=pandas.read_csv("C:\\Users\\Lab User\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "all_conditions.csv") #reading all conditions
+df2=pandas.read_csv("C:\\Users\\Lab User\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "all_sentences_F1.csv") # Reading F1 sentences
+df3=pandas.read_csv("C:\\Users\\Lab User\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "all_sentences_F2.csv") # Reading F2 sentences
 df1_list= df1["0"].tolist() 
 df2_list= df2["0"].tolist()
 df3_list= df3["0"].tolist()
@@ -594,4 +594,4 @@ df = pandas.DataFrame(columns=['Column1', 'Column2','Column3','Column4','Column5
 for sublist in list_to_string:
     df.loc[len(df)] = sublist
 
-df.to_csv("D:\\Experiments\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "Answerkey.csv")
+df.to_csv("C:\\Users\\Lab User\\Documents\\GitHub\\TalkingHeads\\stim\\s_" + SubID + "\\" + SubID + "Answerkey.csv")
