@@ -1,13 +1,13 @@
 ,0
-0,mismatch left
-1,mismatch right
-2,mismatch left
+0,match right
+1,mismatch left
+2,match right
 3,match left
 4,match left
-5,match left
-6,mismatch right
-7,match right
-8,mismatch right
-9,match right
+5,match right
+6,mismatch left
+7,mismatch right
+8,match left
+9,mismatch right
 10,mismatch left
-11,match right
+11,mismatch right

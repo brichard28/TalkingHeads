@@ -415,7 +415,7 @@ for itrial in range(num_trials):
    #Adding visual cues and audio cues    
     if condition_this_trial == 'match right':  
         right_cue = ImageSequenceClip(["right_visual_cue.jpg"], durations = [2])
-        right_cue_color= ImageSequenceClip(["colored_blocks_white.png"], durations = [0.004])
+        #right_cue_color= ImageSequenceClip(["colored_blocks_white.png"], durations = [0.004])
         
         right_cue = right_cue.resize(newsize=combined.size)
         if flips==0: # F1 on left and F2 on right
@@ -423,11 +423,11 @@ for itrial in range(num_trials):
             right_cue= right_cue.set_audio(audioclip_right_match)
             combined_with_cue = CompositeVideoClip([right_cue, # starts at t=0
                                 combined.set_start(1)]) # start at t=1s
-            x_position =  20
-            y_position = combined_with_cue.size[1] - right_cue_color.size[1] - 20  
-            right_cue_color = right_cue_color.set_position((x_position, y_position))
-            combined_with_cue = CompositeVideoClip([combined_with_cue, # starts at t=0
-                                right_cue_color])
+            #x_position =  20
+            #y_position = combined_with_cue.size[1] - right_cue_color.size[1] - 20  
+            #right_cue_color = right_cue_color.set_position((x_position, y_position))
+            #combined_with_cue = CompositeVideoClip([combined_with_cue, # starts at t=0
+                               # right_cue_color])
             
 
 
@@ -443,28 +443,28 @@ for itrial in range(num_trials):
             combined_with_cue = CompositeVideoClip([right_cue, # starts at t=0
                                 combined.set_start(1)]) # start at t=1s
 
-            x_position =  20
-            y_position = combined_with_cue.size[1] - right_cue_color.size[1] - 20  
-            right_cue_color = right_cue_color.set_position((x_position, y_position))
-            combined_with_cue = CompositeVideoClip([combined_with_cue, # starts at t=0
-                                right_cue_color])
+           # x_position =  20
+            #y_position = combined_with_cue.size[1] - right_cue_color.size[1] - 20  
+            #right_cue_color = right_cue_color.set_position((x_position, y_position))
+            #combined_with_cue = CompositeVideoClip([combined_with_cue, # starts at t=0
+             #                   right_cue_color])
            
 
     elif condition_this_trial == 'mismatch right':
         right_cue = ImageSequenceClip(["right_visual_cue.jpg"], durations = [2])
         right_cue = right_cue.resize(newsize=combined.size)
-        right_cue_color=ImageSequenceClip(["colored_blocks_white.png"], durations = [0.004])
+        #right_cue_color=ImageSequenceClip(["colored_blocks_white.png"], durations = [0.004])
         if flips==0: # F1 on left and F2 on right
             audioclip_right_match=AudioFileClip("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\Audio Cue\\Houses_F2_mismatchedright.wav")
             right_cue= right_cue.set_audio(audioclip_right_match)
             combined_with_cue = CompositeVideoClip([right_cue, # starts at t=0
                                 combined.set_start(1)]) # start at t=1s
 
-            x_position =  20
-            y_position = combined_with_cue.size[1] - right_cue_color.size[1] - 20  
-            right_cue_color = right_cue_color.set_position((x_position, y_position))
-            combined_with_cue = CompositeVideoClip([combined_with_cue, # starts at t=0
-                                right_cue_color])
+            #x_position =  20
+            #y_position = combined_with_cue.size[1] - right_cue_color.size[1] - 20  
+            #right_cue_color = right_cue_color.set_position((x_position, y_position))
+            #combined_with_cue = CompositeVideoClip([combined_with_cue, # starts at t=0
+             #                   right_cue_color])
 
         elif flips==1: # F2 on left and F1 on right
             audioclip_right_match=AudioFileClip("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1_mismatchedright.wav")
@@ -472,27 +472,27 @@ for itrial in range(num_trials):
             combined_with_cue = CompositeVideoClip([right_cue, # starts at t=0
                                 combined.set_start(1)]) # start at t=1s
 
-            x_position =  20
-            y_position = combined_with_cue.size[1] - right_cue_color.size[1] - 20  
-            right_cue_color = right_cue_color.set_position((x_position, y_position))
-            combined_with_cue = CompositeVideoClip([combined_with_cue, # starts at t=0
-                                right_cue_color])
+            #x_position =  20
+            #y_position = combined_with_cue.size[1] - right_cue_color.size[1] - 20  
+            #right_cue_color = right_cue_color.set_position((x_position, y_position))
+            #combined_with_cue = CompositeVideoClip([combined_with_cue, # starts at t=0
+             #                   right_cue_color])
            
 
     elif condition_this_trial == 'match left':  
         left_cue = ImageSequenceClip(["left_visual_cue.jpg"], durations = [2])
         left_cue = left_cue.resize(newsize=combined.size)
-        left_cue_color= ImageSequenceClip(["colored_blocks_white.png"], durations = [0.004])
+       # left_cue_color= ImageSequenceClip(["colored_blocks_white.png"], durations = [0.004])
         if flips==0: # F1 on left and F2 on right
             audioclip_left_match=AudioFileClip("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1_matchedleft.wav")
             left_cue= left_cue.set_audio(audioclip_left_match)
             combined_with_cue = CompositeVideoClip([left_cue, # starts at t=0
                                 combined.set_start(1)]) # start at t=1s
-            x_position = 20
-            y_position = combined_with_cue.size[1] - left_cue_color.size[1] - 20  
-            left_cue_color = left_cue_color.set_position((x_position, y_position))
-            combined_with_cue = CompositeVideoClip([combined_with_cue, # starts at t=0
-                                left_cue_color])
+        #    x_position = 20
+         #   y_position = combined_with_cue.size[1] - left_cue_color.size[1] - 20  
+          #  left_cue_color = left_cue_color.set_position((x_position, y_position))
+           # combined_with_cue = CompositeVideoClip([combined_with_cue, # starts at t=0
+            #                    left_cue_color])
            
 
         elif flips==1: # F2 on left and F1 on right
@@ -501,28 +501,28 @@ for itrial in range(num_trials):
             combined_with_cue = CompositeVideoClip([left_cue, # starts at t=0
                                 combined.set_start(1)]) # start at t=1s
 
-            x_position =  20
-            y_position = combined_with_cue.size[1] - left_cue_color.size[1] - 20  
-            left_cue_color = left_cue_color.set_position((x_position, y_position))
-            combined_with_cue = CompositeVideoClip([combined_with_cue, # starts at t=0
-                                left_cue_color])
+          #  x_position =  20
+           # y_position = combined_with_cue.size[1] - left_cue_color.size[1] - 20  
+            #left_cue_color = left_cue_color.set_position((x_position, y_position))
+            #combined_with_cue = CompositeVideoClip([combined_with_cue, # starts at t=0
+             #                   left_cue_color])
           
             
 
     elif condition_this_trial == 'mismatch left':
         left_cue = ImageSequenceClip(["left_visual_cue.jpg"], durations = [2])
         left_cue = left_cue.resize(newsize=combined.size)
-        left_cue_color=ImageSequenceClip(["colored_blocks_white.png"], durations = [0.004])
+      #  left_cue_color=ImageSequenceClip(["colored_blocks_white.png"], durations = [0.004])
         if flips==0: # F1 on left and F2 on right
             audioclip_left_match=AudioFileClip("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1_mismatchedleft.wav")
             left_cue= left_cue.set_audio(audioclip_left_match)
             combined_with_cue = CompositeVideoClip([left_cue, # starts at t=0
                              combined.set_start(1)]) # start at t=1s
-            x_position = 20
-            y_position = combined_with_cue.size[1] - left_cue_color.size[1] - 20  
-            left_cue_color = left_cue_color.set_position((x_position, y_position))
-            combined_with_cue = CompositeVideoClip([combined_with_cue, # starts at t=0
-                                left_cue_color])
+       #     x_position = 20
+        #    y_position = combined_with_cue.size[1] - left_cue_color.size[1] - 20  
+         #   left_cue_color = left_cue_color.set_position((x_position, y_position))
+          #  combined_with_cue = CompositeVideoClip([combined_with_cue, # starts at t=0
+           #                     left_cue_color])
             
 
 
@@ -531,11 +531,11 @@ for itrial in range(num_trials):
             left_cue= left_cue.set_audio(audioclip_left_match)
             combined_with_cue = CompositeVideoClip([left_cue,  # starts at t=0
                             combined.set_start(1)])  # start at t=1s
-            x_position = 20
-            y_position = combined_with_cue.size[1] - left_cue_color.size[1] - 20  
-            left_cue_color = left_cue_color.set_position((x_position, y_position))
-            combined_with_cue = CompositeVideoClip([combined_with_cue, # starts at t=0
-                                left_cue_color])
+           # x_position = 20
+            #y_position = combined_with_cue.size[1] - left_cue_color.size[1] - 20  
+            #left_cue_color = left_cue_color.set_position((x_position, y_position))
+            #combined_with_cue = CompositeVideoClip([combined_with_cue, # starts at t=0
+             #                   left_cue_color])
             
 
      

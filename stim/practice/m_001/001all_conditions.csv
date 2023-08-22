@@ -1,13 +1,13 @@
 ,0
 0,match right
 1,match left
-2,match left
-3,match right
-4,match left
-5,match left
+2,match right
+3,match left
+4,match right
+5,match right
 6,match right
 7,match left
-8,match right
-9,match right
+8,match left
+9,match left
 10,match right
 11,match left
