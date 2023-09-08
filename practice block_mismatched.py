@@ -346,16 +346,18 @@ for itrial in range(num_trials):
         last_frame = cl2.get_frame(raw_duration_clip_2)
         extend_video = ImageSequenceClip([last_frame],durations = [raw_duration_clip_1 - raw_duration_clip_2]) #extend video with image frame
         cl2 = concatenate_videoclips([cl2, extend_video]) #concatenate video clips
+        cross=ImageClip("fixation cross.jpg",duration=cl2.duration)
     elif raw_duration_clip_2 > raw_duration_clip_1: # if clip 2 is longer than clip 1
         last_frame = cl1.get_frame(raw_duration_clip_1) # get the last frame of clip 1
         extend_video = ImageSequenceClip([last_frame],durations = [raw_duration_clip_2 - raw_duration_clip_1]) #extend video with image frame
         cl1 = concatenate_videoclips([cl1, extend_video]) #concatenate video clips
+        cross=ImageClip("fixation cross.jpg",duration=cl1.duration)
     #d1=cl1.set_duration(3)
     
     #duration1= cl1.duration
     clip1 = cl1;
     clip2 = cl2;
-    combined=clips_array([[clip1,clip2]]) # combing clips to array
+    combined=clips_array([[clip1,cross,clip2]]) # combing clips to array
     
    #Adding visual cues and audio cues    
    

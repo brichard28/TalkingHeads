@@ -16,7 +16,8 @@ df = pd.DataFrame({
     'matched right': [93.33333333, 91.66666667, 78.33333333, 91.66666667,93.33333333],
     'matched left': [90, 98.33333333, 93.33333333, 100,100],
     'mismatched right': [56.66666667, 80, 66.66666667, 98.33333333,91.66666667],
-    'mismatched left': [88.33333333, 93.33333333, 80, 100,98.33333333]
+    'mismatched left': [88.33333333, 93.33333333, 80, 100,98.33333333],
+    
 })
 
 # Set the subject Id column as the index
@@ -26,6 +27,7 @@ df.set_index('subject Id', inplace=True)
 for subject in df.index:
     plt.scatter(df.columns, df.loc[subject], label=subject)
     plt.plot(df.columns, df.loc[subject], label=subject)
+    
 plt.xlabel('Test Conditions')
 plt.ylabel('Scores(%)')
 plt.title('Scores between subjects for Different test conditions')
