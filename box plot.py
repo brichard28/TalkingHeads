@@ -11,9 +11,9 @@ import matplotlib.pyplot as plt
 
 # Your DataFrame
 df = pd.DataFrame({
-    'subject Id': ['pilot725-1', 'pilot821-1', 'pilot822-1', 'pilot823-1'],
-    'aligned': [94.16666667, 82.5, 95, 95.83333333],
-    'misaligned': [97.5, 84.16666667, 63.33333333, 95.83333333]
+    'subject Id': ['new_pilot1', 'new_pilot2'],
+    'aligned': [99.16666667,99.16666667],
+    'misaligned': [98.33333333,98.33333333]
 })
 
 # Create a box plot

@@ -15,11 +15,11 @@ import matplotlib.pyplot as plt
 
 # Create a sample dataframe
 df = pd.DataFrame({
-    'subject Id': ['pilot725-1', 'pilot821-1', 'pilot822-1', 'pilot823-1'],
-    'aligned right': [91.66666667, 80, 95, 93.33333333],
-    'aligned left': [96.66666667, 85, 95, 98.33333333],
-    'misaligned right': [96.66666667, 81.66666667, 65, 93.33333333],
-    'misaligned left': [98.33333333, 86.66666667, 61.66666667, 98.33333333],
+    'subject Id': ['new_pilot1', 'new_pilot2'],
+    'aligned right': [98.33333333,100],
+    'aligned left': [100,98.33333333],
+    'misaligned right': [98.33333333,96.66666667],
+    'misaligned left': [98.33333333,100],
 })
 
 # Set the subject Id column as the index
