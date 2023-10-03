@@ -1,6 +1,6 @@
 1.conda activate TalkingHeads-env
 2.cd /d D:\Experiments\TalkingHeads
-3.python stimgen_TalkingHeads.py
+(3.python stimgen_TalkingHeads.py)
 4.D:\Experiments\TalkingHeads\TalkingHeads-venv\Scripts\activate.bat
 5.cd D:\Experiments\TalkingHeads\GUI code
 6. python exp_TalkingHeads.py
