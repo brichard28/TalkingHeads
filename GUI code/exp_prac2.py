@@ -43,7 +43,7 @@ while not eng_instruct.workspace['release']:
 eng_instruct.quit()
 
 
-n_trials = 12
+n_trials = 8
 
 
 
@@ -82,7 +82,7 @@ while itrial < n_trials:
     
     media_player.play()
 
-    time.sleep(5)
+    time.sleep(8)
 
     media_player.stop()
     

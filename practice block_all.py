@@ -44,7 +44,7 @@ if not os.path.exists("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\
 
 all_sentences_F1 = [];
 all_sentences_F2 = [];
-num_trials=12
+num_trials=8
 possible_conditions = ["match left","mismatch left","match right","mismatch right"]
 # create array of conditions, ensuring there are equal amounts
 condition_array = []
@@ -421,7 +421,7 @@ for itrial in range(num_trials):
         
         right_cue = right_cue.resize(newsize=combined.size)
         if flips==0: # F1 on left and F2 on right
-            audioclip_right_match=AudioFileClip("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1_matchedright.wav")
+            audioclip_right_match=AudioFileClip("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1_matchedright_ramped.wav")
             right_cue= right_cue.set_audio(audioclip_right_match)
             combined_with_cue = CompositeVideoClip([right_cue, # starts at t=0
                                 combined.set_start(1)]) # start at t=1s
@@ -440,7 +440,7 @@ for itrial in range(num_trials):
             # set the audio back to combined_with_cue
         
         elif flips==1: # F2 on left and F1 on right
-            audioclip_right_match=AudioFileClip("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1_matchedright.wav")
+            audioclip_right_match=AudioFileClip("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1_matchedright_ramped.wav")
             right_cue= right_cue.set_audio(audioclip_right_match)
             combined_with_cue = CompositeVideoClip([right_cue, # starts at t=0
                                 combined.set_start(1)]) # start at t=1s
@@ -457,7 +457,7 @@ for itrial in range(num_trials):
         right_cue = right_cue.resize(newsize=combined.size)
         #right_cue_color=ImageSequenceClip(["colored_blocks_white.png"], durations = [0.004])
         if flips==0: # F1 on left and F2 on right
-            audioclip_right_match=AudioFileClip("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1_mismatchedright.wav")
+            audioclip_right_match=AudioFileClip("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1_mismatchedright_ramped.wav")
             right_cue= right_cue.set_audio(audioclip_right_match)
             combined_with_cue = CompositeVideoClip([right_cue, # starts at t=0
                                 combined.set_start(1)]) # start at t=1s
@@ -469,7 +469,7 @@ for itrial in range(num_trials):
              #                   right_cue_color])
 
         elif flips==1: # F2 on left and F1 on right
-            audioclip_right_match=AudioFileClip("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1_mismatchedright.wav")
+            audioclip_right_match=AudioFileClip("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1_mismatchedright_ramped.wav")
             right_cue= right_cue.set_audio(audioclip_right_match)
             combined_with_cue = CompositeVideoClip([right_cue, # starts at t=0
                                 combined.set_start(1)]) # start at t=1s
@@ -486,7 +486,7 @@ for itrial in range(num_trials):
         left_cue = left_cue.resize(newsize=combined.size)
        # left_cue_color= ImageSequenceClip(["colored_blocks_white.png"], durations = [0.004])
         if flips==0: # F1 on left and F2 on right
-            audioclip_left_match=AudioFileClip("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1_matchedleft.wav")
+            audioclip_left_match=AudioFileClip("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1_matchedleft_ramped.wav")
             left_cue= left_cue.set_audio(audioclip_left_match)
             combined_with_cue = CompositeVideoClip([left_cue, # starts at t=0
                                 combined.set_start(1)]) # start at t=1s
@@ -498,7 +498,7 @@ for itrial in range(num_trials):
            
 
         elif flips==1: # F2 on left and F1 on right
-            audioclip_left_match=AudioFileClip("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1_matchedleft.wav")
+            audioclip_left_match=AudioFileClip("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1_matchedleft_ramped.wav")
             left_cue= left_cue.set_audio(audioclip_left_match)
             combined_with_cue = CompositeVideoClip([left_cue, # starts at t=0
                                 combined.set_start(1)]) # start at t=1s
@@ -516,7 +516,7 @@ for itrial in range(num_trials):
         left_cue = left_cue.resize(newsize=combined.size)
       #  left_cue_color=ImageSequenceClip(["colored_blocks_white.png"], durations = [0.004])
         if flips==0: # F1 on left and F2 on right
-            audioclip_left_match=AudioFileClip("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1_mismatchedleft.wav")
+            audioclip_left_match=AudioFileClip("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1_mismatchedleft_ramped.wav")
             left_cue= left_cue.set_audio(audioclip_left_match)
             combined_with_cue = CompositeVideoClip([left_cue, # starts at t=0
                              combined.set_start(1)]) # start at t=1s
@@ -529,7 +529,7 @@ for itrial in range(num_trials):
 
 
         elif flips==1: # F2 on left and F1 on right
-            audioclip_left_match=AudioFileClip("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1_mismatchedleft.wav")
+            audioclip_left_match=AudioFileClip("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\Audio Cue\\Chairs_F1_mismatchedleft_ramped.wav")
             left_cue= left_cue.set_audio(audioclip_left_match)
             combined_with_cue = CompositeVideoClip([left_cue,  # starts at t=0
                             combined.set_start(1)])  # start at t=1s
