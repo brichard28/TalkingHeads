@@ -38,7 +38,7 @@ if not os.path.exists("C:\\Users\\maana\\Documents\\GitHub\\TalkingHeads\\stim\\
 
 all_sentences_F1 = [];
 all_sentences_F2 = [];
-num_trials=20
+num_trials=60
 possible_conditions = ["match left","mismatch left","match right","mismatch right"]
 # create array of conditions, ensuring there are equal amounts
 condition_array = []
