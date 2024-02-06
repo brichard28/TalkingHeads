@@ -1,0 +1,98 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 3.3039909297052152 
+tiers? <exists> 
+size = 5 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "Allen" 
+        xmin = 0 
+        xmax = 3.3039909297052152 
+        intervals: size = 3 
+        intervals [1]:
+            xmin = 0 
+            xmax = 0.41841430758121917 
+            text = "" 
+        intervals [2]:
+            xmin = 0.41841430758121917 
+            xmax = 0.8045435001373374 
+            text = "Allen" 
+        intervals [3]:
+            xmin = 0.8045435001373374 
+            xmax = 3.3039909297052152 
+            text = "" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "bought" 
+        xmin = 0 
+        xmax = 3.3039909297052152 
+        intervals: size = 3 
+        intervals [1]:
+            xmin = 0 
+            xmax = 0.8289306070356186 
+            text = "" 
+        intervals [2]:
+            xmin = 0.8289306070356186 
+            xmax = 1.003704873139967 
+            text = "bought" 
+        intervals [3]:
+            xmin = 1.003704873139967 
+            xmax = 3.3039909297052152 
+            text = "" 
+    item [3]:
+        class = "IntervalTier" 
+        name = "nineteen" 
+        xmin = 0 
+        xmax = 3.3039909297052152 
+        intervals: size = 3 
+        intervals [1]:
+            xmin = 0 
+            xmax = 1.0402855334873886 
+            text = "" 
+        intervals [2]:
+            xmin = 1.0402855334873886 
+            xmax = 1.341059851899523 
+            text = "19" 
+        intervals [3]:
+            xmin = 1.341059851899523 
+            xmax = 3.3039909297052152 
+            text = "" 
+    item [4]:
+        class = "IntervalTier" 
+        name = "large" 
+        xmin = 0 
+        xmax = 3.3039909297052152 
+        intervals: size = 3 
+        intervals [1]:
+            xmin = 0 
+            xmax = 1.4426727973090276 
+            text = "" 
+        intervals [2]:
+            xmin = 1.4426727973090276 
+            xmax = 2.2962215387488683 
+            text = "Large" 
+        intervals [3]:
+            xmin = 2.2962215387488683 
+            xmax = 3.3039909297052152 
+            text = "" 
+    item [5]:
+        class = "IntervalTier" 
+        name = "chairs" 
+        xmin = 0 
+        xmax = 3.3039909297052152 
+        intervals: size = 3 
+        intervals [1]:
+            xmin = 0 
+            xmax = 2.3165441278307695 
+            text = "" 
+        intervals [2]:
+            xmin = 2.3165441278307695 
+            xmax = 2.8489959617765743 
+            text = "Chairs" 
+        intervals [3]:
+            xmin = 2.8489959617765743 
+            xmax = 3.3039909297052152 
+            text = "" 
