@@ -15,11 +15,11 @@ import matplotlib.pyplot as plt
 
 # Create a sample dataframe
 df = pd.DataFrame({
-    'subject Id': ['new_pilot1', 'new_pilot2'],
-    'aligned right': [96.66666667,95],
-    'aligned left': [85,96.66666667],
-    'misaligned right': [38.33333333,90],
-    'misaligned left': [46.66666667,91.66666667],
+    'subject Id': ['156973','159058','156028','157144','157837','160171','160093','160891','160927','160228','160090','160045','160339'],
+    'matched left': [96,94.66666667,93.33333333,82.66666667,94.66666667,89.33333333,97.33333333,92,93.33333333,100,92,93.33333333,82.66666667],
+    'matched right': [98.66666667,100,90.66666667,80,100,85.33333333,100,97.33333333,96,94.66666667,86.66666667,94.66666667,94.66666667],
+    'mismatched left': [77.33333333,77.33333333,92,76,94.66666667,74.66666667,78.66666667,90.66666667,69.33333333,54.66666667,81.33333333,64,78.66666667],
+    'mismatched right': [77.33333333,88,84,90.66666667,81.33333333,74.66666667,85.33333333,78.66666667,89.33333333,72,56,44,72],
 })
 
 # Set the subject Id column as the index
@@ -41,7 +41,7 @@ plt.scatter(df.columns, df.mean(), color='blue',linewidth=2)
 
 plt.xlabel('Test Conditions')
 plt.ylabel('Mean Scores(%)')
-plt.title('Scores between subjects for Different test conditions(n=7)')
+plt.title('Scores between subjects for Different test conditions(n=13)')
 
 # Create the legend for scatter plots only
 plt.legend()
